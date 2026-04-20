@@ -1,0 +1,896 @@
+/**
+ * THX 1138 Design System — aesthetics.css
+ * Classless CSS Framework with THX 1138 Clinical Sci-Fi Aesthetic
+ * 
+ * Philosophy: Direct element styling for content, minimal utility classes
+ * for complex UI patterns. Inspired by brutalist/classless CSS frameworks.
+ */
+
+/* ============================================
+   DESIGN TOKENS
+   ============================================ */
+
+:root {
+  /* 4 Neutral Colors */
+  --neutral-100: #fafafa;
+  --neutral-200: #e0e0e0;
+  --neutral-600: #666;
+  --neutral-800: #333;
+
+  /* 3 Atmospheric Colors (CRT Blue Phosphor) */
+  --atmos-primary: #a6c8e1;
+  --atmos-secondary: #707e91;
+  --atmos-tertiary: #deffff;
+
+  /* 2 Accent Colors */
+  --accent-warning: #d4aa00;
+  --accent-error: #d44000;
+
+  /* CRT Display Colors */
+  --crt-bg: #111;
+  --crt-bg-dark: #0a0a0a;
+  --crt-border: #2a2a2a;
+  --crt-grid: #333;
+
+  /* Typography */
+  --font-display: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --font-body: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --font-mono: 'Courier New', Courier, monospace;
+}
+
+/* ============================================
+   BASE RESET
+   ============================================ */
+
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+  scrollbar-width: thin;
+  scrollbar-color: #999 #e0e0e0;
+}
+
+body {
+  font-family: var(--font-body);
+  background: var(--neutral-200);
+  min-height: 100vh;
+  color: var(--neutral-800);
+  line-height: 1.6;
+  padding: 40px 20px;
+}
+
+/* ============================================
+   LAYOUT CONTAINERS
+   ============================================ */
+
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+/* Support both semantic <section> element and .section class */
+section,
+.section {
+  background: var(--neutral-100);
+  margin-bottom: 1px;
+  padding: 32px;
+  position: relative;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.06);
+}
+
+/* ============================================
+   TYPOGRAPHY
+   ============================================ */
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--neutral-800);
+}
+
+h1 {
+  font-size: 1.75rem;
+  font-weight: 300;
+  margin-bottom: 16px;
+  letter-spacing: 0.1em;
+}
+
+h2 {
+  font-size: 1.25rem;
+  margin: 24px 0 12px 0;
+  letter-spacing: 0.08em;
+}
+
+h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: var(--neutral-600);
+  margin: 20px 0 10px 0;
+}
+
+h4 {
+  font-size: 0.875rem;
+  font-weight: 600;
+  margin: 16px 0 8px 0;
+  letter-spacing: 0.05em;
+}
+
+p {
+  font-size: 0.875rem;
+  color: var(--neutral-600);
+  margin-bottom: 12px;
+}
+
+a {
+  color: #555;
+  text-decoration: none;
+  border-bottom: 1px solid #bbb;
+  transition: all 0.15s;
+}
+
+a:hover {
+  color: #222;
+  border-color: #666;
+}
+
+strong, b {
+  font-weight: 600;
+  color: var(--neutral-800);
+}
+
+em, i {
+  font-style: italic;
+  color: #777;
+}
+
+small {
+  font-size: 0.75rem;
+  color: var(--neutral-600);
+}
+
+mark {
+  background: var(--atmos-primary);
+  color: var(--neutral-800);
+  padding: 2px 4px;
+}
+
+/* Code & Preformatted */
+
+code, kbd, samp {
+  font-family: var(--font-mono);
+  background: white;
+  font-size: 0.8125rem;
+  color: #555;
+}
+
+code {
+  padding: 2px 6px;
+  border-bottom: 1px solid #ddd;
+}
+
+pre {
+  font-family: var(--font-mono);
+  background: white;
+  padding: 16px 20px;
+  border-left: 2px solid #ccc;
+  font-size: 0.8125rem;
+  color: #555;
+  overflow-x: auto;
+  margin: 12px 0;
+  line-height: 1.6;
+}
+
+pre code {
+  background: transparent;
+  border: none;
+  padding: 0;
+}
+
+/* Blockquotes */
+
+blockquote {
+  border-left: 2px solid #bbb;
+  padding-left: 20px;
+  margin: 16px 0;
+  color: #777;
+  font-style: italic;
+}
+
+blockquote p:last-child {
+  margin-bottom: 0;
+}
+
+/* Horizontal Rule */
+
+hr {
+  border: none;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  margin: 24px 0;
+}
+
+/* Lists */
+
+ul, ol {
+  margin: 12px 0 12px 24px;
+  font-size: 0.875rem;
+  color: var(--neutral-600);
+}
+
+li {
+  margin-bottom: 6px;
+}
+
+ul ul, ul ol, ol ul, ol ol {
+  margin: 6px 0 6px 20px;
+}
+
+dl {
+  margin: 12px 0;
+  font-size: 0.875rem;
+}
+
+dt {
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #555;
+  margin-top: 12px;
+}
+
+dd {
+  color: #777;
+  margin-left: 0;
+  margin-top: 4px;
+}
+
+/* ============================================
+   TABLES
+   ============================================ */
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 16px 0;
+  font-size: 0.8125rem;
+}
+
+caption {
+  font-size: 0.6875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--neutral-600);
+  margin-bottom: 8px;
+  text-align: left;
+}
+
+th {
+  text-align: left;
+  padding: 12px;
+  border-bottom: 2px solid #ccc;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #555;
+  font-family: var(--font-mono);
+}
+
+td {
+  padding: 12px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  color: var(--neutral-600);
+}
+
+tr:hover td {
+  background: rgba(0, 0, 0, 0.02);
+}
+
+thead {
+  background: rgba(0, 0, 0, 0.02);
+}
+
+tfoot {
+  border-top: 2px solid #ccc;
+  font-weight: 600;
+}
+
+/* ============================================
+   FORMS
+   ============================================ */
+
+label {
+  display: block;
+  font-size: 0.6875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #888;
+  margin-bottom: 6px;
+  font-weight: 500;
+}
+
+input[type='text'],
+input[type='email'],
+input[type='password'],
+input[type='number'],
+input[type='search'],
+input[type='tel'],
+input[type='url'],
+input[type='date'],
+input[type='datetime-local'],
+input[type='month'],
+input[type='week'],
+input[type='time'],
+select,
+textarea {
+  width: 100%;
+  height: 40px;
+  padding: 0 12px;
+  border: none;
+  border-bottom: 2px solid #ccc;
+  font-size: 0.875rem;
+  font-family: var(--font-mono);
+  background: white;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #333;
+  transition: border-color 0.2s;
+  margin-bottom: 16px;
+}
+
+textarea {
+  height: 100px;
+  padding: 12px;
+  resize: vertical;
+  text-transform: none;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  border-color: #666;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: #aaa;
+}
+
+input:disabled,
+select:disabled,
+textarea:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background: var(--neutral-200);
+}
+
+select {
+  cursor: pointer;
+}
+
+/* Fieldset & Legend */
+
+fieldset {
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  margin: 16px 0;
+}
+
+legend {
+  font-size: 0.6875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #888;
+  padding: 0 12px;
+}
+
+/* Radio & Checkbox */
+
+input[type='radio'],
+input[type='checkbox'] {
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border: 2px solid #999;
+  background: white;
+  margin-right: 8px;
+  vertical-align: middle;
+  position: relative;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+input[type='radio'] {
+  border-radius: 50%;
+}
+
+input[type='checkbox'] {
+  border-radius: 0;
+}
+
+input[type='radio']:hover,
+input[type='checkbox']:hover {
+  border-color: #666;
+}
+
+input[type='radio']:checked {
+  border-color: #444;
+  background: white;
+}
+
+input[type='radio']:checked::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 8px;
+  height: 8px;
+  background: #444;
+  border-radius: 50%;
+}
+
+input[type='checkbox']:checked {
+  border-color: #444;
+  background: #444;
+}
+
+input[type='checkbox']:checked::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 5px;
+  width: 4px;
+  height: 8px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+input[type='radio']:focus,
+input[type='checkbox']:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(100, 100, 100, 0.3);
+}
+
+/* Inline form labels */
+
+label:has(input[type='radio']),
+label:has(input[type='checkbox']) {
+  display: inline;
+  font-size: 0.8125rem;
+  text-transform: none;
+  letter-spacing: normal;
+  color: var(--neutral-600);
+  margin-right: 16px;
+  cursor: pointer;
+}
+
+/* ============================================
+   BUTTONS
+   ============================================ */
+
+button,
+input[type='submit'],
+input[type='reset'],
+input[type='button'] {
+  height: 40px;
+  padding: 0 24px;
+  background: #e0e0e0;
+  color: #333;
+  border: none;
+  border-bottom: 2px solid #bbb;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  transition: all 0.15s;
+  margin-right: 8px;
+  margin-bottom: 8px;
+  font-family: var(--font-body);
+}
+
+button:hover,
+input[type='submit']:hover,
+input[type='reset']:hover,
+input[type='button']:hover {
+  background: #d5d5d5;
+  border-color: #999;
+}
+
+button:active,
+input[type='submit']:active,
+input[type='reset']:active,
+input[type='button']:active {
+  background: #c0c0c0;
+  border-color: #666;
+  transform: translateY(1px);
+}
+
+button:disabled,
+input[type='submit']:disabled,
+input[type='reset']:disabled,
+input[type='button']:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ============================================
+   PROGRESS & METER
+   ============================================ */
+
+progress {
+  width: 100%;
+  height: 8px;
+  appearance: none;
+  margin: 12px 0;
+  background: #ddd;
+  border: none;
+}
+
+progress::-webkit-progress-bar {
+  background: #ddd;
+}
+
+progress::-webkit-progress-value {
+  background: #666;
+}
+
+progress::-moz-progress-bar {
+  background: #666;
+}
+
+meter {
+  width: 100%;
+  height: 20px;
+  margin: 12px 0;
+  appearance: none;
+  background: #ddd;
+}
+
+meter::-webkit-meter-bar {
+  background: #ddd;
+  border: none;
+}
+
+meter::-webkit-meter-optimum-value {
+  background: #666;
+}
+
+meter::-webkit-meter-suboptimum-value {
+  background: #888;
+}
+
+meter::-webkit-meter-even-less-good-value {
+  background: #aaa;
+}
+
+meter::-moz-meter-bar {
+  background: #666;
+}
+
+/* ============================================
+   RANGE SLIDER
+   ============================================ */
+
+input[type='range'] {
+  width: 100%;
+  height: 8px;
+  margin: 16px 0;
+  appearance: none;
+  background: #ddd;
+  outline: none;
+}
+
+input[type='range']::-webkit-slider-thumb {
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  background: #555;
+  cursor: pointer;
+  border: none;
+  margin-top: -5px;
+}
+
+input[type='range']::-webkit-slider-runnable-track {
+  height: 8px;
+  background: #ddd;
+}
+
+input[type='range']::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  background: #555;
+  cursor: pointer;
+  border: none;
+  border-radius: 0;
+}
+
+input[type='range']::-moz-range-track {
+  height: 8px;
+  background: #ddd;
+}
+
+input[type='range']:focus::-webkit-slider-thumb {
+  box-shadow: 0 0 0 2px rgba(100, 100, 100, 0.3);
+}
+
+/* ============================================
+   SCROLLBAR
+   ============================================ */
+
+::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: #e0e0e0;
+  border-left: 1px solid #ccc;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #999;
+  border: 2px solid #e0e0e0;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #777;
+}
+
+::-webkit-scrollbar-corner {
+  background: #e0e0e0;
+}
+
+/* ============================================
+   DETAILS / SUMMARY
+   ============================================ */
+
+details {
+  background: rgba(0, 0, 0, 0.02);
+  margin: 12px 0;
+}
+
+summary {
+  padding: 12px 16px;
+  font-size: 0.8125rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #555;
+  cursor: pointer;
+  font-weight: 500;
+  list-style: none;
+}
+
+summary::-webkit-details-marker {
+  display: none;
+}
+
+summary::before {
+  content: '▸';
+  display: inline-block;
+  margin-right: 8px;
+  transition: transform 0.2s;
+}
+
+details[open] > summary::before {
+  transform: rotate(90deg);
+}
+
+details[open] summary {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+details > *:not(summary) {
+  padding: 16px;
+  font-size: 0.875rem;
+  color: var(--neutral-600);
+}
+
+/* ============================================
+   FIGURE & IMG
+   ============================================ */
+
+figure {
+  margin: 20px 0;
+  border-left: 2px solid #ccc;
+  padding-left: 20px;
+}
+
+figcaption {
+  font-size: 0.75rem;
+  color: #888;
+  margin-top: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* ============================================
+   DASHBOARD LAYOUT (Minimal Classes)
+   ============================================ */
+
+header {
+  background: var(--neutral-100);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  padding: 12px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+header h1, header h2, header h3 {
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  margin: 0;
+  letter-spacing: 0.15em;
+}
+
+/* ============================================
+   UTILITY CLASSES (For Complex Patterns)
+   ============================================ */
+
+/* Mono inline text */
+.mono {
+  font-family: var(--font-mono);
+  background: white;
+  padding: 2px 6px;
+  border-bottom: 1px solid #ddd;
+  font-size: 0.8125rem;
+}
+
+/* CRT Display - THX 1138 Monitor Style */
+.crt-display {
+  background: var(--crt-bg);
+  border: 12px solid var(--crt-border);
+  border-radius: 4px;
+  position: relative;
+  overflow: hidden;
+  margin: 20px 0;
+  box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.5);
+}
+
+.crt-display::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(166, 200, 225, 0.04) 2px,
+    rgba(166, 200, 225, 0.04) 4px
+  );
+  pointer-events: none;
+  z-index: 10;
+  animation: scanlines 8s linear infinite;
+}
+
+@keyframes scanlines {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(4px); }
+}
+
+.crt-display::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at center, transparent 50%, rgba(0, 0, 0, 0.4) 100%);
+  pointer-events: none;
+  z-index: 11;
+}
+
+.crt-content {
+  position: relative;
+  z-index: 5;
+  padding: 20px;
+}
+
+.crt-label {
+  position: absolute;
+  top: 4px;
+  right: 8px;
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  z-index: 15;
+}
+
+/* Scope Display - Tektronix Oscilloscope */
+.scope-display {
+  background: var(--crt-bg-dark);
+  border: 12px solid #222;
+  border-radius: 4px;
+  position: relative;
+  margin: 20px 0;
+  overflow: hidden;
+  box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.8);
+}
+
+.scope-display::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(166, 200, 225, 0.2) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(166, 200, 225, 0.2) 1px, transparent 1px);
+  background-size: 20px 20px;
+  pointer-events: none;
+}
+
+/* Button Variants (as classes since they require semantic intent) */
+.btn-primary {
+  background: var(--atmos-primary);
+  color: var(--neutral-800);
+  border-color: var(--atmos-primary);
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: var(--atmos-tertiary);
+  box-shadow: 0 0 15px rgba(166, 200, 225, 0.5);
+}
+
+.btn-secondary {
+  background: var(--atmos-secondary);
+  color: var(--neutral-100);
+  border-color: var(--atmos-secondary);
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background: var(--atmos-primary);
+  color: var(--neutral-800);
+}
+
+.btn-warning {
+  background: var(--accent-warning);
+  color: var(--neutral-800);
+  border-color: var(--accent-warning);
+}
+
+.btn-error {
+  background: var(--accent-error);
+  color: var(--neutral-100);
+  border-color: var(--accent-error);
+}
+
+/* Grid for form sections */
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 24px;
+}
+
+@media (max-width: 600px) {
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ============================================
+   SECTION LABELS
+   ============================================ */
+
+.section-title {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--neutral-600);
+  margin-bottom: 24px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}

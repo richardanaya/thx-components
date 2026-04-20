@@ -1,0 +1,222 @@
+// @ts-check
+
+/**
+ * @fileoverview THX 1138 styled menu item component
+ * @module thx-menu-item
+ */
+
+import { LitElement, html, css } from 'lit';
+
+/**
+ * Individual menu item with hover/active states
+ * THX 1138 style: clinical precision with phosphor glow
+ * @element thx-menu-item
+ */
+export class ThxMenuItem extends LitElement {
+  static styles = css`
+    :host {
+      display: block;
+    }
+
+    .menu-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 16px;
+      font-family: var(--font-mono, 'Courier New', Courier, monospace);
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--neutral-800, #333);
+      cursor: pointer;
+      transition: all 0.15s;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+      background: transparent;
+      text-decoration: none;
+      position: relative;
+    }
+
+    .menu-item:hover {
+      background: rgba(166, 200, 225, 0.08);
+      color: var(--atmos-primary, #a6c8e1);
+    }
+
+    .menu-item.active,
+    :host([active]) .menu-item {
+      background: var(--atmos-primary, #a6c8e1);
+      color: var(--neutral-800, #333);
+    }
+
+    .menu-item.active::before,
+    :host([active]) .menu-item::before {
+      content: '▸';
+      position: absolute;
+      left: 4px;
+      font-size: 0.625rem;
+    }
+
+    :host([active]) .menu-item {
+      padding-left: 20px;
+    }
+
+    .menu-item.disabled,
+    :host([disabled]) .menu-item {
+      opacity: 0.4;
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+
+    /* CRT variant styling */
+    :host([variant='crt']) .menu-item {
+      color: var(--atmos-secondary, #707e91);
+      border-bottom-color: rgba(166, 200, 225, 0.1);
+    }
+
+    :host([variant='crt']) .menu-item:hover {
+      color: var(--atmos-tertiary, #deffff);
+      background: rgba(166, 200, 225, 0.15);
+      text-shadow: 0 0 8px rgba(166, 200, 225, 0.5);
+    }
+
+    :host([variant='crt']) .menu-item.active {
+      background: rgba(166, 200, 225, 0.25);
+      color: var(--atmos-tertiary, #deffff);
+      text-shadow: 0 0 8px rgba(166, 200, 225, 0.8);
+    }
+
+    /* Badge/pill indicator */
+    .indicator {
+      margin-left: auto;
+      font-size: 0.625rem;
+      padding: 2px 6px;
+      background: var(--atmos-secondary, #707e91);
+      color: var(--neutral-100, #fafafa);
+      min-width: 20px;
+      text-align: center;
+    }
+
+    .indicator.warning {
+      background: var(--accent-warning, #d4aa00);
+      color: var(--neutral-800, #333);
+    }
+
+    .indicator.error {
+      background: var(--accent-error, #d44000);
+      color: var(--neutral-100, #fafafa);
+    }
+
+    /* Icon slot */
+    ::slotted([slot='icon']) {
+      width: 16px;
+      height: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  `;
+
+  /**
+   * @type {import('lit').PropertyDeclarations}
+   */
+  static properties = {
+    href: { type: String },
+    active: { type: Boolean, reflect: true },
+    disabled: { type: Boolean, reflect: true },
+    variant: { type: String, reflect: true },
+    indicator: { type: String },
+  };
+
+  constructor() {
+    super();
+    /** @type {string} URL for link menu items */
+    this.href = '';
+    /** @type {boolean} Whether this item is active/selected */
+    this.active = false;
+    /** @type {boolean} Whether this item is disabled */
+    this.disabled = false;
+    /** @type {string} Variant inherited from parent */
+    this.variant = 'default';
+    /** @type {string} Optional indicator badge text */
+    this.indicator = '';
+  }
+
+  /**
+   * Handle click events
+   * @param {MouseEvent} e
+   * @returns {void}
+   * @private
+   */
+  _handleClick(e) {
+    if (this.disabled) {
+      e.preventDefault();
+      return;
+    }
+
+    this.dispatchEvent(
+      new CustomEvent('select', {
+        bubbles: true,
+        composed: true,
+        detail: {
+          href: this.href,
+          active: this.active,
+        },
+      })
+    );
+  }
+
+  /**
+   * Get indicator classes
+   * @returns {string}
+   * @private
+   */
+  _getIndicatorClass() {
+    if (this.indicator === '!') return 'indicator error';
+    if (this.indicator?.includes('WARN')) return 'indicator warning';
+    return 'indicator';
+  }
+
+  /**
+   * @returns {import('lit').TemplateResult}
+   */
+  render() {
+    const classes = {
+      'menu-item': true,
+      active: this.active,
+      disabled: this.disabled,
+    };
+
+    const classString = Object.entries(classes)
+      .filter(([, v]) => v)
+      .map(([k]) => k)
+      .join(' ');
+
+    const content = html`
+      <slot name="icon"></slot>
+      <span class="label"><slot></slot></span>
+      ${this.indicator
+        ? html`<span class="${this._getIndicatorClass()}">${this.indicator}</span>`
+        : ''}
+    `;
+
+    if (this.href && !this.disabled) {
+      return html`
+        <a href="${this.href}" class="${classString}" role="menuitem" @click="${this._handleClick}">
+          ${content}
+        </a>
+      `;
+    }
+
+    return html`
+      <div
+        class="${classString}"
+        role="menuitem"
+        tabindex="${this.disabled ? '-1' : '0'}"
+        @click="${this._handleClick}"
+      >
+        ${content}
+      </div>
+    `;
+  }
+}
+
+customElements.define('thx-menu-item', ThxMenuItem);
