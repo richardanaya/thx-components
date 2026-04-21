@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>THX 1138 — CDN Test</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/thx-components@0.0.0/aesthetics.css"
+    />
+    <script
+      type="module"
+      src="https://cdn.jsdelivr.net/npm/thx-components@0.0.0/webcomponents.js"
+    ></script>
+    <style>
+      body {
+        padding: calc(var(--size-7) + var(--size-2)) var(--size-4);
+      }
+      .container {
+        max-width: 900px;
+        margin: 0 auto;
+      }
+      .demo-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: calc(var(--size-2) + var(--size-1));
+        align-items: center;
+        margin: var(--size-4) 0 var(--size-5) 0;
+      }
+      .component-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: var(--size-5);
+        margin-top: var(--size-4);
+      }
+      .component-demo {
+        background: rgba(0, 0, 0, 0.02);
+        padding: var(--size-4);
+        border: var(--border-size-1) solid rgba(0, 0, 0, 0.06);
+      }
+      .component-demo-label {
+        font-family: var(--font-mono);
+        font-size: var(--font-size-0);
+        text-transform: uppercase;
+        letter-spacing: var(--font-letterspacing-4);
+        color: var(--neutral-600);
+        margin-bottom: var(--size-3);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="section">
+        <div class="section-title">// SYSTEM // CDN SMOKE TEST</div>
+        <h1>THX 1138 via jsdelivr</h1>
+        <p style="font-size: var(--font-size-1); color: var(--neutral-600)">
+          This page loads <code>thx-components</code> entirely from the
+          <a href="https://cdn.jsdelivr.net/npm/thx-components@0.0.0/">jsDelivr/npm CDN</a>. No
+          local imports, no import maps, no build step.
+        </p>
+      </div>
+
+      <div class="section">
+        <div class="section-title">// FEEDBACK // ALERTS & BADGES</div>
+        <div class="demo-row">
+          <thx-alert variant="info" open>INFO — SYSTEM NORMAL</thx-alert>
+          <thx-alert variant="warning" open>WARNING — CHECK REQUIRED</thx-alert>
+          <thx-alert variant="error" open>ERROR — CRITICAL</thx-alert>
+          <thx-alert variant="success" open>SUCCESS — COMPLIANT</thx-alert>
+        </div>
+        <div class="demo-row">
+          <thx-badge variant="primary">NORMAL</thx-badge>
+          <thx-badge variant="secondary">PENDING</thx-badge>
+          <thx-badge variant="warning">WARNING</thx-badge>
+          <thx-badge variant="error">CRITICAL</thx-badge>
+          <thx-badge variant="pulse">LIVE</thx-badge>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">// CONTAINERS // CARDS</div>
+        <div class="component-grid">
+          <div class="component-demo">
+            <div class="component-demo-label">// STANDARD CARD</div>
+            <thx-card label="SECTOR 7">
+              <p style="font-size: var(--font-size-1); color: var(--neutral-600)">
+                All personnel are required to report for biometric scan at 0600. Non-compliance will
+                result in sedation.
+              </p>
+              <thx-button slot="actions" variant="secondary">DISMISS</thx-button>
+              <thx-button slot="actions">ACKNOWLEDGE</thx-button>
+            </thx-card>
+          </div>
+          <div class="component-demo">
+            <div class="component-demo-label">// CRT CARD</div>
+            <thx-card crt label="MONITOR-1138">
+              <div
+                style="
+                  color: var(--atmos-primary);
+                  font-family: var(--font-mono);
+                  font-size: var(--font-size-0);
+                  line-height: var(--font-lineheight-4);
+                "
+              >
+                &gt; CPU: 34%<br />
+                &gt; MEM: 128TB ALLOCATED<br />
+                &gt; NET: ENCRYPTED<br />
+                &gt; STATUS: COMPLIANT
+              </div>
+            </thx-card>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">// FORMS // INPUTS & CONTROLS</div>
+        <div class="component-grid">
+          <div class="component-demo">
+            <div class="component-demo-label">// TEXT INPUT</div>
+            <thx-input label="DESIGNATION" placeholder="ENTER ID..." value="THX-1138"></thx-input>
+          </div>
+          <div class="component-demo">
+            <div class="component-demo-label">// SWITCH</div>
+            <thx-switch checked> sedation override </thx-switch>
+          </div>
+          <div class="component-demo">
+            <div class="component-demo-label">// RANGE</div>
+            <thx-range value="68" min="0" max="100" step="1"></thx-range>
+          </div>
+          <div class="component-demo">
+            <div class="component-demo-label">// RADIO GROUP</div>
+            <thx-radio-group value="standard">
+              <thx-radio value="standard">STANDARD</thx-radio>
+              <thx-radio value="restricted">RESTRICTED</thx-radio>
+              <thx-radio value="black">BLACK</thx-radio>
+            </thx-radio-group>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">// DISPLAY // SPLIT PANEL</div>
+        <thx-split-panel
+          start-label="OBSERVE"
+          end-label="ANALYZE"
+          position="40"
+          style="height: 300px; border: var(--border-size-1) solid rgba(0, 0, 0, 0.1)"
+        >
+          <div slot="start" style="padding: var(--size-4)">
+            <p style="font-size: var(--font-size-1); color: var(--neutral-600)">
+              Subject movements logged. Facial recognition ACTIVE.
+            </p>
+          </div>
+          <div slot="end" style="padding: var(--size-4)">
+            <p style="font-size: var(--font-size-1); color: var(--neutral-600)">
+              Cross-referencing with central database. 12,847 matches found.
+            </p>
+          </div>
+        </thx-split-panel>
+      </div>
+
+      <div class="section">
+        <div class="section-title">// FEEDBACK // PROGRESS</div>
+        <div class="component-grid">
+          <div class="component-demo">
+            <div class="component-demo-label">// PROGRESS BAR</div>
+            <thx-progress-bar value="73" label="SYNCING DATA..."></thx-progress-bar>
+          </div>
+          <div class="component-demo">
+            <div class="component-demo-label">// SPINNER</div>
+            <thx-spinner></thx-spinner>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">// DATA // VISUALIZATIONS</div>
+        <thx-crt-display label="TEK-444 // READOUT" style="max-width: 600px">
+          <thx-chart-bar id="cdn-bar-chart" style="display: block"></thx-chart-bar>
+        </thx-crt-display>
+        <script type="module">
+          document.getElementById('cdn-bar-chart').data = [
+            { label: 'CPU', value: 92, max: 100 },
+            { label: 'MEM', value: 64, max: 100 },
+            { label: 'NET', value: 45, max: 100 },
+            { label: 'DSK', value: 31, max: 100, warning: true },
+            { label: 'PWR', value: 12, max: 100 },
+          ];
+        </script>
+      </div>
+    </div>
+  </body>
+</html>
