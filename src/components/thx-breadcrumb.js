@@ -5,7 +5,7 @@
  * @module thx-breadcrumb
  */
 
-import { LitElement, html, css } from 'lit';
+import { LitElement, html, css } from '../../vendor/lit.js';
 
 /**
  * Breadcrumb container component for navigation path display

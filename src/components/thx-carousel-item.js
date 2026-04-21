@@ -5,7 +5,7 @@
  * @module thx-carousel-item
  */
 
-import { LitElement, html, css } from 'lit';
+import { LitElement, html, css } from '../../vendor/lit.js';
 
 /**
  * Carousel item component for use within thx-carousel.

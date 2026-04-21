@@ -5,7 +5,7 @@
  * @module thx-menu
  */
 
-import { LitElement, html, css } from 'lit';
+import { LitElement, html, css } from '../../vendor/lit.js';
 
 /**
  * Menu container for navigation lists

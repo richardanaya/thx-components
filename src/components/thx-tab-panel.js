@@ -5,7 +5,7 @@
  * @module thx-tab-panel
  */
 
-import { LitElement, html, css } from 'lit';
+import { LitElement, html, css } from '../../vendor/lit.js';
 
 /**
  * Tab panel content container

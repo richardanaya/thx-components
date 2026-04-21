@@ -5,7 +5,7 @@
  * @module thx-skeleton
  */
 
-import { LitElement, html, css } from 'lit';
+import { LitElement, html, css } from '../../vendor/lit.js';
 
 /**
  * @typedef {Object} SkeletonConfig

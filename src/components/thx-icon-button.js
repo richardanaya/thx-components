@@ -6,7 +6,7 @@
  * @description A clinical icon button with phosphor glow effects
  */
 
-import { LitElement, html, css } from 'lit';
+import { LitElement, html, css } from '../../vendor/lit.js';
 
 /**
  * @typedef {Object} IconButtonConfig

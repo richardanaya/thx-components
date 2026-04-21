@@ -6,7 +6,7 @@
  * @description A clinical popup/positioned overlay with CRT aesthetics
  */
 
-import { LitElement, html, css } from 'lit';
+import { LitElement, html, css } from '../../vendor/lit.js';
 
 /**
  * @typedef {Object} PopupState

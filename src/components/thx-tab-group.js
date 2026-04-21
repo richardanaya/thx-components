@@ -5,7 +5,7 @@
  * @module thx-tab-group
  */
 
-import { LitElement, html, css } from 'lit';
+import { LitElement, html, css } from '../../vendor/lit.js';
 
 // Forward declarations for type checking
 /** @typedef {import('./thx-tab.js').ThxTab} ThxTab */

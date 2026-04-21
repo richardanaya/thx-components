@@ -5,7 +5,7 @@
  * @module thx-chart-bar
  */
 
-import { LitElement, html, css } from 'lit';
+import { LitElement, html, css } from '../../vendor/lit.js';
 
 /**
  * @typedef {Object} BarDataPoint

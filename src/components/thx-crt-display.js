@@ -5,7 +5,7 @@
  * @module thx-crt-display
  */
 
-import { LitElement, html, css } from 'lit';
+import { LitElement, html, css } from '../../vendor/lit.js';
 
 /**
  * THX 1138 styled CRT monitor display wrapper

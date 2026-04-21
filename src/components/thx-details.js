@@ -5,7 +5,7 @@
  * @module thx-details
  */
 
-import { LitElement, html, css } from 'lit';
+import { LitElement, html, css } from '../../vendor/lit.js';
 
 /**
  * Details disclosure component with THX 1138 styling

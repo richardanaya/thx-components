@@ -5,7 +5,7 @@
  * @module thx-button-group
  */
 
-import { LitElement, html, css } from 'lit';
+import { LitElement, html, css } from '../../vendor/lit.js';
 
 /**
  * Button group for grouping related actions together

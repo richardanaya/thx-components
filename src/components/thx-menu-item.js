@@ -5,7 +5,7 @@
  * @module thx-menu-item
  */
 
-import { LitElement, html, css } from 'lit';
+import { LitElement, html, css } from '../../vendor/lit.js';
 
 /**
  * Individual menu item with hover/active states

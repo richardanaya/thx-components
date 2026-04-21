@@ -6,7 +6,7 @@
  * @description A clinical tooltip with CRT-style phosphor glow
  */
 
-import { LitElement, html, css } from 'lit';
+import { LitElement, html, css } from '../../vendor/lit.js';
 
 /**
  * @typedef {Object} TooltipState

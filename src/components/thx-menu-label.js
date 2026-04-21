@@ -5,7 +5,7 @@
  * @module thx-menu-label
  */
 
-import { LitElement, html, css } from 'lit';
+import { LitElement, html, css } from '../../vendor/lit.js';
 
 /**
  * Menu label for grouping/categorizing menu items
