@@ -9,10 +9,17 @@
 
 /**
  * THX 1138 Design System — aesthetics.css
- * Classless CSS Framework with THX 1138 Clinical Sci-Fi Aesthetic
- * 
- * Philosophy: Direct element styling for content, minimal utility classes
- * for complex UI patterns. Inspired by brutalist/classless CSS frameworks.
+ *
+ * A CLASSLESS CSS FRAMEWORK. Pair with webcomponents.js for zero-class HTML.
+ *
+ * How this works:
+ *   1. Load aesthetics.css  → bare HTML tags (<h1>, <p>, <button>, etc.) are
+ *                              styled automatically. No utility classes needed.
+ *   2. Load webcomponents.js → drop <thx-*> custom elements anywhere.
+ *
+ * Together they let you write extremely minimal HTML. No classes. No builds.
+ *
+ * Inspired by brutalist / classless CSS frameworks like Pico.css and MVP.css.
  */
 
 /* ============================================
