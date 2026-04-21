@@ -31,26 +31,26 @@ export class ThxTag extends LitElement {
     .tag {
       display: inline-flex;
       align-items: center;
-      gap: 6px;
+      gap: var(--size-1);
       font-family: var(--font-mono, 'Courier New', Courier, monospace);
-      font-size: 0.625rem;
-      font-weight: 500;
-      letter-spacing: 0.1em;
+      font-size: var(--font-size-0);
+      font-weight: var(--font-weight-5);
+      letter-spacing: var(--font-letterspacing-4);
       text-transform: uppercase;
-      border: 1px solid transparent;
-      transition: all 0.15s;
+      border: var(--border-size-1) solid transparent;
+      transition: all var(--duration-quick-2);
       line-height: 1;
       cursor: default;
     }
 
     .tag--sm {
-      padding: 3px 8px;
-      font-size: 0.5625rem;
+      padding: var(--size-1) var(--size-2);
+      font-size: var(--font-size-00);
     }
 
     .tag--md {
-      padding: 4px 10px;
-      font-size: 0.625rem;
+      padding: var(--size-1) var(--size-2);
+      font-size: var(--font-size-0);
     }
 
     .tag--default {
@@ -86,8 +86,8 @@ export class ThxTag extends LitElement {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      width: 14px;
-      height: 14px;
+      width: var(--size-3);
+      height: var(--size-3);
       padding: 0;
       margin: -2px -4px -2px 0;
       background: none;
@@ -95,10 +95,10 @@ export class ThxTag extends LitElement {
       cursor: pointer;
       color: currentColor;
       font-family: var(--font-mono, 'Courier New', Courier, monospace);
-      font-size: 0.75rem;
+      font-size: var(--font-size-0);
       line-height: 1;
       opacity: 0.6;
-      transition: opacity 0.15s;
+      transition: opacity var(--duration-quick-2);
     }
 
     .tag__remove:hover {
@@ -113,7 +113,7 @@ export class ThxTag extends LitElement {
     /* Prefix styling */
     .tag__prefix {
       color: var(--neutral-600, #666);
-      font-weight: 400;
+      font-weight: var(--font-weight-4);
     }
 
     .tag--primary .tag__prefix,

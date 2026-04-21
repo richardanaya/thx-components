@@ -42,7 +42,7 @@ export class ThxCarousel extends LitElement {
 
     .carousel__track {
       display: flex;
-      transition: transform 0.3s ease;
+      transition: transform var(--duration-moderate-2) ease;
     }
 
     ::slotted(thx-carousel-item) {
@@ -55,19 +55,19 @@ export class ThxCarousel extends LitElement {
       position: absolute;
       top: 50%;
       transform: translateY(-50%);
-      width: 40px;
-      height: 40px;
+      width: calc(var(--size-7) + var(--size-2));
+      height: calc(var(--size-7) + var(--size-2));
       display: flex;
       align-items: center;
       justify-content: center;
       background: var(--neutral-100, #fafafa);
-      border: 1px solid rgba(0, 0, 0, 0.1);
+      border: var(--border-size-1) solid rgba(0, 0, 0, 0.1);
       cursor: pointer;
       font-family: var(--font-mono, 'Courier New', Courier, monospace);
-      font-size: 1rem;
+      font-size: var(--font-size-1);
       color: var(--neutral-600, #666);
-      transition: all 0.15s;
-      z-index: 10;
+      transition: all var(--duration-quick-2);
+      z-index: var(--layer-2);
     }
 
     .carousel__arrow:hover {
@@ -97,19 +97,19 @@ export class ThxCarousel extends LitElement {
     .carousel__dots {
       display: flex;
       justify-content: center;
-      gap: 8px;
-      margin-top: 16px;
-      padding: 8px;
+      gap: var(--size-2);
+      margin-top: var(--size-3);
+      padding: var(--size-2);
     }
 
     .carousel__dot {
-      width: 8px;
-      height: 8px;
+      width: var(--size-2);
+      height: var(--size-2);
       padding: 0;
-      border: 1px solid var(--neutral-600, #666);
+      border: var(--border-size-1) solid var(--neutral-600, #666);
       background: transparent;
       cursor: pointer;
-      transition: all 0.15s;
+      transition: all var(--duration-quick-2);
     }
 
     .carousel__dot:hover {
@@ -134,7 +134,7 @@ export class ThxCarousel extends LitElement {
 
     .carousel--crt .carousel__arrow:hover {
       background: rgba(166, 200, 225, 0.2);
-      box-shadow: 0 0 8px rgba(166, 200, 225, 0.4);
+      box-shadow: 0 0 var(--size-2) rgba(166, 200, 225, 0.4);
     }
 
     .carousel--crt .carousel__dot {
@@ -147,22 +147,22 @@ export class ThxCarousel extends LitElement {
 
     .carousel--crt .carousel__dot--active {
       background: var(--atmos-primary, #a6c8e1);
-      box-shadow: 0 0 6px rgba(166, 200, 225, 0.6);
+      box-shadow: 0 0 var(--size-1) rgba(166, 200, 225, 0.6);
     }
 
     /* Counter */
     .carousel__counter {
       position: absolute;
-      bottom: 16px;
-      right: 16px;
+      bottom: var(--size-3);
+      right: var(--size-3);
       font-family: var(--font-mono, 'Courier New', Courier, monospace);
-      font-size: 0.625rem;
+      font-size: var(--font-size-0);
       text-transform: uppercase;
-      letter-spacing: 0.1em;
+      letter-spacing: var(--font-letterspacing-4);
       color: var(--neutral-600, #666);
       background: var(--neutral-100, #fafafa);
-      padding: 4px 8px;
-      border: 1px solid rgba(0, 0, 0, 0.1);
+      padding: var(--size-1) var(--size-2);
+      border: var(--border-size-1) solid rgba(0, 0, 0, 0.1);
     }
 
     .carousel--crt .carousel__counter {

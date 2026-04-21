@@ -49,7 +49,7 @@ export class ThxChartGauge extends LitElement {
       stroke: var(--atmos-primary, #a6c8e1);
       stroke-linecap: round;
       filter: drop-shadow(0 0 3px rgba(166, 200, 225, 0.5));
-      transition: stroke-dasharray 0.3s ease;
+      transition: stroke-dasharray var(--duration-moderate-2) ease;
     }
 
     .gauge-fill.warning {
@@ -73,7 +73,7 @@ export class ThxChartGauge extends LitElement {
       text-anchor: middle;
       dominant-baseline: middle;
       text-transform: uppercase;
-      letter-spacing: 0.1em;
+      letter-spacing: var(--font-letterspacing-4);
     }
 
     .tick {
@@ -83,7 +83,7 @@ export class ThxChartGauge extends LitElement {
 
     .tick-label {
       font-family: var(--font-mono, 'Courier New', Courier, monospace);
-      font-size: 6px;
+      font-size: 4px;
       fill: var(--atmos-secondary, #707e91);
       text-anchor: middle;
       dominant-baseline: middle;

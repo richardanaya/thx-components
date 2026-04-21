@@ -1,11 +1,11 @@
 // @ts-check
 
 /**
- * @fileoverview THX 1138 styled line chart component (Tektronix oscilloscope style)
+ * @fileoverview THX 1138 styled line chart component — Canvas-based oscilloscope
  * @module thx-chart-line
  */
 
-import { LitElement, html, svg, css } from 'lit';
+import { LitElement, html, css } from 'lit';
 
 /**
  * @typedef {Object} LineSeries
@@ -25,7 +25,7 @@ import { LitElement, html, svg, css } from 'lit';
  */
 
 /**
- * THX 1138 styled line chart component
+ * THX 1138 styled canvas line chart component
  * @extends {LitElement}
  */
 export class ThxChartLine extends LitElement {
@@ -40,65 +40,19 @@ export class ThxChartLine extends LitElement {
       width: 100%;
     }
 
-    svg {
+    canvas {
       width: 100%;
       height: auto;
       display: block;
-    }
-
-    .grid-line {
-      stroke: rgba(166, 200, 225, 0.15);
-      stroke-width: 1;
-    }
-
-    .axis {
-      stroke: var(--atmos-secondary, #707e91);
-      stroke-width: 2;
-    }
-
-    .axis-label {
-      font-family: var(--font-mono, 'Courier New', Courier, monospace);
-      font-size: 9px;
-      fill: var(--atmos-secondary, #707e91);
-      text-transform: uppercase;
-    }
-
-    .legend-text {
-      font-family: var(--font-mono, 'Courier New', Courier, monospace);
-      font-size: 8px;
-      fill: var(--atmos-secondary, #707e91);
-      text-transform: uppercase;
-    }
-
-    .series-line {
-      fill: none;
-      stroke-width: 2;
-      filter: drop-shadow(0 0 2px currentColor);
-    }
-
-    .data-point {
-      stroke-width: 2;
-    }
-
-    .data-point.outlined {
-      fill: #0a0a0a;
-    }
-
-    .diamond {
-      stroke-width: 0;
+      image-rendering: pixelated;
     }
   `;
 
-  /**
-   * @returns {import('lit').PropertyDeclarations}
-   */
-  static get properties() {
-    return {
-      data: { type: Object },
-      width: { type: Number },
-      height: { type: Number },
-    };
-  }
+  static properties = {
+    data: { type: Object },
+    width: { type: Number },
+    height: { type: Number },
+  };
 
   constructor() {
     super();
@@ -111,11 +65,18 @@ export class ThxChartLine extends LitElement {
     });
     this.width = 440;
     this.height = 180;
+
+    /** @type {HTMLCanvasElement|null} */
+    this._canvas = null;
+    /** @type {CanvasRenderingContext2D|null} */
+    this._ctx = null;
+    /** @type {ResizeObserver|null} */
+    this._resizeObs = null;
+    /** @type {number} */
+    this._dpr = 1;
   }
 
-  // Plot-area geometry. The viewBox is 440x180 but we reserve a
-  // fixed gutter on the right (PLOT_RIGHT -> LEGEND area) so the
-  // legend never overlaps the rightmost data points.
+  // Plot-area geometry (logical px at width=440)
   static PLOT_LEFT = 50;
   static PLOT_RIGHT = 310;
   static PLOT_TOP = 20;
@@ -136,9 +97,6 @@ export class ThxChartLine extends LitElement {
   }
 
   /**
-   * Uniformly distribute points across the plot area. The previous
-   * hard-coded non-uniform positions pushed the last point out past
-   * where the legend now lives.
    * @param {number} index
    * @param {number} total
    * @returns {number}
@@ -150,164 +108,255 @@ export class ThxChartLine extends LitElement {
     return left + (index / (total - 1)) * (right - left);
   }
 
-  /**
-   * @param {LineSeries} series
-   * @returns {string}
-   */
-  _buildPolyline(series) {
-    const min = this.data.min ?? 0;
-    const max = this.data.max ?? 100;
-    const points = series.data.map((val, i) => {
-      const x = this._scaleX(i, series.data.length);
-      const y = this._scaleY(val, min, max);
-      return `${x},${y}`;
-    });
-    return points.join(' ');
+  connectedCallback() {
+    super.connectedCallback();
+    this._resizeObs = new ResizeObserver(() => this._redraw());
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    this._resizeObs?.disconnect();
+  }
+
+  firstUpdated() {
+    this._canvas = /** @type {HTMLCanvasElement} */ (this.renderRoot.querySelector('canvas'));
+    if (!this._canvas) return;
+    this._ctx = this._canvas.getContext('2d');
+    this._resizeObs?.observe(this._canvas.parentElement || this);
+    this._redraw();
   }
 
   /**
-   * @param {number} x
-   * @param {number} y
-   * @returns {string}
+   * @param {import('lit').PropertyValues} changed
    */
-  _buildDiamond(x, y) {
-    const size = 4;
-    return `${x},${y - size} ${x + size},${y} ${x},${y + size} ${x - size},${y}`;
+  updated(changed) {
+    if (changed.has('data')) this._redraw();
   }
 
   /**
-   * @returns {import('lit').TemplateResult}
+   * Resize + redraw the canvas to match DPR and parent width.
+   * @returns {void}
    */
-  render() {
+  _redraw() {
+    if (!this._canvas || !this._ctx) return;
+    const parent = this._canvas.parentElement;
+    if (!parent) return;
+
+    const rect = parent.getBoundingClientRect();
+    const cssW = rect.width;
+    const cssH = (cssW * this.height) / this.width;
+    this._dpr = Math.min(window.devicePixelRatio || 1, 2);
+
+    this._canvas.style.width = `${cssW}px`;
+    this._canvas.style.height = `${cssH}px`;
+    this._canvas.width = Math.round(cssW * this._dpr);
+    this._canvas.height = Math.round(cssH * this._dpr);
+
+    this._ctx.clearRect(0, 0, this._canvas.width, this._canvas.height);
+    this._ctx.save();
+    this._ctx.scale(this._dpr * (cssW / this.width), this._dpr * (cssH / this.height));
+    this._draw();
+    this._ctx.restore();
+  }
+
+  /**
+   * Draw the entire chart at logical resolution (440×180).
+   * @returns {void}
+   */
+  _draw() {
+    const ctx = /** @type {CanvasRenderingContext2D} */ (this._ctx);
     const data = this.data;
     const min = data.min ?? 0;
     const max = data.max ?? 100;
     const labels = data.labels || [];
     const series = data.series || [];
 
+    this._drawGrid(ctx);
+    this._drawAxes(ctx, min, max, labels);
+    series.forEach(s => this._drawSeries(ctx, s, min, max));
+    this._drawLegend(ctx, series);
+  }
+
+  /**
+   * @param {CanvasRenderingContext2D} ctx
+   * @returns {void}
+   */
+  _drawGrid(ctx) {
+    ctx.strokeStyle = 'rgba(166, 200, 225, 0.15)';
+    ctx.lineWidth = 1;
+
+    // Horizontal grid lines
+    [30, 60, 90, 120, 150].forEach(y => {
+      ctx.beginPath();
+      ctx.moveTo(ThxChartLine.PLOT_LEFT, y);
+      ctx.lineTo(ThxChartLine.PLOT_RIGHT, y);
+      ctx.stroke();
+    });
+
+    // Vertical grid lines (skip first and last)
+    const labels = this.data.labels || [];
+    if (labels.length > 2) {
+      labels.forEach((_, i) => {
+        if (i === 0 || i === labels.length - 1) return;
+        const x = this._scaleX(i, labels.length);
+        ctx.beginPath();
+        ctx.moveTo(x, ThxChartLine.PLOT_TOP);
+        ctx.lineTo(x, ThxChartLine.PLOT_BOTTOM);
+        ctx.stroke();
+      });
+    }
+  }
+
+  /**
+   * @param {CanvasRenderingContext2D} ctx
+   * @param {number} min
+   * @param {number} max
+   * @param {string[]} labels
+   * @returns {void}
+   */
+  _drawAxes(ctx, min, max, labels) {
+    ctx.strokeStyle = '#707e91';
+    ctx.lineWidth = 2;
+
+    // Y-axis
+    ctx.beginPath();
+    ctx.moveTo(ThxChartLine.PLOT_LEFT, ThxChartLine.PLOT_TOP);
+    ctx.lineTo(ThxChartLine.PLOT_LEFT, ThxChartLine.PLOT_BOTTOM);
+    ctx.stroke();
+
+    // X-axis
+    ctx.beginPath();
+    ctx.moveTo(ThxChartLine.PLOT_LEFT, ThxChartLine.PLOT_BOTTOM);
+    ctx.lineTo(ThxChartLine.PLOT_RIGHT, ThxChartLine.PLOT_BOTTOM);
+    ctx.stroke();
+
+    // Y-axis labels
+    ctx.fillStyle = '#707e91';
+    ctx.font = "9px 'Courier New', monospace";
+    ctx.textAlign = 'right';
+    ctx.textBaseline = 'middle';
+
+    const steps = [
+      { y: 25, val: max },
+      { y: 50, val: Math.round(max * 0.8) },
+      { y: 75, val: Math.round(max * 0.6) },
+      { y: 100, val: Math.round(max * 0.4) },
+      { y: 125, val: Math.round(max * 0.2) },
+      { y: 165, val: min },
+    ];
+    steps.forEach(({ y, val }) => {
+      ctx.fillText(String(val), 40, y);
+    });
+
+    // X-axis labels
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'top';
+    labels.forEach((label, i) => {
+      const x = this._scaleX(i, labels.length);
+      ctx.fillText(label, x, ThxChartLine.PLOT_BOTTOM + 8);
+    });
+  }
+
+  /**
+   * @param {CanvasRenderingContext2D} ctx
+   * @param {LineSeries} s
+   * @param {number} min
+   * @param {number} max
+   * @returns {void}
+   */
+  _drawSeries(ctx, s, min, max) {
+    ctx.strokeStyle = s.color;
+    ctx.lineWidth = 2;
+
+    if (s.dasharray && s.dasharray !== 'none') {
+      const parts = s.dasharray.split(/[,\s]+/).map(Number);
+      ctx.setLineDash(parts);
+    } else {
+      ctx.setLineDash([]);
+    }
+
+    // Shadow/glow
+    ctx.shadowColor = s.color;
+    ctx.shadowBlur = 4;
+
+    // Draw polyline
+    ctx.beginPath();
+    s.data.forEach((val, i) => {
+      const x = this._scaleX(i, s.data.length);
+      const y = this._scaleY(val, min, max);
+      if (i === 0) ctx.moveTo(x, y);
+      else ctx.lineTo(x, y);
+    });
+    ctx.stroke();
+
+    // Reset shadow
+    ctx.shadowColor = 'transparent';
+    ctx.shadowBlur = 0;
+    ctx.setLineDash([]);
+
+    // Data points
+    s.data.forEach((val, i) => {
+      const x = this._scaleX(i, s.data.length);
+      const y = this._scaleY(val, min, max);
+
+      if (s.outlined) {
+        ctx.strokeStyle = s.color;
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.arc(x, y, 3, 0, Math.PI * 2);
+        ctx.stroke();
+      } else {
+        ctx.fillStyle = s.color;
+        ctx.beginPath();
+        ctx.arc(x, y, 4, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    });
+  }
+
+  /**
+   * @param {CanvasRenderingContext2D} ctx
+   * @param {LineSeries[]} series
+   * @returns {void}
+   */
+  _drawLegend(ctx, series) {
+    if (series.length === 0) return;
+
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'middle';
+
+    series.forEach((s, i) => {
+      const y = ThxChartLine.LEGEND_Y + i * 14;
+
+      // Legend line sample
+      ctx.strokeStyle = s.color;
+      ctx.lineWidth = 2;
+      if (s.dasharray && s.dasharray !== 'none') {
+        const parts = s.dasharray.split(/[,\s]+/).map(Number);
+        ctx.setLineDash(parts);
+      } else {
+        ctx.setLineDash([]);
+      }
+      ctx.beginPath();
+      ctx.moveTo(ThxChartLine.LEGEND_X, y);
+      ctx.lineTo(ThxChartLine.LEGEND_X + 16, y);
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      // Label text
+      ctx.fillStyle = '#707e91';
+      ctx.font = "9px 'Courier New', monospace";
+      ctx.fillText(s.name, ThxChartLine.LEGEND_X + 20, y + 1);
+    });
+  }
+
+  /**
+   * @returns {import('lit').TemplateResult}
+   */
+  render() {
     return html`
       <div class="chart-container">
-        <svg viewBox="0 0 ${this.width} ${this.height}" preserveAspectRatio="xMidYMid meet">
-          <!-- Grid lines (bounded to the plot area, never cross into the legend gutter) -->
-          <g class="grid">
-            ${[30, 60, 90, 120, 150].map(
-              y => svg`
-                <line
-                  x1="${ThxChartLine.PLOT_LEFT}"
-                  y1="${y}"
-                  x2="${ThxChartLine.PLOT_RIGHT}"
-                  y2="${y}"
-                  class="grid-line"
-                />
-              `
-            )}
-            ${(labels.length > 1 ? labels : []).map((_, i) => {
-              if (i === 0 || i === labels.length - 1) return '';
-              const x = this._scaleX(i, labels.length);
-              return svg`
-                <line
-                  x1="${x}"
-                  y1="${ThxChartLine.PLOT_TOP}"
-                  x2="${x}"
-                  y2="${ThxChartLine.PLOT_BOTTOM}"
-                  class="grid-line"
-                />
-              `;
-            })}
-          </g>
-
-          <!-- Axes -->
-          <line
-            x1="${ThxChartLine.PLOT_LEFT}"
-            y1="${ThxChartLine.PLOT_TOP}"
-            x2="${ThxChartLine.PLOT_LEFT}"
-            y2="${ThxChartLine.PLOT_BOTTOM}"
-            class="axis"
-          />
-          <line
-            x1="${ThxChartLine.PLOT_LEFT}"
-            y1="${ThxChartLine.PLOT_BOTTOM}"
-            x2="${ThxChartLine.PLOT_RIGHT}"
-            y2="${ThxChartLine.PLOT_BOTTOM}"
-            class="axis"
-          />
-
-          <!-- Y-axis labels -->
-          <text x="40" y="25" text-anchor="end" class="axis-label">${max}</text>
-          <text x="40" y="50" text-anchor="end" class="axis-label">${Math.round(max * 0.8)}</text>
-          <text x="40" y="75" text-anchor="end" class="axis-label">${Math.round(max * 0.6)}</text>
-          <text x="40" y="100" text-anchor="end" class="axis-label">${Math.round(max * 0.4)}</text>
-          <text x="40" y="125" text-anchor="end" class="axis-label">${Math.round(max * 0.2)}</text>
-          <text x="40" y="165" text-anchor="end" class="axis-label">${min}</text>
-
-          <!-- X-axis labels -->
-          ${labels.map(
-            (label, i) => svg`
-              <text
-                x="${this._scaleX(i, labels.length)}"
-                y="175"
-                text-anchor="middle"
-                class="axis-label"
-              >
-                ${label}
-              </text>
-            `
-          )}
-
-          <!-- Series -->
-          ${series.map(
-            s => svg`
-              <polyline
-                fill="none"
-                stroke="${s.color}"
-                stroke-width="2"
-                stroke-dasharray="${s.dasharray || 'none'}"
-                points="${this._buildPolyline(s)}"
-                class="series-line"
-              />
-
-              ${s.data.map((val, i) => {
-                const x = this._scaleX(i, s.data.length);
-                const y = this._scaleY(val, min, max);
-                if (s.outlined) {
-                  return svg`
-                    <circle
-                      cx="${x}"
-                      cy="${y}"
-                      r="3"
-                      fill="none"
-                      stroke="${s.color}"
-                      stroke-width="2"
-                    />
-                  `;
-                }
-                return svg` <circle cx="${x}" cy="${y}" r="4" fill="${s.color}" /> `;
-              })}
-            `
-          )}
-
-          <!-- Legend (lives in the reserved right-hand gutter) -->
-          ${series.length > 0
-            ? svg`
-                <g transform="translate(${ThxChartLine.LEGEND_X}, ${ThxChartLine.LEGEND_Y})">
-                  ${series.map(
-                    (s, i) => svg`
-                      <line
-                        x1="0"
-                        y1="${i * 14}"
-                        x2="16"
-                        y2="${i * 14}"
-                        stroke="${s.color}"
-                        stroke-width="2"
-                        stroke-dasharray="${s.dasharray || 'none'}"
-                      />
-                      <text x="20" y="${i * 14 + 4}" class="legend-text">${s.name}</text>
-                    `
-                  )}
-                </g>
-              `
-            : ''}
-        </svg>
+        <canvas></canvas>
       </div>
     `;
   }

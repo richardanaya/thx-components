@@ -33,12 +33,12 @@ export class ThxProgressBar extends LitElement {
     .progress {
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: var(--size-2);
     }
 
     .progress__track {
       width: 100%;
-      height: 8px;
+      height: var(--size-2);
       background: var(--neutral-200, #e0e0e0);
       position: relative;
       overflow: hidden;
@@ -47,7 +47,7 @@ export class ThxProgressBar extends LitElement {
     .progress__fill {
       height: 100%;
       background: var(--neutral-600, #666);
-      transition: width 0.3s ease;
+      transition: width var(--duration-moderate-2) ease;
       position: relative;
     }
 
@@ -60,19 +60,19 @@ export class ThxProgressBar extends LitElement {
         transparent,
         transparent 2px,
         rgba(255, 255, 255, 0.2) 2px,
-        rgba(255, 255, 255, 0.2) 4px
+        rgba(255, 255, 255, 0.2) var(--size-1)
       );
     }
 
     /* Variants */
     .progress--crt .progress__track {
       background: rgba(166, 200, 225, 0.2);
-      box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.3);
+      box-shadow: inset 0 0 var(--size-1) rgba(0, 0, 0, 0.3);
     }
 
     .progress--crt .progress__fill {
       background: var(--atmos-primary, #a6c8e1);
-      box-shadow: 0 0 10px rgba(166, 200, 225, 0.6);
+      box-shadow: 0 0 var(--size-2) rgba(166, 200, 225, 0.6);
     }
 
     .progress--warning .progress__fill {
@@ -109,9 +109,9 @@ export class ThxProgressBar extends LitElement {
 
     .progress__label {
       font-family: var(--font-mono, 'Courier New', Courier, monospace);
-      font-size: 0.625rem;
+      font-size: var(--font-size-0);
       text-transform: uppercase;
-      letter-spacing: 0.1em;
+      letter-spacing: var(--font-letterspacing-4);
       color: var(--neutral-600, #666);
     }
 
@@ -121,16 +121,16 @@ export class ThxProgressBar extends LitElement {
 
     .progress__value {
       font-family: var(--font-mono, 'Courier New', Courier, monospace);
-      font-size: 0.625rem;
-      font-weight: 600;
+      font-size: var(--font-size-0);
+      font-weight: var(--font-weight-6);
       text-transform: uppercase;
-      letter-spacing: 0.1em;
+      letter-spacing: var(--font-letterspacing-4);
       color: var(--neutral-800, #333);
     }
 
     .progress--crt .progress__value {
       color: var(--atmos-primary, #a6c8e1);
-      text-shadow: 0 0 4px rgba(166, 200, 225, 0.5);
+      text-shadow: 0 0 var(--size-1) rgba(166, 200, 225, 0.5);
     }
 
     /* CRT scanline effect */
@@ -143,7 +143,7 @@ export class ThxProgressBar extends LitElement {
         transparent,
         transparent 2px,
         rgba(166, 200, 225, 0.05) 2px,
-        rgba(166, 200, 225, 0.05) 4px
+        rgba(166, 200, 225, 0.05) var(--size-1)
       );
       pointer-events: none;
       z-index: 2;

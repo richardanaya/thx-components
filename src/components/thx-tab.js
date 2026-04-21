@@ -24,18 +24,18 @@ export class ThxTab extends LitElement {
     .tab {
       display: flex;
       align-items: center;
-      gap: 8px;
-      padding: 12px 20px;
+      gap: var(--size-2);
+      padding: calc(var(--size-2) + var(--size-1)) var(--size-4);
       font-family: var(--font-mono, 'Courier New', Courier, monospace);
-      font-size: 0.6875rem;
+      font-size: var(--font-size-0);
       text-transform: uppercase;
-      letter-spacing: 0.1em;
+      letter-spacing: var(--font-letterspacing-4);
       color: var(--neutral-600, #666);
       background: transparent;
       border: none;
-      border-bottom: 2px solid transparent;
+      border-bottom: var(--border-size-2) solid transparent;
       cursor: pointer;
-      transition: all 0.15s;
+      transition: all var(--duration-quick-2);
       white-space: nowrap;
       position: relative;
     }
@@ -60,7 +60,7 @@ export class ThxTab extends LitElement {
       right: 0;
       height: 2px;
       background: var(--atmos-primary, #a6c8e1);
-      box-shadow: 0 0 8px rgba(166, 200, 225, 0.6);
+      box-shadow: 0 0 var(--size-2) rgba(166, 200, 225, 0.6);
     }
 
     .tab.disabled,
@@ -83,7 +83,7 @@ export class ThxTab extends LitElement {
     :host([variant='crt']) .tab.active,
     :host([variant='crt']):host([active]) .tab {
       color: var(--atmos-tertiary, #deffff);
-      text-shadow: 0 0 8px rgba(166, 200, 225, 0.8);
+      text-shadow: 0 0 var(--size-2) rgba(166, 200, 225, 0.8);
     }
 
     /* Indicator badge */
@@ -91,10 +91,10 @@ export class ThxTab extends LitElement {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      min-width: 18px;
-      height: 18px;
-      padding: 0 4px;
-      font-size: 0.5625rem;
+      min-width: var(--size-3);
+      height: var(--size-3);
+      padding: 0 var(--size-1);
+      font-size: var(--font-size-00);
       background: var(--atmos-secondary, #707e91);
       color: var(--neutral-100, #fafafa);
     }
@@ -114,10 +114,10 @@ export class ThxTab extends LitElement {
       display: flex;
       align-items: center;
       justify-content: center;
-      width: 14px;
-      height: 14px;
-      margin-left: 4px;
-      font-size: 0.625rem;
+      width: var(--size-3);
+      height: var(--size-3);
+      margin-left: var(--size-1);
+      font-size: var(--font-size-0);
       color: var(--neutral-600, #666);
       background: transparent;
       border: none;
@@ -131,8 +131,8 @@ export class ThxTab extends LitElement {
 
     /* Icon slot */
     ::slotted([slot='icon']) {
-      width: 14px;
-      height: 14px;
+      width: var(--size-3);
+      height: var(--size-3);
       display: flex;
       align-items: center;
       justify-content: center;

@@ -16,26 +16,26 @@ export class ThxButtonGroup extends LitElement {
   static styles = css`
     :host {
       display: inline-flex;
-      border: 1px solid var(--atmos-secondary, #707e91);
+      border: var(--border-size-1) solid var(--atmos-secondary, #707e91);
       background: var(--neutral-100, #fafafa);
-      box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.06);
+      box-shadow: var(--inner-shadow-0);
     }
 
     ::slotted(button) {
       margin: 0 !important;
       border-radius: 0 !important;
       border: none !important;
-      border-right: 1px solid var(--atmos-secondary, #707e91) !important;
+      border-right: var(--border-size-1) solid var(--atmos-secondary, #707e91) !important;
       background: transparent !important;
       color: var(--atmos-secondary, #707e91) !important;
       font-family: var(--font-mono, 'Courier New', Courier, monospace) !important;
-      font-size: 0.6875rem !important;
+      font-size: var(--font-size-0) !important;
       text-transform: uppercase !important;
-      letter-spacing: 0.12em !important;
-      padding: 8px 16px !important;
-      height: 36px !important;
+      letter-spacing: var(--font-letterspacing-4) !important;
+      padding: var(--size-2) var(--size-3) !important;
+      height: calc(var(--size-7) + var(--size-1)) !important;
       cursor: pointer !important;
-      transition: all 0.15s !important;
+      transition: all var(--duration-quick-2) !important;
     }
 
     ::slotted(thx-button) {
@@ -60,7 +60,7 @@ export class ThxButtonGroup extends LitElement {
     ::slotted(button.active) {
       background: var(--atmos-primary, #a6c8e1) !important;
       color: var(--neutral-800, #333) !important;
-      box-shadow: inset 0 0 10px rgba(166, 200, 225, 0.3) !important;
+      box-shadow: inset 0 0 var(--size-2) rgba(166, 200, 225, 0.3) !important;
     }
 
     ::slotted(button:disabled) {
@@ -72,15 +72,15 @@ export class ThxButtonGroup extends LitElement {
     /* Size variants */
     :host([size='sm']) ::slotted(button),
     :host([size='sm']) ::slotted(thx-button) {
-      padding: 6px 12px !important;
-      font-size: 0.5625rem !important;
-      height: 28px !important;
+      padding: var(--size-1) calc(var(--size-2) + var(--size-1)) !important;
+      font-size: var(--font-size-00) !important;
+      height: var(--size-6) !important;
     }
 
     :host([size='lg']) ::slotted(button),
     :host([size='lg']) ::slotted(thx-button) {
-      padding: 12px 24px !important;
-      font-size: 0.75rem !important;
+      padding: calc(var(--size-2) + var(--size-1)) var(--size-5) !important;
+      font-size: var(--font-size-0) !important;
       height: 44px !important;
     }
   `;

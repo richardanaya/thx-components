@@ -32,13 +32,13 @@ export class ThxButton extends LitElement {
       justify-content: center;
       font-family: var(--font-mono, 'Courier New', Courier, monospace);
       text-transform: uppercase;
-      letter-spacing: 0.12em;
+      letter-spacing: var(--font-letterspacing-4);
       border: none;
       cursor: pointer;
-      transition: all 0.15s;
+      transition: all var(--duration-quick-2);
       position: relative;
       overflow: hidden;
-      font-weight: 600;
+      font-weight: var(--font-weight-6);
     }
 
     button:disabled {
@@ -48,21 +48,21 @@ export class ThxButton extends LitElement {
 
     /* Sizes */
     .size-sm {
-      padding: 6px 12px;
-      font-size: 0.5625rem;
-      height: 28px;
+      padding: var(--size-1) calc(var(--size-2) + var(--size-1));
+      font-size: var(--font-size-00);
+      height: var(--size-6);
     }
 
     .size-md {
-      padding: 10px 20px;
-      font-size: 0.6875rem;
-      height: 40px;
+      padding: var(--size-2) var(--size-4);
+      font-size: var(--font-size-0);
+      height: calc(var(--size-7) + var(--size-2));
     }
 
     .size-lg {
-      padding: 14px 28px;
-      font-size: 0.75rem;
-      height: 48px;
+      padding: var(--size-3) var(--size-6);
+      font-size: var(--font-size-0);
+      height: var(--size-8);
     }
 
     /* Grouped - for use in button groups */
@@ -73,18 +73,18 @@ export class ThxButton extends LitElement {
     :host([grouped]) button {
       border-radius: 0;
       width: 100%;
-      height: 36px;
-      padding: 8px 16px;
+      height: calc(var(--size-7) + var(--size-1));
+      padding: var(--size-2) var(--size-3);
     }
 
     :host([grouped]) .size-sm {
-      height: 28px;
-      padding: 6px 12px;
+      height: var(--size-6);
+      padding: var(--size-1) calc(var(--size-2) + var(--size-1));
     }
 
     :host([grouped]) .size-lg {
       height: 44px;
-      padding: 12px 24px;
+      padding: calc(var(--size-2) + var(--size-1)) var(--size-5);
     }
 
     /* Primary */
@@ -133,7 +133,7 @@ export class ThxButton extends LitElement {
     .variant-outline-primary {
       background: transparent;
       color: var(--atmos-primary, #a6c8e1);
-      border: 1px solid var(--atmos-primary, #a6c8e1);
+      border: var(--border-size-1) solid var(--atmos-primary, #a6c8e1);
     }
 
     .variant-outline-primary:hover:not(:disabled) {
@@ -144,7 +144,7 @@ export class ThxButton extends LitElement {
     .variant-outline-secondary {
       background: transparent;
       color: var(--atmos-secondary, #707e91);
-      border: 1px solid var(--atmos-secondary, #707e91);
+      border: var(--border-size-1) solid var(--atmos-secondary, #707e91);
     }
 
     .variant-outline-secondary:hover:not(:disabled) {
@@ -155,7 +155,7 @@ export class ThxButton extends LitElement {
     .variant-outline-warning {
       background: transparent;
       color: var(--accent-warning, #d4aa00);
-      border: 1px solid var(--accent-warning, #d4aa00);
+      border: var(--border-size-1) solid var(--accent-warning, #d4aa00);
     }
 
     .variant-outline-warning:hover:not(:disabled) {
@@ -167,7 +167,7 @@ export class ThxButton extends LitElement {
     .variant-ghost {
       background: transparent;
       color: var(--neutral-600, #666);
-      border: 1px solid transparent;
+      border: var(--border-size-1) solid transparent;
     }
 
     .variant-ghost:hover:not(:disabled) {
@@ -182,12 +182,12 @@ export class ThxButton extends LitElement {
 
     .loading::after {
       content: '';
-      width: 12px;
-      height: 12px;
-      border: 2px solid transparent;
+      width: calc(var(--size-2) + var(--size-1));
+      height: calc(var(--size-2) + var(--size-1));
+      border: var(--border-size-2) solid transparent;
       border-top-color: currentColor;
-      border-radius: 50%;
-      margin-left: 8px;
+      border-radius: var(--radius-round);
+      margin-left: var(--size-2);
       animation: spin 1s linear infinite;
     }
 

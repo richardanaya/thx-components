@@ -21,15 +21,15 @@ export class ThxTabGroup extends LitElement {
     :host {
       display: block;
       background: var(--neutral-100, #fafafa);
-      border: 1px solid rgba(0, 0, 0, 0.08);
-      box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.06);
+      border: var(--border-size-1) solid rgba(0, 0, 0, 0.08);
+      box-shadow: var(--inner-shadow-0);
     }
 
     .tab-nav {
       display: flex;
-      border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+      border-bottom: var(--border-size-1) solid rgba(0, 0, 0, 0.08);
       background: rgba(0, 0, 0, 0.02);
-      padding: 0 16px;
+      padding: 0 var(--size-3);
       gap: 0;
       overflow-x: auto;
     }
@@ -53,9 +53,9 @@ export class ThxTabGroup extends LitElement {
     /* CRT variant */
     :host([variant='crt']) {
       background: var(--crt-bg, #111);
-      border: 12px solid var(--crt-border, #2a2a2a);
-      border-radius: 4px;
-      box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.5);
+      border: calc(var(--size-2) + var(--size-1)) solid var(--crt-border, #2a2a2a);
+      border-radius: var(--size-1);
+      box-shadow: inset 0 0 var(--size-4) rgba(0, 0, 0, 0.5);
     }
 
     :host([variant='crt']) .tab-nav {
@@ -72,10 +72,10 @@ export class ThxTabGroup extends LitElement {
         transparent,
         transparent 2px,
         rgba(166, 200, 225, 0.04) 2px,
-        rgba(166, 200, 225, 0.04) 4px
+        rgba(166, 200, 225, 0.04) var(--size-1)
       );
       pointer-events: none;
-      z-index: 10;
+      z-index: var(--layer-2);
     }
 
     /* Compact variant */
@@ -87,7 +87,7 @@ export class ThxTabGroup extends LitElement {
 
     :host([variant='compact']) .tab-nav {
       background: transparent;
-      border-bottom: 2px solid rgba(0, 0, 0, 0.06);
+      border-bottom: var(--border-size-2) solid rgba(0, 0, 0, 0.06);
       padding: 0;
     }
 
@@ -99,7 +99,7 @@ export class ThxTabGroup extends LitElement {
 
     :host([placement='bottom']) .tab-nav {
       border-bottom: none;
-      border-top: 1px solid rgba(0, 0, 0, 0.08);
+      border-top: var(--border-size-1) solid rgba(0, 0, 0, 0.08);
     }
 
     :host([placement='start']) {
@@ -110,8 +110,8 @@ export class ThxTabGroup extends LitElement {
     :host([placement='start']) .tab-nav {
       flex-direction: column;
       border-bottom: none;
-      border-right: 1px solid rgba(0, 0, 0, 0.08);
-      padding: 16px 0;
+      border-right: var(--border-size-1) solid rgba(0, 0, 0, 0.08);
+      padding: var(--size-3) 0;
     }
 
     :host([placement='end']) {
@@ -122,8 +122,8 @@ export class ThxTabGroup extends LitElement {
     :host([placement='end']) .tab-nav {
       flex-direction: column;
       border-bottom: none;
-      border-left: 1px solid rgba(0, 0, 0, 0.08);
-      padding: 16px 0;
+      border-left: var(--border-size-1) solid rgba(0, 0, 0, 0.08);
+      padding: var(--size-3) 0;
     }
   `;
 

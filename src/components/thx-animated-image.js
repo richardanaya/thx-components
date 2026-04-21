@@ -43,8 +43,8 @@ export class ThxAnimatedImage extends LitElement {
       object-fit: cover;
       display: block;
       transition:
-        transform 0.3s ease,
-        filter 0.3s ease;
+        transform var(--duration-moderate-2) ease,
+        filter var(--duration-moderate-2) ease;
     }
 
     /* Aspect ratios */
@@ -68,9 +68,9 @@ export class ThxAnimatedImage extends LitElement {
     /* CRT variant */
     .image-container--crt {
       background: var(--crt-bg, #111);
-      border: 8px solid var(--crt-border, #2a2a2a);
-      border-radius: 4px;
-      box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.5);
+      border: var(--size-2) solid var(--crt-border, #2a2a2a);
+      border-radius: var(--size-1);
+      box-shadow: inset 0 0 var(--size-4) rgba(0, 0, 0, 0.5);
     }
 
     .image-container--crt img {
@@ -80,9 +80,9 @@ export class ThxAnimatedImage extends LitElement {
     /* Scope/Oscilloscope variant */
     .image-container--scope {
       background: var(--crt-bg-dark, #0a0a0a);
-      border: 12px solid var(--crt-border, #2a2a2a);
-      border-radius: 4px;
-      box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.8);
+      border: calc(var(--size-2) + var(--size-1)) solid var(--crt-border, #2a2a2a);
+      border-radius: var(--size-1);
+      box-shadow: inset 0 0 calc(var(--size-7) + var(--size-2)) rgba(0, 0, 0, 0.8);
     }
 
     .image-container--scope::before {
@@ -92,9 +92,9 @@ export class ThxAnimatedImage extends LitElement {
       background-image:
         linear-gradient(rgba(166, 200, 225, 0.1) 1px, transparent 1px),
         linear-gradient(90deg, rgba(166, 200, 225, 0.1) 1px, transparent 1px);
-      background-size: 20px 20px;
+      background-size: var(--size-4) var(--size-4);
       pointer-events: none;
-      z-index: 5;
+      z-index: var(--layer-1);
     }
 
     .image-container--scope img {
@@ -112,11 +112,11 @@ export class ThxAnimatedImage extends LitElement {
         transparent,
         transparent 2px,
         rgba(166, 200, 225, 0.04) 2px,
-        rgba(166, 200, 225, 0.04) 4px
+        rgba(166, 200, 225, 0.04) var(--size-1)
       );
       pointer-events: none;
-      z-index: 10;
-      animation: scanlines 8s linear infinite;
+      z-index: var(--layer-2);
+      animation: var(--duration-pause) linear infinite;
     }
 
     @keyframes scanlines {
@@ -135,20 +135,20 @@ export class ThxAnimatedImage extends LitElement {
       inset: 0;
       background: radial-gradient(ellipse at center, transparent 50%, rgba(0, 0, 0, 0.4) 100%);
       pointer-events: none;
-      z-index: 11;
+      z-index: calc(var(--layer-2) + 1);
     }
 
     /* CRT label */
     .image-label {
       position: absolute;
-      top: 4px;
-      right: 8px;
+      top: var(--size-1);
+      right: var(--size-2);
       font-family: var(--font-mono, 'Courier New', Courier, monospace);
-      font-size: 0.625rem;
+      font-size: var(--font-size-0);
       color: #666;
       text-transform: uppercase;
-      letter-spacing: 0.1em;
-      z-index: 15;
+      letter-spacing: var(--font-letterspacing-4);
+      z-index: calc(var(--layer-2) + 5);
       pointer-events: none;
     }
 
@@ -190,7 +190,7 @@ export class ThxAnimatedImage extends LitElement {
     .image-container--crt.image-container--interactive:hover,
     .image-container--scope.image-container--interactive:hover {
       box-shadow:
-        inset 0 0 20px rgba(0, 0, 0, 0.5),
+        inset 0 0 var(--size-4) rgba(0, 0, 0, 0.5),
         0 0 15px rgba(166, 200, 225, 0.3);
     }
   `;

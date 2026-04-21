@@ -95,32 +95,32 @@ export class ThxFormatNumber extends LitElement {
     .number-container {
       display: inline-flex;
       align-items: baseline;
-      gap: 2px;
-      font-size: 0.8125rem;
-      letter-spacing: 0.05em;
+      gap: var(--size-1);
+      font-size: var(--font-size-0);
+      letter-spacing: var(--font-letterspacing-2);
       text-transform: uppercase;
     }
 
     .number-value {
       color: var(--neutral-800, #333);
-      font-weight: 600;
+      font-weight: var(--font-weight-6);
     }
 
     .number-unit {
       color: var(--neutral-600, #666);
-      font-size: 0.6875rem;
+      font-size: var(--font-size-0);
     }
 
     /* CRT display variant */
     :host([variant='crt']) .number-container {
       background: var(--crt-bg, #111);
-      padding: 8px 12px;
-      border: 2px solid var(--crt-border, #2a2a2a);
+      padding: var(--size-2) calc(var(--size-2) + var(--size-1));
+      border: var(--border-size-2) solid var(--crt-border, #2a2a2a);
     }
 
     :host([variant='crt']) .number-value {
       color: var(--atmos-primary, #a6c8e1);
-      text-shadow: 0 0 4px rgba(166, 200, 225, 0.4);
+      text-shadow: 0 0 var(--size-1) rgba(166, 200, 225, 0.4);
     }
 
     :host([variant='crt']) .number-unit {
@@ -129,14 +129,14 @@ export class ThxFormatNumber extends LitElement {
 
     /* Engineering notation uses larger text for suffix */
     :host([notation='engineering']) .number-unit {
-      font-size: 0.75rem;
-      font-weight: 600;
+      font-size: var(--font-size-0);
+      font-weight: var(--font-weight-6);
     }
 
     /* Error state */
     .number-error {
       color: var(--accent-error, #d44000);
-      font-size: 0.75rem;
+      font-size: var(--font-size-0);
     }
   `;
 

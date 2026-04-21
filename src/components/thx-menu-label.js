@@ -16,14 +16,14 @@ export class ThxMenuLabel extends LitElement {
   static styles = css`
     :host {
       display: block;
-      padding: 8px 16px;
-      margin-top: 8px;
+      padding: var(--size-2) var(--size-3);
+      margin-top: var(--size-2);
       font-family: var(--font-mono, 'Courier New', Courier, monospace);
-      font-size: 0.625rem;
+      font-size: var(--font-size-0);
       text-transform: uppercase;
-      letter-spacing: 0.15em;
+      letter-spacing: var(--font-letterspacing-5);
       color: var(--neutral-600, #666);
-      border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+      border-bottom: var(--border-size-1) solid rgba(0, 0, 0, 0.06);
     }
 
     :host::before {
@@ -47,8 +47,8 @@ export class ThxMenuLabel extends LitElement {
 
     /* Compact variant */
     :host([variant='compact']) {
-      padding: 8px 0;
-      margin-top: 4px;
+      padding: var(--size-2) 0;
+      margin-top: var(--size-1);
     }
   `;
 

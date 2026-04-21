@@ -1,0 +1,719 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>THX 1138 // NEWS MONITORING TERMINAL</title>
+    <link rel="stylesheet" href="./aesthetics.css" />
+    <script type="importmap">
+      {
+        "imports": {
+          "lit": "https://cdn.jsdelivr.net/npm/lit@3.1.2/+esm",
+          "lit/": "https://cdn.jsdelivr.net/npm/lit@3.1.2/"
+        }
+      }
+    </script>
+    <style>
+      body {
+        padding: 0;
+        background: var(--neutral-200);
+      }
+
+      .dashboard {
+        max-width: 1280px;
+        margin: 0 auto;
+        padding: var(--size-5);
+      }
+
+      .dashboard-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: var(--size-5);
+        padding-bottom: var(--size-3);
+        border-bottom: var(--border-size-1) solid rgba(0, 0, 0, 0.1);
+      }
+
+      .dashboard-header h1 {
+        margin: 0;
+        font-size: var(--font-size-4);
+        letter-spacing: var(--font-letterspacing-5);
+      }
+
+      .dashboard-header .meta {
+        font-family: var(--font-mono);
+        font-size: var(--font-size-0);
+        color: var(--neutral-600);
+        text-transform: uppercase;
+        letter-spacing: var(--font-letterspacing-4);
+      }
+
+      .grid {
+        display: grid;
+        gap: var(--size-1);
+        background: rgba(0, 0, 0, 0.1);
+        border: var(--border-size-1) solid rgba(0, 0, 0, 0.1);
+      }
+
+      .grid-4 {
+        grid-template-columns: repeat(4, 1fr);
+      }
+      .grid-3 {
+        grid-template-columns: repeat(3, 1fr);
+      }
+      .grid-2 {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .grid > * {
+        background: var(--neutral-100);
+      }
+
+      .panel {
+        padding: var(--size-5);
+      }
+
+      .panel-header {
+        font-family: var(--font-mono);
+        font-size: var(--font-size-0);
+        text-transform: uppercase;
+        letter-spacing: var(--font-letterspacing-5);
+        color: var(--neutral-600);
+        margin-bottom: var(--size-3);
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+      }
+
+      .kpi-value {
+        font-size: var(--font-size-6);
+        font-weight: var(--font-weight-3);
+        letter-spacing: var(--font-letterspacing-2);
+        color: var(--neutral-800);
+        margin: var(--size-2) 0;
+      }
+
+      .kpi-value.critical {
+        color: var(--accent-error);
+      }
+      .kpi-value.warning {
+        color: var(--accent-warning);
+      }
+
+      .kpi-label {
+        font-family: var(--font-mono);
+        font-size: var(--font-size-0);
+        text-transform: uppercase;
+        letter-spacing: var(--font-letterspacing-4);
+        color: var(--neutral-600);
+      }
+
+      .kpi-delta {
+        font-family: var(--font-mono);
+        font-size: var(--font-size-0);
+        margin-top: var(--size-2);
+      }
+
+      .kpi-delta.up {
+        color: var(--atmos-primary);
+      }
+      .kpi-delta.down {
+        color: var(--accent-error);
+      }
+
+      .alert-row {
+        display: flex;
+        align-items: flex-start;
+        gap: calc(var(--size-2) + var(--size-1));
+        padding: calc(var(--size-2) + var(--size-1)) 0;
+        border-bottom: var(--border-size-1) solid rgba(0, 0, 0, 0.06);
+      }
+      .alert-row:last-child {
+        border-bottom: none;
+      }
+
+      .alert-time {
+        font-family: var(--font-mono);
+        font-size: var(--font-size-0);
+        color: var(--neutral-600);
+        min-width: 70px;
+        white-space: nowrap;
+      }
+
+      .alert-source {
+        font-family: var(--font-mono);
+        font-size: var(--font-size-0);
+        text-transform: uppercase;
+        color: var(--neutral-600);
+        min-width: 90px;
+      }
+
+      .alert-msg {
+        font-size: var(--font-size-1);
+        color: var(--neutral-800);
+        flex: 1;
+        line-height: var(--font-lineheight-3);
+      }
+
+      .badge-row {
+        display: flex;
+        gap: var(--size-2);
+        flex-wrap: wrap;
+        margin-top: calc(var(--size-2) + var(--size-1));
+      }
+
+      .tab-content {
+        padding: var(--size-4) 0;
+      }
+
+      .controls-row {
+        display: flex;
+        gap: calc(var(--size-2) + var(--size-1));
+        flex-wrap: wrap;
+        align-items: center;
+        margin-top: var(--size-3);
+      }
+
+      .footer-bar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: var(--size-5);
+        padding-top: var(--size-3);
+        border-top: var(--border-size-1) solid rgba(0, 0, 0, 0.1);
+        font-family: var(--font-mono);
+        font-size: var(--font-size-0);
+        text-transform: uppercase;
+        letter-spacing: var(--font-letterspacing-4);
+        color: var(--neutral-600);
+      }
+
+      .news-card {
+        margin-bottom: var(--size-3);
+        padding-bottom: var(--size-3);
+        border-bottom: var(--border-size-1) solid rgba(0, 0, 0, 0.06);
+      }
+      .news-card:last-child {
+        margin-bottom: 0;
+        padding-bottom: 0;
+        border-bottom: none;
+      }
+
+      .news-headline {
+        font-size: 0.9375rem;
+        font-weight: var(--font-weight-5);
+        color: var(--neutral-800);
+        margin-bottom: var(--size-1);
+        line-height: 1.4;
+      }
+
+      .news-meta {
+        font-family: var(--font-mono);
+        font-size: var(--font-size-0);
+        color: var(--neutral-600);
+        text-transform: uppercase;
+        letter-spacing: var(--font-letterspacing-2);
+        margin-bottom: var(--size-2);
+      }
+
+      .news-excerpt {
+        font-size: var(--font-size-0);
+        color: var(--neutral-600);
+        line-height: var(--font-lineheight-3);
+      }
+
+      .region-tag {
+        display: inline-block;
+        font-family: var(--font-mono);
+        font-size: var(--font-size-0);
+        text-transform: uppercase;
+        letter-spacing: var(--font-letterspacing-4);
+        padding: var(--size-1) var(--size-2);
+        background: rgba(0, 0, 0, 0.04);
+        margin-right: var(--size-1);
+      }
+
+      @media (max-width: 900px) {
+        .grid-4 {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        .grid-3 {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+
+      @media (max-width: 600px) {
+        .grid-4,
+        .grid-3,
+        .grid-2 {
+          grid-template-columns: 1fr;
+        }
+        .dashboard-header {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: var(--size-2);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="dashboard">
+      <!-- Header -->
+      <div class="dashboard-header">
+        <div>
+          <div class="meta">// TERMINAL LDS-1138 // NEWS MONITORING // APRIL 20, 2026</div>
+          <h1>GLOBAL INCIDENT FEED</h1>
+        </div>
+        <div style="display: flex; gap: calc(var(--size-2) + var(--size-1)); align-items: center">
+          <thx-badge variant="pulse">LIVE</thx-badge>
+          <thx-avatar name="OP 1138" status="online"></thx-avatar>
+        </div>
+      </div>
+
+      <!-- KPI Row -->
+      <div class="grid grid-4" style="margin-bottom: var(--size-1)">
+        <div class="panel">
+          <div class="panel-header">
+            <span>Active Conflicts</span>
+            <thx-icon name="warning"></thx-icon>
+          </div>
+          <div class="kpi-value critical">4</div>
+          <div class="kpi-label">MAJOR FLASHPOINTS</div>
+          <div class="kpi-delta down">+1 FROM YESTERDAY</div>
+        </div>
+        <div class="panel">
+          <div class="panel-header">
+            <span>Oil Price Spike</span>
+            <thx-icon name="monitor"></thx-icon>
+          </div>
+          <div class="kpi-value warning">+5.5%</div>
+          <div class="kpi-label">BRENT CRUDE</div>
+          <div class="kpi-delta down">STRAIT OF HORMUZ CLOSED</div>
+        </div>
+        <div class="panel">
+          <div class="panel-header">
+            <span>Casualty Count</span>
+            <thx-icon name="error"></thx-icon>
+          </div>
+          <div class="kpi-value critical">31+</div>
+          <div class="kpi-label">REPORTED DEATHS TODAY</div>
+          <div class="kpi-delta down">INCLUDING 8 CHILDREN</div>
+        </div>
+        <div class="panel">
+          <div class="panel-header">
+            <span>Earthquakes</span>
+            <thx-icon name="terminal"></thx-icon>
+          </div>
+          <div class="kpi-value warning">7.8</div>
+          <div class="kpi-label">SANRIKU, JAPAN</div>
+          <div class="kpi-delta down">TSUNAMI WARNING ACTIVE</div>
+        </div>
+      </div>
+
+      <!-- Main News Feeds -->
+      <div class="grid grid-2" style="margin-bottom: var(--size-1)">
+        <!-- Breaking Alerts -->
+        <div class="panel">
+          <div class="panel-header">
+            <span>Breaking Alerts</span>
+            <thx-button variant="ghost" size="small" id="clear-alerts">CLEAR ALL</thx-button>
+          </div>
+          <div id="alert-list">
+            <div class="alert-row">
+              <thx-badge variant="error">CRITICAL</thx-badge>
+              <span class="alert-source">ABC News</span>
+              <span class="alert-msg"
+                >US Navy seizes Iranian-flagged cargo ship in Gulf of Oman. Iran vows retaliation.
+                Ceasefire expires Wednesday.</span
+              >
+            </div>
+            <div class="alert-row">
+              <thx-badge variant="error">CRITICAL</thx-badge>
+              <span class="alert-source">NBC News</span>
+              <span class="alert-msg"
+                >Father fatally shoots eight children, seven his own, in Louisiana mass shooting.
+                Suspect killed by police.</span
+              >
+            </div>
+            <div class="alert-row">
+              <thx-badge variant="warning">WARN</thx-badge>
+              <span class="alert-source">Kyodo News</span>
+              <span class="alert-msg"
+                >Magnitude 7.8 earthquake strikes Sanriku coast, Japan. 80cm tsunami reported.
+                Further 8.0 quake risk warned.</span
+              >
+            </div>
+            <div class="alert-row">
+              <thx-badge variant="warning">WARN</thx-badge>
+              <span class="alert-source">Euronews</span>
+              <span class="alert-msg"
+                >Moscow launches 236 drones in overnight attacks on Ukraine. Boy killed in Chernihiv
+                residential strike.</span
+              >
+            </div>
+            <div class="alert-row">
+              <thx-badge variant="info">INFO</thx-badge>
+              <span class="alert-source">Bloomberg</span>
+              <span class="alert-msg"
+                >Oil jumps 5.5% as Strait of Hormuz remains closed. VP Vance expected to lead
+                delegation to Pakistan talks.</span
+              >
+            </div>
+            <div class="alert-row">
+              <thx-badge variant="info">INFO</thx-badge>
+              <span class="alert-source">AP</span>
+              <span class="alert-msg"
+                >Bulgaria election: Progressive Bulgaria coalition, led by Rumen Radev, secures
+                majority in National Assembly.</span
+              >
+            </div>
+            <div class="alert-row">
+              <thx-badge variant="success">OK</thx-badge>
+              <span class="alert-source">1 News NZ</span>
+              <span class="alert-msg"
+                >PM Christopher Luxon confirms he will not quit National Party leadership amid
+                pressure.</span
+              >
+            </div>
+          </div>
+        </div>
+
+        <!-- Regional Breakdown -->
+        <div class="panel">
+          <div class="panel-header">
+            <span>Regional Incident Map</span>
+            <thx-badge variant="secondary">BATCH 0420</thx-badge>
+          </div>
+          <thx-crt-display label="CRT-01 // GLOBAL STATUS">
+            <thx-chart-bar id="news-bar-chart"></thx-chart-bar>
+          </thx-crt-display>
+          <div class="badge-row" style="margin-top: var(--size-3)">
+            <span class="region-tag">Middle East</span>
+            <span class="region-tag">Europe</span>
+            <span class="region-tag">Asia-Pacific</span>
+            <span class="region-tag">North America</span>
+            <span class="region-tag">Africa</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Detailed Stories Row -->
+      <div class="grid grid-3" style="margin-bottom: var(--size-1)">
+        <div class="panel">
+          <div class="panel-header">
+            <span>Middle East Crisis</span>
+            <thx-spinner style="width: var(--size-3); height: var(--size-3)"></thx-spinner>
+          </div>
+          <div class="news-card">
+            <div class="news-headline">US Seizes Iranian Cargo Ship; Tehran Vows Response</div>
+            <div class="news-meta">Bloomberg / ABC News / NBC News</div>
+            <div class="news-excerpt">
+              US forces boarded and seized an Iranian-flagged vessel after it allegedly attempted to
+              breach the naval blockade. Iran calls it piracy. Ceasefire expires April 22. Trump
+              threatens to destroy power plants and bridges.
+            </div>
+          </div>
+          <div class="news-card">
+            <div class="news-headline">Israel-Lebanon Ceasefire Straining</div>
+            <div class="news-meta">Al Jazeera</div>
+            <div class="news-excerpt">
+              New round of Israel-Lebanon talks scheduled for Washington, D.C. on April 21. IDF
+              confirms authenticity of viral photo showing soldier smashing religious icon in
+              Lebanon.
+            </div>
+          </div>
+          <thx-progress-bar value="85" style="margin-top: var(--size-2)"></thx-progress-bar>
+          <div
+            style="
+              font-family: var(--font-mono);
+              font-size: var(--font-size-0);
+              color: var(--neutral-600);
+              margin-top: var(--size-1);
+            "
+          >
+            ESCALATION RISK: 85%
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-header">
+            <span>Europe & Russia</span>
+            <thx-status-leds count="4" id="europe-leds"></thx-status-leds>
+          </div>
+          <div class="news-card">
+            <div class="news-headline">Russia-Ukraine: 236 Drones Launched Overnight</div>
+            <div class="news-meta">Euronews / Al Jazeera</div>
+            <div class="news-excerpt">
+              Moscow launched 236 drones in Sunday attacks. One boy killed in Chernihiv. Ukraine
+              struck Russian Navy landing ships in Sevastopol and a drone factory in Taganrog.
+            </div>
+          </div>
+          <div class="news-card">
+            <div class="news-headline">Bulgaria Election: Radev Coalition Wins Majority</div>
+            <div class="news-meta">AP / DW</div>
+            <div class="news-excerpt">
+              Progressive Bulgaria coalition, led by former president Rumen Radev, secured a
+              majority in the National Assembly according to preliminary results.
+            </div>
+          </div>
+          <div class="news-card">
+            <div class="news-headline">Baby Food Recall: Rat Poison Detected</div>
+            <div class="news-meta">AP</div>
+            <div class="news-excerpt">
+              Austria, Slovakia and Czech Republic pulling Hipp Holding baby food after rat poison
+              detected in some jars over the weekend.
+            </div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-header">
+            <span>Asia-Pacific & Americas</span>
+            <thx-button variant="ghost" size="small" id="refresh-feed">REFRESH</thx-button>
+          </div>
+          <div class="news-card">
+            <div class="news-headline">Japan Earthquake: 7.8 Magnitude, Tsunami Warning</div>
+            <div class="news-meta">AP / Kyodo News / Geo News</div>
+            <div class="news-excerpt">
+              Powerful earthquake off Sanriku coast. 80cm tsunami in Kuji, Iwate. Authorities warn
+              of potential further quakes up to magnitude 8.0.
+            </div>
+          </div>
+          <div class="news-card">
+            <div class="news-headline">Louisiana Mass Shooting: 8 Children Killed</div>
+            <div class="news-meta">NBC News / Euronews</div>
+            <div class="news-excerpt">
+              Father shot eight children, seven his own, in Sunday morning attack. One child
+              survived by jumping off roof. Suspect killed by police after chase.
+            </div>
+          </div>
+          <div class="news-card">
+            <div class="news-headline">US Anti-Drug Strikes in Caribbean Kill 3 More</div>
+            <div class="news-meta">Euronews</div>
+            <div class="news-excerpt">
+              US military strike on boat in Caribbean. At least 181 killed since September. Critics
+              say strikes violate international law with no evidence of drugs.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Ticker + Protocols -->
+      <div class="grid grid-2" style="margin-bottom: var(--size-1)">
+        <div class="panel">
+          <div class="panel-header">
+            <span>Live Market Feed</span>
+            <thx-badge variant="pulse">UPDATING</thx-badge>
+          </div>
+          <thx-crt-display variant="scope" label="SCOPE-01 // MARKETS">
+            <div
+              style="
+                font-family: var(--font-mono);
+                padding: var(--size-3);
+                color: var(--atmos-primary);
+              "
+            >
+              <div
+                style="display: flex; justify-content: space-between; margin-bottom: var(--size-2)"
+              >
+                <span>BRENT CRUDE</span>
+                <span style="color: var(--accent-warning)">+5.5%</span>
+              </div>
+              <div
+                style="display: flex; justify-content: space-between; margin-bottom: var(--size-2)"
+              >
+                <span>GAS PRICE US</span>
+                <span style="color: var(--accent-error)">$4.00</span>
+              </div>
+              <div
+                style="display: flex; justify-content: space-between; margin-bottom: var(--size-2)"
+              >
+                <span>EUROPEAN STOCKS</span>
+                <span>CAUTIOUS</span>
+              </div>
+              <div
+                style="display: flex; justify-content: space-between; margin-bottom: var(--size-2)"
+              >
+                <span>ASIA-PACIFIC</span>
+                <span>BRUSHING OFF</span>
+              </div>
+              <div style="display: flex; justify-content: space-between">
+                <span>STRAIT OF HORMUZ</span>
+                <span style="color: var(--accent-error)">BLOCKED</span>
+              </div>
+            </div>
+          </thx-crt-display>
+          <thx-divider style="margin: var(--size-3) 0"></thx-divider>
+          <div class="panel-header">
+            <span>Quick Filters</span>
+          </div>
+          <div class="controls-row">
+            <thx-switch checked>BREAKING ONLY</thx-switch>
+            <thx-switch>CONFLICTS</thx-switch>
+            <thx-switch>MARKETS</thx-switch>
+          </div>
+          <div class="controls-row">
+            <thx-button variant="primary" id="run-search">SEARCH</thx-button>
+            <thx-button variant="outline" id="export-feed">EXPORT</thx-button>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-header">
+            <span>Feed Configuration</span>
+          </div>
+          <thx-tab-group>
+            <thx-tab slot="nav" panel="sources" active>SOURCES</thx-tab>
+            <thx-tab slot="nav" panel="regions">REGIONS</thx-tab>
+            <thx-tab slot="nav" panel="severity">SEVERITY</thx-tab>
+            <thx-tab-panel name="sources">
+              <div class="tab-content">
+                <thx-checkbox checked>ABC News</thx-checkbox>
+                <thx-checkbox checked>Bloomberg</thx-checkbox>
+                <thx-checkbox checked>NBC News</thx-checkbox>
+                <thx-checkbox checked>Euronews</thx-checkbox>
+                <thx-checkbox>Al Jazeera</thx-checkbox>
+                <thx-checkbox checked>AP</thx-checkbox>
+              </div>
+            </thx-tab-panel>
+            <thx-tab-panel name="regions">
+              <div class="tab-content">
+                <thx-radio-group name="region" value="all">
+                  <thx-radio value="all">ALL REGIONS</thx-radio>
+                  <thx-radio value="middle-east">MIDDLE EAST</thx-radio>
+                  <thx-radio value="europe">EUROPE</thx-radio>
+                  <thx-radio value="asia">ASIA-PACIFIC</thx-radio>
+                  <thx-radio value="americas">AMERICAS</thx-radio>
+                </thx-radio-group>
+              </div>
+            </thx-tab-panel>
+            <thx-tab-panel name="severity">
+              <div class="tab-content">
+                <thx-range label="MINIMUM SEVERITY" min="0" max="100" value="50"></thx-range>
+                <div class="badge-row">
+                  <thx-tag>CRITICAL</thx-tag>
+                  <thx-tag>WARNING</thx-tag>
+                  <thx-tag removable>INFO</thx-tag>
+                </div>
+              </div>
+            </thx-tab-panel>
+          </thx-tab-group>
+          <thx-divider style="margin: var(--size-3) 0"></thx-divider>
+          <div class="panel-header">
+            <span>System Protocols</span>
+          </div>
+          <thx-details summary="PROTOCOL 0420-A - INCIDENT VERIFICATION">
+            All breaking alerts require cross-reference with minimum 2 independent sources before
+            elevation to CRITICAL status.
+          </thx-details>
+          <thx-details summary="PROTOCOL 0420-B - SOURCE RANKING" open>
+            Tier 1: AP, Reuters, AFP. Tier 2: BBC, NYT, WaPo. Tier 3: National broadcasters. Tier 4:
+            Aggregators.
+          </thx-details>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="footer-bar">
+        <div>STATUS: OPERATIONAL // BATCH: THX-0420</div>
+        <div>
+          <thx-format-date date="2026-04-20" format="crt"></thx-format-date>
+          |
+          <thx-relative-time date="2026-04-20T12:00:00"></thx-relative-time>
+        </div>
+      </div>
+    </div>
+
+    <!-- Import all components -->
+    <script type="module">
+      // Feedback & Display
+      import './src/components/thx-alert.js';
+      import './src/components/thx-avatar.js';
+      import './src/components/thx-badge.js';
+      import './src/components/thx-divider.js';
+      import './src/components/thx-icon.js';
+      import './src/components/thx-progress-bar.js';
+      import './src/components/thx-spinner.js';
+      import './src/components/thx-tag.js';
+
+      // Navigation
+      import './src/components/thx-button.js';
+      import './src/components/thx-details.js';
+      import './src/components/thx-tab-group.js';
+      import './src/components/thx-tab.js';
+      import './src/components/thx-tab-panel.js';
+
+      // Forms & Inputs
+      import './src/components/thx-checkbox.js';
+      import './src/components/thx-radio.js';
+      import './src/components/thx-radio-group.js';
+      import './src/components/thx-range.js';
+      import './src/components/thx-switch.js';
+
+      // Charts & Visualizations
+      import './src/components/thx-crt-display.js';
+      import './src/components/thx-chart-bar.js';
+      import './src/components/thx-status-leds.js';
+
+      // Utilities & Formatters
+      import './src/components/thx-format-date.js';
+      import './src/components/thx-relative-time.js';
+
+      // Interactions
+      document.getElementById('clear-alerts')?.addEventListener('click', () => {
+        const list = document.getElementById('alert-list');
+        if (list)
+          list.innerHTML =
+            '<div style="padding: var(--size-3) 0; color: var(--neutral-600); font-size: var(--font-size-1);">NO ALERTS PENDING</div>';
+      });
+
+      document.getElementById('refresh-feed')?.addEventListener('click', () => {
+        const btn = document.getElementById('refresh-feed');
+        if (btn) {
+          btn.textContent = 'REFRESHING...';
+          setTimeout(() => {
+            btn.textContent = 'REFRESH';
+          }, 1200);
+        }
+      });
+
+      document.getElementById('run-search')?.addEventListener('click', () => {
+        alert('SEARCH QUERY: incidents after 2026-04-20T00:00:00Z');
+      });
+
+      document.getElementById('export-feed')?.addEventListener('click', () => {
+        alert('EXPORTING BATCH THX-0420 TO ARCHIVE...');
+      });
+
+      // Initialize charts
+      Promise.all([
+        customElements.whenDefined('thx-chart-bar'),
+        customElements.whenDefined('thx-status-leds'),
+      ]).then(() => {
+        const barChart = document.getElementById('news-bar-chart');
+        if (barChart) {
+          barChart.data = [
+            { label: 'M.East', value: 92, warning: true },
+            { label: 'Europe', value: 71 },
+            { label: 'Asia', value: 58 },
+            { label: 'N.America', value: 45 },
+            { label: 'Africa', value: 23 },
+            { label: 'S.America', value: 12 },
+          ];
+        }
+
+        const leds = document.getElementById('europe-leds');
+        if (leds) {
+          leds.leds = [
+            { active: true, state: 'normal' },
+            { active: true, state: 'normal' },
+            { active: false, state: 'normal' },
+            { active: true, state: 'normal' },
+          ];
+        }
+      });
+
+      console.log('THX 1138 News Dashboard loaded - monitoring 6 regions');
+    </script>
+  </body>
+</html>

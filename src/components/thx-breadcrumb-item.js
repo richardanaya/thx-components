@@ -22,26 +22,26 @@ export class ThxBreadcrumbItem extends LitElement {
     a {
       color: var(--atmos-primary, #a6c8e1);
       text-decoration: none;
-      border-bottom: 1px solid transparent;
-      transition: all 0.15s;
+      border-bottom: var(--border-size-1) solid transparent;
+      transition: all var(--duration-quick-2);
       font-family: var(--font-mono, 'Courier New', Courier, monospace);
-      font-size: 0.6875rem;
+      font-size: var(--font-size-0);
       text-transform: uppercase;
-      letter-spacing: 0.1em;
+      letter-spacing: var(--font-letterspacing-4);
     }
 
     a:hover {
       color: var(--atmos-tertiary, #deffff);
       border-bottom-color: var(--atmos-primary, #a6c8e1);
-      text-shadow: 0 0 8px rgba(166, 200, 225, 0.5);
+      text-shadow: 0 0 var(--size-2) rgba(166, 200, 225, 0.5);
     }
 
     span {
       color: var(--neutral-800, #333);
       font-family: var(--font-mono, 'Courier New', Courier, monospace);
-      font-size: 0.6875rem;
+      font-size: var(--font-size-0);
       text-transform: uppercase;
-      letter-spacing: 0.1em;
+      letter-spacing: var(--font-letterspacing-4);
     }
 
     /* Separator injected by parent */

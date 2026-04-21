@@ -75,14 +75,26 @@ export class ThxSplitPanel extends LitElement {
       user-select: none;
     }
 
-    :host([orientation='horizontal']) .divider {
-      width: 20px;
+    :host([orientation='horizontal']) .divider,
+    :host([orientation='horizontal']) .divider::before,
+    :host([orientation='horizontal']) .divider-handle,
+    :host([orientation='horizontal']) .divider-handle::after {
       cursor: col-resize;
     }
 
-    :host([orientation='vertical']) .divider {
-      height: 20px;
+    :host([orientation='horizontal']) .divider {
+      width: var(--size-4);
+    }
+
+    :host([orientation='vertical']) .divider,
+    :host([orientation='vertical']) .divider::before,
+    :host([orientation='vertical']) .divider-handle,
+    :host([orientation='vertical']) .divider-handle::after {
       cursor: row-resize;
+    }
+
+    :host([orientation='vertical']) .divider {
+      height: var(--size-4);
     }
 
     :host([resizable='false']) .divider {
@@ -114,18 +126,18 @@ export class ThxSplitPanel extends LitElement {
       align-items: center;
       justify-content: center;
       background: var(--neutral-100, #fafafa);
-      border: 2px solid var(--atmos-secondary, #707e91);
+      border: var(--border-size-2) solid var(--atmos-secondary, #707e91);
       box-shadow: 0 0 0 3px var(--neutral-200, #e0e0e0);
     }
 
     :host([orientation='horizontal']) .divider-handle {
-      width: 16px;
+      width: var(--size-3);
       height: 60px;
     }
 
     :host([orientation='vertical']) .divider-handle {
       width: 60px;
-      height: 16px;
+      height: var(--size-3);
     }
 
     :host([variant='crt']) .divider {
@@ -135,7 +147,7 @@ export class ThxSplitPanel extends LitElement {
     :host([variant='crt']) .divider-handle {
       background: #111;
       border-color: var(--atmos-primary, #a6c8e1);
-      box-shadow: 0 0 8px rgba(166, 200, 225, 0.3);
+      box-shadow: 0 0 var(--size-2) rgba(166, 200, 225, 0.3);
     }
 
     /* Grip lines on handle */
@@ -146,46 +158,46 @@ export class ThxSplitPanel extends LitElement {
 
     :host([orientation='horizontal']) .divider-handle::after {
       width: 3px;
-      height: 36px;
+      height: calc(var(--size-7) + var(--size-1));
       background: repeating-linear-gradient(
         0deg,
         var(--atmos-secondary, #707e91),
         var(--atmos-secondary, #707e91) 3px,
         transparent 3px,
-        transparent 6px
+        transparent var(--size-1)
       );
     }
 
     :host([orientation='vertical']) .divider-handle::after {
-      width: 36px;
+      width: calc(var(--size-7) + var(--size-1));
       height: 3px;
       background: repeating-linear-gradient(
         90deg,
         var(--atmos-secondary, #707e91),
         var(--atmos-secondary, #707e91) 3px,
         transparent 3px,
-        transparent 6px
+        transparent var(--size-1)
       );
     }
 
     /* Panel labels */
     .panel-label {
       position: absolute;
-      font-size: 0.5625rem;
+      font-size: var(--font-size-00);
       color: var(--neutral-600, #666);
       text-transform: uppercase;
-      letter-spacing: 0.1em;
+      letter-spacing: var(--font-letterspacing-4);
       pointer-events: none;
     }
 
     :host([orientation='horizontal']) .panel-label {
-      top: 4px;
+      top: var(--size-1);
       writing-mode: vertical-rl;
       text-orientation: mixed;
     }
 
     :host([orientation='vertical']) .panel-label {
-      left: 4px;
+      left: var(--size-1);
     }
 
     :host([variant='crt']) .panel-label {
@@ -194,16 +206,16 @@ export class ThxSplitPanel extends LitElement {
 
     /* Panel header/footer bars */
     .panel-bar {
-      padding: 8px 12px;
+      padding: var(--size-2) calc(var(--size-2) + var(--size-1));
       background: rgba(0, 0, 0, 0.03);
-      border-bottom: 1px solid rgba(0, 0, 0, 0.06);
-      font-size: 0.6875rem;
+      border-bottom: var(--border-size-1) solid rgba(0, 0, 0, 0.06);
+      font-size: var(--font-size-0);
       color: var(--neutral-600, #666);
       text-transform: uppercase;
-      letter-spacing: 0.1em;
+      letter-spacing: var(--font-letterspacing-4);
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: var(--size-2);
     }
 
     :host([variant='crt']) .panel-bar {
@@ -213,25 +225,25 @@ export class ThxSplitPanel extends LitElement {
     }
 
     .panel-indicator {
-      width: 6px;
-      height: 6px;
+      width: var(--size-1);
+      height: var(--size-1);
       background: var(--atmos-secondary, #707e91);
     }
 
     :host([variant='crt']) .panel-indicator {
       background: var(--atmos-primary, #a6c8e1);
-      box-shadow: 0 0 4px rgba(166, 200, 225, 0.5);
+      box-shadow: 0 0 var(--size-1) rgba(166, 200, 225, 0.5);
     }
 
     /* Panel content area */
     .panel-content {
-      padding: 16px;
+      padding: var(--size-3);
     }
 
     /* Size display */
     .size-display {
       margin-left: auto;
-      font-size: 0.5625rem;
+      font-size: var(--font-size-00);
       color: var(--neutral-600, #666);
     }
 

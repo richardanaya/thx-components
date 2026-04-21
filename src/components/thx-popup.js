@@ -36,8 +36,8 @@ export class ThxPopup extends LitElement {
       opacity: 0;
       visibility: hidden;
       transition:
-        opacity 0.15s,
-        visibility 0.15s;
+        opacity var(--duration-quick-2),
+        visibility var(--duration-quick-2);
     }
 
     .popup-overlay.open {
@@ -48,15 +48,15 @@ export class ThxPopup extends LitElement {
     .popup-content {
       position: absolute;
       background: var(--crt-bg, #111);
-      border: 8px solid var(--crt-border, #2a2a2a);
-      border-radius: 2px;
-      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.6);
-      z-index: 1000;
+      border: var(--size-2) solid var(--crt-border, #2a2a2a);
+      border-radius: var(--radius-1);
+      box-shadow: 0 var(--size-1) 30px rgba(0, 0, 0, 0.6);
+      z-index: var(--layer-5);
       opacity: 0;
       visibility: hidden;
       transition:
-        opacity 0.15s,
-        visibility 0.15s;
+        opacity var(--duration-quick-2),
+        visibility var(--duration-quick-2);
       min-width: 200px;
       max-width: 400px;
     }
@@ -76,10 +76,10 @@ export class ThxPopup extends LitElement {
         transparent,
         transparent 2px,
         rgba(166, 200, 225, 0.04) 2px,
-        rgba(166, 200, 225, 0.04) 4px
+        rgba(166, 200, 225, 0.04) var(--size-1)
       );
       pointer-events: none;
-      z-index: 10;
+      z-index: var(--layer-2);
     }
 
     /* Vignette */
@@ -89,14 +89,14 @@ export class ThxPopup extends LitElement {
       inset: 0;
       background: radial-gradient(ellipse at center, transparent 50%, rgba(0, 0, 0, 0.3) 100%);
       pointer-events: none;
-      z-index: 11;
+      z-index: calc(var(--layer-2) + 1);
     }
 
     /* Arrow */
     .popup-arrow {
       position: absolute;
-      width: 12px;
-      height: 12px;
+      width: calc(var(--size-2) + var(--size-1));
+      height: calc(var(--size-2) + var(--size-1));
       background: var(--crt-border, #2a2a2a);
       transform: rotate(45deg);
       z-index: -1;
@@ -106,32 +106,32 @@ export class ThxPopup extends LitElement {
     .popup-content.top-start .popup-arrow,
     .popup-content.top-end .popup-arrow {
       bottom: -10px;
-      border-bottom: 2px solid #2a2a2a;
-      border-right: 2px solid #2a2a2a;
+      border-bottom: var(--border-size-2) solid #2a2a2a;
+      border-right: var(--border-size-2) solid #2a2a2a;
     }
 
     .popup-content.bottom .popup-arrow,
     .popup-content.bottom-start .popup-arrow,
     .popup-content.bottom-end .popup-arrow {
       top: -10px;
-      border-top: 2px solid #2a2a2a;
-      border-left: 2px solid #2a2a2a;
+      border-top: var(--border-size-2) solid #2a2a2a;
+      border-left: var(--border-size-2) solid #2a2a2a;
     }
 
     .popup-content.left .popup-arrow,
     .popup-content.left-start .popup-arrow,
     .popup-content.left-end .popup-arrow {
       right: -10px;
-      border-top: 2px solid #2a2a2a;
-      border-right: 2px solid #2a2a2a;
+      border-top: var(--border-size-2) solid #2a2a2a;
+      border-right: var(--border-size-2) solid #2a2a2a;
     }
 
     .popup-content.right .popup-arrow,
     .popup-content.right-start .popup-arrow,
     .popup-content.right-end .popup-arrow {
       left: -10px;
-      border-bottom: 2px solid #2a2a2a;
-      border-left: 2px solid #2a2a2a;
+      border-bottom: var(--border-size-2) solid #2a2a2a;
+      border-left: var(--border-size-2) solid #2a2a2a;
     }
 
     /* Center arrow horizontally for top/bottom placements */
@@ -144,12 +144,12 @@ export class ThxPopup extends LitElement {
     /* Position arrow at start/end */
     .popup-content.top-start .popup-arrow,
     .popup-content.bottom-start .popup-arrow {
-      left: 20px;
+      left: var(--size-4);
     }
 
     .popup-content.top-end .popup-arrow,
     .popup-content.bottom-end .popup-arrow {
-      right: 20px;
+      right: var(--size-4);
       left: auto;
     }
 
@@ -163,39 +163,39 @@ export class ThxPopup extends LitElement {
     /* Position arrow at start/end */
     .popup-content.left-start .popup-arrow,
     .popup-content.right-start .popup-arrow {
-      top: 20px;
+      top: var(--size-4);
     }
 
     .popup-content.left-end .popup-arrow,
     .popup-content.right-end .popup-arrow {
-      bottom: 20px;
+      bottom: var(--size-4);
       top: auto;
     }
 
     .popup-header {
-      padding: 12px 16px;
-      border-bottom: 1px solid #333;
+      padding: calc(var(--size-2) + var(--size-1)) var(--size-3);
+      border-bottom: var(--border-size-1) solid #333;
       position: relative;
-      z-index: 5;
+      z-index: var(--layer-1);
     }
 
     .popup-title {
       font-family: var(--font-mono, 'Courier New', monospace);
-      font-size: 0.625rem;
+      font-size: var(--font-size-0);
       color: var(--atmos-primary, #a6c8e1);
       text-transform: uppercase;
-      letter-spacing: 0.12em;
+      letter-spacing: var(--font-letterspacing-4);
       margin: 0;
-      text-shadow: 0 0 4px rgba(166, 200, 225, 0.5);
+      text-shadow: 0 0 var(--size-1) rgba(166, 200, 225, 0.5);
     }
 
     .popup-body {
-      padding: 16px;
+      padding: var(--size-3);
       font-family: var(--font-body, 'Helvetica Neue', sans-serif);
-      font-size: 0.875rem;
+      font-size: var(--font-size-1);
       color: var(--neutral-100, #fafafa);
       position: relative;
-      z-index: 5;
+      z-index: var(--layer-1);
     }
 
     .popup-body ::slotted(*) {
@@ -204,22 +204,22 @@ export class ThxPopup extends LitElement {
 
     .popup-close {
       position: absolute;
-      top: 8px;
-      right: 8px;
-      width: 24px;
-      height: 24px;
+      top: var(--size-2);
+      right: var(--size-2);
+      width: var(--size-5);
+      height: var(--size-5);
       background: transparent;
-      border: 1px solid var(--atmos-secondary, #707e91);
+      border: var(--border-size-1) solid var(--atmos-secondary, #707e91);
       color: var(--atmos-secondary, #707e91);
       font-family: var(--font-mono, 'Courier New', monospace);
-      font-size: 0.75rem;
+      font-size: var(--font-size-0);
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      transition: all 0.15s;
+      transition: all var(--duration-quick-2);
       padding: 0;
-      z-index: 15;
+      z-index: calc(var(--layer-2) + 5);
     }
 
     .popup-close:hover {
@@ -228,13 +228,13 @@ export class ThxPopup extends LitElement {
     }
 
     .popup-footer {
-      padding: 12px 16px;
-      border-top: 1px solid #333;
+      padding: calc(var(--size-2) + var(--size-1)) var(--size-3);
+      border-top: var(--border-size-1) solid #333;
       display: flex;
       justify-content: flex-end;
-      gap: 8px;
+      gap: var(--size-2);
       position: relative;
-      z-index: 5;
+      z-index: var(--layer-1);
     }
   `;
 
@@ -367,15 +367,15 @@ export class ThxPopup extends LitElement {
         <slot name="trigger">
           <button
             style="
-              height: 36px;
-              padding: 0 16px;
+              height: calc(var(--size-7) + var(--size-1));
+              padding: 0 var(--size-3);
               background: var(--atmos-primary, #a6c8e1);
               color: var(--neutral-800, #333);
               border: none;
               font-family: var(--font-mono, 'Courier New', monospace);
-              font-size: 0.625rem;
+              font-size: var(--font-size-0);
               text-transform: uppercase;
-              letter-spacing: 0.1em;
+              letter-spacing: var(--font-letterspacing-4);
               cursor: pointer;
             "
             type="button"

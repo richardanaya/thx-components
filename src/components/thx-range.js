@@ -32,7 +32,7 @@ export class ThxRange extends LitElement {
     .range-wrapper {
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: var(--size-2);
     }
 
     .label-row {
@@ -43,19 +43,19 @@ export class ThxRange extends LitElement {
 
     .label {
       font-family: var(--font-mono, 'Courier New', Courier, monospace);
-      font-size: 0.6875rem;
+      font-size: var(--font-size-0);
       text-transform: uppercase;
-      letter-spacing: 0.1em;
+      letter-spacing: var(--font-letterspacing-4);
       color: var(--neutral-600, #666);
     }
 
     .value-display {
       font-family: var(--font-mono, 'Courier New', Courier, monospace);
-      font-size: 0.8125rem;
+      font-size: var(--font-size-0);
       color: var(--neutral-800, #333);
       background: var(--neutral-200, #e0e0e0);
-      padding: 2px 8px;
-      min-width: 40px;
+      padding: var(--size-1) var(--size-2);
+      min-width: calc(var(--size-7) + var(--size-2));
       text-align: center;
     }
 
@@ -63,12 +63,12 @@ export class ThxRange extends LitElement {
       position: relative;
       display: flex;
       align-items: center;
-      height: 24px;
+      height: var(--size-5);
     }
 
     input[type='range'] {
       width: 100%;
-      height: 8px;
+      height: var(--size-2);
       appearance: none;
       background: var(--neutral-200, #e0e0e0);
       outline: none;
@@ -85,16 +85,16 @@ export class ThxRange extends LitElement {
       cursor: not-allowed;
     }
 
-    /* Webkit slider thumb - margin-top centers 18px thumb on 8px track */
+    /* Webkit slider thumb - margin-top centers var(--size-3) thumb on var(--size-2) track */
     input[type='range']::-webkit-slider-thumb {
       appearance: none;
-      width: 18px;
-      height: 18px;
+      width: var(--size-3);
+      height: var(--size-3);
       background: var(--neutral-800, #333);
       cursor: pointer;
       border: none;
       border-radius: 0;
-      transition: all 0.15s;
+      transition: all var(--duration-quick-2);
       margin-top: -5px;
       position: relative;
       z-index: 3;
@@ -102,7 +102,7 @@ export class ThxRange extends LitElement {
 
     input[type='range']::-webkit-slider-thumb:hover {
       background: var(--atmos-primary, #a6c8e1);
-      box-shadow: 0 0 8px rgba(166, 200, 225, 0.6);
+      box-shadow: 0 0 var(--size-2) rgba(166, 200, 225, 0.6);
     }
 
     input[type='range']:focus::-webkit-slider-thumb {
@@ -111,38 +111,38 @@ export class ThxRange extends LitElement {
 
     /* Webkit slider runnable track */
     input[type='range']::-webkit-slider-runnable-track {
-      height: 8px;
+      height: var(--size-2);
       background: var(--neutral-200, #e0e0e0);
       border: none;
     }
 
     /* Firefox slider thumb */
     input[type='range']::-moz-range-thumb {
-      width: 18px;
-      height: 18px;
+      width: var(--size-3);
+      height: var(--size-3);
       background: var(--neutral-800, #333);
       cursor: pointer;
       border: none;
       border-radius: 0;
-      transition: all 0.15s;
+      transition: all var(--duration-quick-2);
       position: relative;
       z-index: 3;
     }
 
     input[type='range']::-moz-range-thumb:hover {
       background: var(--atmos-primary, #a6c8e1);
-      box-shadow: 0 0 8px rgba(166, 200, 225, 0.6);
+      box-shadow: 0 0 var(--size-2) rgba(166, 200, 225, 0.6);
     }
 
     /* Firefox slider track */
     input[type='range']::-moz-range-track {
-      height: 8px;
+      height: var(--size-2);
       background: var(--neutral-200, #e0e0e0);
       border: none;
     }
 
     input[type='range']::-moz-range-progress {
-      height: 8px;
+      height: var(--size-2);
       background: var(--atmos-secondary, #707e91);
       border: none;
     }
@@ -150,20 +150,20 @@ export class ThxRange extends LitElement {
     .ticks {
       display: flex;
       justify-content: space-between;
-      margin-top: 4px;
+      margin-top: var(--size-1);
       padding: 0 9px;
     }
 
     .tick {
       font-family: var(--font-mono, 'Courier New', Courier, monospace);
-      font-size: 0.5625rem;
+      font-size: var(--font-size-00);
       color: var(--neutral-600, #666);
       text-transform: uppercase;
     }
 
     .progress-bar {
       position: absolute;
-      height: 8px;
+      height: var(--size-2);
       top: 50%;
       transform: translateY(-50%);
       left: 0;

@@ -51,19 +51,19 @@ export class ThxVisuallyHidden extends LitElement {
       position: static !important;
       width: auto !important;
       height: auto !important;
-      padding: 8px 12px !important;
+      padding: var(--size-2) calc(var(--size-2) + var(--size-1)) !important;
       margin: 0 !important;
       overflow: visible !important;
       clip: auto !important;
       white-space: normal !important;
       background: var(--neutral-100, #fafafa);
-      border: 1px solid var(--atmos-primary, #a6c8e1) !important;
+      border: var(--border-size-1) solid var(--atmos-primary, #a6c8e1) !important;
       box-shadow: 0 0 0 2px rgba(166, 200, 225, 0.3);
-      z-index: 1000;
-      font-size: 0.8125rem;
+      z-index: var(--layer-5);
+      font-size: var(--font-size-0);
       color: var(--neutral-800, #333);
       text-transform: uppercase;
-      letter-spacing: 0.05em;
+      letter-spacing: var(--font-letterspacing-2);
     }
 
     /* Debug mode - visually show the hidden element with an indicator */
@@ -71,22 +71,22 @@ export class ThxVisuallyHidden extends LitElement {
       position: relative !important;
       width: auto !important;
       height: auto !important;
-      padding: 4px 8px !important;
+      padding: var(--size-1) var(--size-2) !important;
       margin: 0 !important;
       overflow: visible !important;
       clip: auto !important;
       white-space: normal !important;
       background: rgba(166, 200, 225, 0.2);
-      border: 1px dashed var(--atmos-primary, #a6c8e1) !important;
+      border: var(--border-size-1) dashed var(--atmos-primary, #a6c8e1) !important;
       color: var(--neutral-800, #333);
-      font-size: 0.75rem;
+      font-size: var(--font-size-0);
     }
 
     :host([debug]) .visually-hidden::before {
       content: '[HIDDEN] ';
-      font-size: 0.625rem;
+      font-size: var(--font-size-0);
       color: var(--atmos-primary, #a6c8e1);
-      font-weight: 600;
+      font-weight: var(--font-weight-6);
     }
 
     /* Status variants */
@@ -112,20 +112,20 @@ export class ThxVisuallyHidden extends LitElement {
       transform: translateX(-50%);
       background: var(--neutral-800, #333);
       color: var(--neutral-100, #fafafa);
-      padding: 16px 24px;
+      padding: var(--size-3) var(--size-5);
       text-decoration: none;
       text-transform: uppercase;
-      letter-spacing: 0.12em;
-      font-size: 0.875rem;
-      font-weight: 500;
+      letter-spacing: var(--font-letterspacing-4);
+      font-size: var(--font-size-1);
+      font-weight: var(--font-weight-5);
       z-index: 10000;
-      transition: top 0.2s;
+      transition: top var(--duration-moderate-1);
       white-space: nowrap;
     }
 
     :host([as='skip-link']) .visually-hidden:focus {
       position: fixed !important;
-      top: 20px;
+      top: var(--size-4);
       width: auto !important;
       height: auto !important;
       clip: auto !important;
@@ -134,23 +134,23 @@ export class ThxVisuallyHidden extends LitElement {
     :host([as='skip-link']) .visually-hidden::after {
       content: ' // PRESS ENTER';
       color: var(--atmos-primary, #a6c8e1);
-      font-size: 0.75rem;
+      font-size: var(--font-size-0);
     }
 
     /* Announcement variant */
     :host([as='announce']) .visually-hidden {
       position: fixed !important;
-      bottom: 20px;
-      right: 20px;
+      bottom: var(--size-4);
+      right: var(--size-4);
       background: var(--crt-bg, #111);
-      border: 2px solid var(--atmos-primary, #a6c8e1) !important;
+      border: var(--border-size-2) solid var(--atmos-primary, #a6c8e1) !important;
       color: var(--atmos-primary, #a6c8e1);
-      padding: 12px 16px;
-      font-size: 0.8125rem;
-      letter-spacing: 0.05em;
+      padding: calc(var(--size-2) + var(--size-1)) var(--size-3);
+      font-size: var(--font-size-0);
+      letter-spacing: var(--font-letterspacing-2);
       text-transform: uppercase;
       z-index: 10000;
-      box-shadow: 0 0 20px rgba(166, 200, 225, 0.3);
+      box-shadow: 0 0 var(--size-4) rgba(166, 200, 225, 0.3);
     }
 
     :host([as='announce']) .visually-hidden::before {

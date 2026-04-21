@@ -50,7 +50,7 @@ export class ThxProgressRing extends LitElement {
       fill: none;
       stroke: var(--neutral-600, #666);
       stroke-linecap: square;
-      transition: stroke-dashoffset 0.3s ease;
+      transition: stroke-dashoffset var(--duration-moderate-2) ease;
     }
 
     /* Variants */
@@ -60,7 +60,7 @@ export class ThxProgressRing extends LitElement {
 
     .ring--crt .ring__fill {
       stroke: var(--atmos-primary, #a6c8e1);
-      filter: drop-shadow(0 0 4px rgba(166, 200, 225, 0.6));
+      filter: drop-shadow(0 0 var(--size-1) rgba(166, 200, 225, 0.6));
     }
 
     .ring--warning .ring__fill {
@@ -89,16 +89,16 @@ export class ThxProgressRing extends LitElement {
     .ring__value {
       position: absolute;
       font-family: var(--font-mono, 'Courier New', Courier, monospace);
-      font-size: 0.75rem;
-      font-weight: 600;
+      font-size: var(--font-size-0);
+      font-weight: var(--font-weight-6);
       text-transform: uppercase;
-      letter-spacing: 0.05em;
+      letter-spacing: var(--font-letterspacing-2);
       color: var(--neutral-800, #333);
     }
 
     .ring--crt .ring__value {
       color: var(--atmos-primary, #a6c8e1);
-      text-shadow: 0 0 4px rgba(166, 200, 225, 0.5);
+      text-shadow: 0 0 var(--size-1) rgba(166, 200, 225, 0.5);
     }
 
     /* Scanline effect for CRT */
@@ -111,10 +111,10 @@ export class ThxProgressRing extends LitElement {
         transparent,
         transparent 2px,
         rgba(166, 200, 225, 0.05) 2px,
-        rgba(166, 200, 225, 0.05) 4px
+        rgba(166, 200, 225, 0.05) var(--size-1)
       );
       pointer-events: none;
-      border-radius: 50%;
+      border-radius: var(--radius-round);
     }
   `;
 

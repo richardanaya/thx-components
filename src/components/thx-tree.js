@@ -20,17 +20,17 @@ export class ThxTree extends LitElement {
     :host {
       display: block;
       background: var(--neutral-100, #fafafa);
-      border: 1px solid rgba(0, 0, 0, 0.08);
-      box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.06);
+      border: var(--border-size-1) solid rgba(0, 0, 0, 0.08);
+      box-shadow: var(--inner-shadow-0);
       font-family: var(--font-mono, 'Courier New', Courier, monospace);
     }
 
     .tree-header {
-      padding: 12px 16px;
-      border-bottom: 1px solid rgba(0, 0, 0, 0.08);
-      font-size: 0.625rem;
+      padding: calc(var(--size-2) + var(--size-1)) var(--size-3);
+      border-bottom: var(--border-size-1) solid rgba(0, 0, 0, 0.08);
+      font-size: var(--font-size-0);
       text-transform: uppercase;
-      letter-spacing: 0.15em;
+      letter-spacing: var(--font-letterspacing-5);
       color: var(--neutral-600, #666);
       background: rgba(0, 0, 0, 0.02);
       display: flex;
@@ -48,18 +48,18 @@ export class ThxTree extends LitElement {
 
     .tree-controls {
       display: flex;
-      gap: 8px;
+      gap: var(--size-2);
     }
 
     .tree-control {
-      font-size: 0.5625rem;
-      padding: 4px 8px;
+      font-size: var(--font-size-00);
+      padding: var(--size-1) var(--size-2);
       background: transparent;
-      border: 1px solid var(--atmos-secondary, #707e91);
+      border: var(--border-size-1) solid var(--atmos-secondary, #707e91);
       color: var(--atmos-secondary, #707e91);
       cursor: pointer;
       text-transform: uppercase;
-      letter-spacing: 0.1em;
+      letter-spacing: var(--font-letterspacing-4);
       font-family: inherit;
     }
 
@@ -71,7 +71,7 @@ export class ThxTree extends LitElement {
     .tree-list {
       list-style: none;
       margin: 0;
-      padding: 8px 0;
+      padding: var(--size-2) 0;
     }
 
     ::slotted(thx-tree-item) {
@@ -81,9 +81,9 @@ export class ThxTree extends LitElement {
     /* CRT variant */
     :host([variant='crt']) {
       background: var(--crt-bg, #111);
-      border: 12px solid var(--crt-border, #2a2a2a);
-      border-radius: 4px;
-      box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.5);
+      border: calc(var(--size-2) + var(--size-1)) solid var(--crt-border, #2a2a2a);
+      border-radius: var(--size-1);
+      box-shadow: inset 0 0 var(--size-4) rgba(0, 0, 0, 0.5);
       position: relative;
       overflow: hidden;
     }
@@ -103,21 +103,21 @@ export class ThxTree extends LitElement {
         transparent,
         transparent 2px,
         rgba(166, 200, 225, 0.04) 2px,
-        rgba(166, 200, 225, 0.04) 4px
+        rgba(166, 200, 225, 0.04) var(--size-1)
       );
       pointer-events: none;
-      z-index: 10;
+      z-index: var(--layer-2);
     }
 
     :host([variant='crt']) .crt-label {
       position: absolute;
-      top: 4px;
-      right: 8px;
-      font-size: 0.625rem;
+      top: var(--size-1);
+      right: var(--size-2);
+      font-size: var(--font-size-0);
       color: #666;
       text-transform: uppercase;
-      letter-spacing: 0.1em;
-      z-index: 15;
+      letter-spacing: var(--font-letterspacing-4);
+      z-index: calc(var(--layer-2) + 5);
     }
 
     /* Compact variant */
@@ -129,7 +129,7 @@ export class ThxTree extends LitElement {
 
     :host([variant='compact']) .tree-header {
       background: transparent;
-      padding: 8px 0;
+      padding: var(--size-2) 0;
     }
 
     /* Selection mode indicator */

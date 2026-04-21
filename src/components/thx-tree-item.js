@@ -24,15 +24,15 @@ export class ThxTreeItem extends LitElement {
     .tree-item {
       display: flex;
       align-items: center;
-      gap: 8px;
-      padding: 8px 16px;
+      gap: var(--size-2);
+      padding: var(--size-2) var(--size-3);
       font-family: var(--font-mono, 'Courier New', Courier, monospace);
-      font-size: 0.75rem;
+      font-size: var(--font-size-0);
       text-transform: uppercase;
-      letter-spacing: 0.05em;
+      letter-spacing: var(--font-letterspacing-2);
       color: var(--neutral-800, #333);
       cursor: pointer;
-      transition: all 0.15s;
+      transition: all var(--duration-quick-2);
       user-select: none;
       position: relative;
     }
@@ -62,11 +62,11 @@ export class ThxTreeItem extends LitElement {
       display: flex;
       align-items: center;
       justify-content: center;
-      width: 16px;
-      height: 16px;
-      font-size: 0.625rem;
+      width: var(--size-3);
+      height: var(--size-3);
+      font-size: var(--font-size-0);
       color: var(--neutral-600, #666);
-      transition: transform 0.2s;
+      transition: transform var(--duration-moderate-1);
       flex-shrink: 0;
     }
 
@@ -76,7 +76,7 @@ export class ThxTreeItem extends LitElement {
     }
 
     .toggle-placeholder {
-      width: 16px;
+      width: var(--size-3);
       flex-shrink: 0;
     }
 
@@ -85,7 +85,7 @@ export class ThxTreeItem extends LitElement {
       flex: 1;
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: var(--size-2);
     }
 
     /* Children container */
@@ -94,7 +94,7 @@ export class ThxTreeItem extends LitElement {
       list-style: none;
       margin: 0;
       padding: 0;
-      padding-left: 24px;
+      padding-left: var(--size-5);
     }
 
     .children.expanded {
@@ -103,16 +103,16 @@ export class ThxTreeItem extends LitElement {
 
     /* Level indentation for nested items (selection bar is an overlay, so padding is identical) */
     :host([level='1']) .tree-item {
-      padding-left: 32px;
+      padding-left: var(--size-7);
     }
     :host([level='2']) .tree-item {
-      padding-left: 48px;
+      padding-left: var(--size-8);
     }
     :host([level='3']) .tree-item {
-      padding-left: 64px;
+      padding-left: var(--size-9);
     }
     :host([level='4']) .tree-item {
-      padding-left: 80px;
+      padding-left: var(--size-10);
     }
 
     /* Disabled state */
@@ -136,24 +136,24 @@ export class ThxTreeItem extends LitElement {
     :host([variant='crt']) .tree-item.selected {
       background: rgba(166, 200, 225, 0.25);
       color: var(--atmos-tertiary, #deffff);
-      text-shadow: 0 0 8px rgba(166, 200, 225, 0.8);
+      text-shadow: 0 0 var(--size-2) rgba(166, 200, 225, 0.8);
     }
 
     :host([variant='crt']) .toggle.expanded {
       color: var(--atmos-tertiary, #deffff);
-      text-shadow: 0 0 8px rgba(166, 200, 225, 0.8);
+      text-shadow: 0 0 var(--size-2) rgba(166, 200, 225, 0.8);
     }
 
     /* Type indicators */
     .type-icon {
-      font-size: 0.625rem;
+      font-size: var(--font-size-0);
       color: var(--neutral-600, #666);
     }
 
     /* Status indicator */
     .status {
-      width: 6px;
-      height: 6px;
+      width: var(--size-1);
+      height: var(--size-1);
       background: var(--neutral-600, #666);
       margin-left: auto;
       flex-shrink: 0;
@@ -161,17 +161,17 @@ export class ThxTreeItem extends LitElement {
 
     .status.active {
       background: var(--atmos-primary, #a6c8e1);
-      box-shadow: 0 0 4px rgba(166, 200, 225, 0.8);
+      box-shadow: 0 0 var(--size-1) rgba(166, 200, 225, 0.8);
     }
 
     .status.warning {
       background: var(--accent-warning, #d4aa00);
-      box-shadow: 0 0 4px rgba(212, 170, 0, 0.8);
+      box-shadow: 0 0 var(--size-1) rgba(212, 170, 0, 0.8);
     }
 
     .status.error {
       background: var(--accent-error, #d44000);
-      box-shadow: 0 0 4px rgba(212, 64, 0, 0.8);
+      box-shadow: 0 0 var(--size-1) rgba(212, 64, 0, 0.8);
     }
   `;
 

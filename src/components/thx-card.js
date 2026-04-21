@@ -29,8 +29,8 @@ export class ThxCard extends LitElement {
 
     .card {
       background: var(--neutral-100, #fafafa);
-      padding: 32px;
-      box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.06);
+      padding: var(--size-7);
+      box-shadow: var(--inner-shadow-0);
       position: relative;
     }
 
@@ -38,22 +38,22 @@ export class ThxCard extends LitElement {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 24px;
-      padding-bottom: 12px;
-      border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+      margin-bottom: var(--size-5);
+      padding-bottom: calc(var(--size-2) + var(--size-1));
+      border-bottom: var(--border-size-1) solid rgba(0, 0, 0, 0.08);
     }
 
     .card__label {
       font-family: var(--font-mono, 'Courier New', Courier, monospace);
-      font-size: 0.75rem;
+      font-size: var(--font-size-0);
       text-transform: uppercase;
-      letter-spacing: 0.15em;
+      letter-spacing: var(--font-letterspacing-5);
       color: var(--neutral-600, #666);
     }
 
     .card__actions {
       display: flex;
-      gap: 8px;
+      gap: var(--size-2);
     }
 
     .card__content {
@@ -61,23 +61,23 @@ export class ThxCard extends LitElement {
     }
 
     .card--hoverable {
-      transition: box-shadow 0.2s;
+      transition: box-shadow var(--duration-moderate-1);
       cursor: pointer;
     }
 
     .card--hoverable:hover {
       box-shadow:
-        inset 0 0 0 1px rgba(0, 0, 0, 0.12),
+        var(--inner-shadow-1),
         0 0 15px rgba(166, 200, 225, 0.3);
     }
 
     /* CRT Display Variant */
     .card--crt {
       background: var(--crt-bg, #111);
-      border: 12px solid var(--crt-border, #2a2a2a);
-      border-radius: 4px;
-      box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.5);
-      padding: 20px;
+      border: calc(var(--size-2) + var(--size-1)) solid var(--crt-border, #2a2a2a);
+      border-radius: var(--size-1);
+      box-shadow: inset 0 0 var(--size-4) rgba(0, 0, 0, 0.5);
+      padding: var(--size-4);
       color: var(--atmos-primary, #a6c8e1);
       overflow: hidden;
     }
@@ -99,11 +99,11 @@ export class ThxCard extends LitElement {
         transparent,
         transparent 2px,
         rgba(166, 200, 225, 0.04) 2px,
-        rgba(166, 200, 225, 0.04) 4px
+        rgba(166, 200, 225, 0.04) var(--size-1)
       );
       pointer-events: none;
-      z-index: 10;
-      animation: scanlines 8s linear infinite;
+      z-index: var(--layer-2);
+      animation: var(--duration-pause) linear infinite;
     }
 
     @keyframes scanlines {
@@ -121,19 +121,19 @@ export class ThxCard extends LitElement {
       inset: 0;
       background: radial-gradient(ellipse at center, transparent 50%, rgba(0, 0, 0, 0.4) 100%);
       pointer-events: none;
-      z-index: 11;
+      z-index: calc(var(--layer-2) + 1);
     }
 
     .card--crt .card__content {
       position: relative;
-      z-index: 5;
+      z-index: var(--layer-1);
     }
 
     /* Inner border decoration */
     .card__inner-border {
       position: absolute;
-      inset: 4px;
-      border: 1px solid rgba(0, 0, 0, 0.04);
+      inset: var(--size-1);
+      border: var(--border-size-1) solid rgba(0, 0, 0, 0.04);
       pointer-events: none;
     }
 

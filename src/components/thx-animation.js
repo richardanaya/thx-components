@@ -278,7 +278,7 @@ export class ThxAnimation extends LitElement {
     .animation--typewriter {
       overflow: hidden;
       white-space: nowrap;
-      border-right: 2px solid var(--atmos-primary, #a6c8e1);
+      border-right: var(--border-size-2) solid var(--atmos-primary, #a6c8e1);
       animation-name: typewriter, blink;
       animation-duration: var(--typewriter-duration, 1s), 0.75s;
       animation-timing-function: steps(40, end), step-end;

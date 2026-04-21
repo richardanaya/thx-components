@@ -36,36 +36,36 @@ export class ThxInput extends LitElement {
     .input-wrapper {
       display: flex;
       flex-direction: column;
-      gap: 6px;
+      gap: var(--size-1);
     }
 
     .label {
       font-family: var(--font-mono, 'Courier New', Courier, monospace);
-      font-size: 0.6875rem;
+      font-size: var(--font-size-0);
       text-transform: uppercase;
-      letter-spacing: 0.1em;
+      letter-spacing: var(--font-letterspacing-4);
       color: var(--neutral-600, #666);
     }
 
     .required-indicator {
       color: var(--accent-error, #d44000);
-      margin-left: 2px;
+      margin-left: var(--size-1);
     }
 
     input {
-      height: 40px;
-      padding: 0 12px;
+      height: calc(var(--size-7) + var(--size-2));
+      padding: 0 calc(var(--size-2) + var(--size-1));
       border: none;
-      border-bottom: 2px solid var(--neutral-200, #e0e0e0);
+      border-bottom: var(--border-size-2) solid var(--neutral-200, #e0e0e0);
       font-family: var(--font-mono, 'Courier New', Courier, monospace);
-      font-size: 0.875rem;
+      font-size: var(--font-size-1);
       text-transform: uppercase;
-      letter-spacing: 0.05em;
+      letter-spacing: var(--font-letterspacing-2);
       background: white;
       color: var(--neutral-800, #333);
       transition:
-        border-color 0.2s,
-        box-shadow 0.2s;
+        border-color var(--duration-moderate-1),
+        box-shadow var(--duration-moderate-1);
       width: 100%;
       box-sizing: border-box;
     }
@@ -92,11 +92,11 @@ export class ThxInput extends LitElement {
 
     .input-status {
       font-family: var(--font-mono, 'Courier New', Courier, monospace);
-      font-size: 0.625rem;
+      font-size: var(--font-size-0);
       text-transform: uppercase;
-      letter-spacing: 0.05em;
+      letter-spacing: var(--font-letterspacing-2);
       color: var(--neutral-600, #666);
-      min-height: 16px;
+      min-height: var(--size-3);
     }
 
     .input-status.error {
@@ -113,35 +113,35 @@ export class ThxInput extends LitElement {
       top: 50%;
       transform: translateY(-50%);
       font-family: var(--font-mono, 'Courier New', Courier, monospace);
-      font-size: 0.875rem;
+      font-size: var(--font-size-1);
       color: var(--neutral-600, #666);
       pointer-events: none;
     }
 
     .prefix {
-      left: 12px;
+      left: calc(var(--size-2) + var(--size-1));
     }
 
     .suffix {
-      right: 12px;
+      right: calc(var(--size-2) + var(--size-1));
     }
 
     .has-prefix input {
-      padding-left: 32px;
+      padding-left: var(--size-7);
     }
 
     .has-suffix input,
     .has-password-toggle input {
-      padding-right: 32px;
+      padding-right: var(--size-7);
     }
 
     .password-toggle {
       position: absolute;
       top: 50%;
-      right: 8px;
+      right: var(--size-2);
       transform: translateY(-50%);
-      width: 24px;
-      height: 24px;
+      width: var(--size-5);
+      height: var(--size-5);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -149,9 +149,9 @@ export class ThxInput extends LitElement {
       border: none;
       cursor: pointer;
       font-family: var(--font-mono, 'Courier New', Courier, monospace);
-      font-size: 0.875rem;
+      font-size: var(--font-size-1);
       color: var(--neutral-600, #666);
-      transition: color 0.15s;
+      transition: color var(--duration-quick-2);
       padding: 0;
     }
 
@@ -356,7 +356,9 @@ export class ThxInput extends LitElement {
         ${this.errorMessage
           ? html`<div class="input-status error">${this.errorMessage}</div>`
           : this._hasHelpText
-            ? html`<div class="input-status"><slot name="help-text" @slotchange=${this._onHelpSlotChange}></slot></div>`
+            ? html`<div class="input-status">
+                <slot name="help-text" @slotchange=${this._onHelpSlotChange}></slot>
+              </div>`
             : html`<slot name="help-text" hidden @slotchange=${this._onHelpSlotChange}></slot>`}
       </div>
     `;

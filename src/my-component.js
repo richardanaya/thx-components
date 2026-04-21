@@ -33,64 +33,64 @@ export class MyGreeting extends LitElement {
       display: block;
       font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
       background: #f0f0f0;
-      padding: 40px;
+      padding: calc(var(--size-7) + var(--size-2));
     }
     .card {
       background: #fafafa;
-      padding: 32px;
-      max-width: 520px;
+      padding: var(--size-7);
+      max-width: var(--size-12);
       position: relative;
-      box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.06);
+      box-shadow: var(--inner-shadow-0);
     }
     .card::before {
       content: 'TERMINAL LDS-1138';
       position: absolute;
-      top: 12px;
-      right: 16px;
+      top: calc(var(--size-2) + var(--size-1));
+      right: var(--size-3);
       font-family: 'Courier New', Courier, monospace;
-      font-size: 0.625rem;
+      font-size: var(--font-size-0);
       color: #bbb;
-      letter-spacing: 0.15em;
+      letter-spacing: var(--font-letterspacing-5);
     }
     .card::after {
       content: '';
       position: absolute;
-      inset: 4px;
-      border: 1px solid rgba(0, 0, 0, 0.04);
+      inset: var(--size-1);
+      border: var(--border-size-1) solid rgba(0, 0, 0, 0.04);
       pointer-events: none;
     }
     .greeting {
       color: #333;
-      font-size: 0.875rem;
-      font-weight: 400;
-      margin-bottom: 24px;
+      font-size: var(--font-size-1);
+      font-weight: var(--font-weight-4);
+      margin-bottom: var(--size-5);
       padding-bottom: 16px;
-      border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+      border-bottom: var(--border-size-1) solid rgba(0, 0, 0, 0.08);
       text-transform: uppercase;
-      letter-spacing: 0.1em;
+      letter-spacing: var(--font-letterspacing-4);
       font-family: 'Courier New', Courier, monospace;
     }
     .input-row {
       display: flex;
-      gap: 12px;
+      gap: calc(var(--size-2) + var(--size-1));
       align-items: center;
       background: rgba(0, 0, 0, 0.02);
-      padding: 12px;
-      margin: 0 -12px;
+      padding: calc(var(--size-2) + var(--size-1));
+      margin: 0 calc(-1 * var(--size-2) - var(--size-1));
     }
     .input-row input {
       flex: 1;
-      height: 36px;
-      padding: 0 12px;
+      height: calc(var(--size-7) + var(--size-1));
+      padding: 0 calc(var(--size-2) + var(--size-1));
       border: none;
-      border-bottom: 2px solid #ccc;
-      font-size: 0.875rem;
+      border-bottom: var(--border-size-2) solid #ccc;
+      font-size: var(--font-size-1);
       font-family: 'Courier New', Courier, monospace;
       background: white;
       box-sizing: border-box;
       text-transform: uppercase;
-      letter-spacing: 0.08em;
-      transition: border-color 0.2s;
+      letter-spacing: var(--font-letterspacing-3);
+      transition: border-color var(--duration-moderate-1);
     }
     .input-row input::placeholder {
       color: #aaa;
@@ -101,19 +101,19 @@ export class MyGreeting extends LitElement {
       border-color: #666;
     }
     .input-row button {
-      height: 36px;
-      padding: 0 20px;
+      height: calc(var(--size-7) + var(--size-1));
+      padding: 0 var(--size-4);
       background: #e0e0e0;
       color: #333;
       border: none;
-      border-bottom: 2px solid #bbb;
-      font-size: 0.6875rem;
-      font-weight: 600;
+      border-bottom: var(--border-size-2) solid #bbb;
+      font-size: var(--font-size-0);
+      font-weight: var(--font-weight-6);
       cursor: pointer;
       text-transform: uppercase;
-      letter-spacing: 0.12em;
+      letter-spacing: var(--font-letterspacing-4);
       box-sizing: border-box;
-      transition: all 0.15s;
+      transition: all var(--duration-quick-2);
       font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
     }
     .input-row button:hover {
@@ -126,47 +126,47 @@ export class MyGreeting extends LitElement {
       transform: translateY(1px);
     }
     .text-examples {
-      margin-top: 28px;
+      margin-top: var(--size-6);
       padding-top: 24px;
-      border-top: 1px solid rgba(0, 0, 0, 0.08);
+      border-top: var(--border-size-1) solid rgba(0, 0, 0, 0.08);
     }
     .display-text {
-      font-size: 1.5rem;
-      font-weight: 300;
+      font-size: var(--font-size-4);
+      font-weight: var(--font-weight-3);
       color: #333;
-      margin: 0 0 16px 0;
-      line-height: 1.2;
+      margin: 0 0 var(--size-3) 0;
+      line-height: var(--font-lineheight-0);
       text-transform: uppercase;
-      letter-spacing: 0.12em;
+      letter-spacing: var(--font-letterspacing-4);
     }
     .body-text {
-      font-size: 0.8125rem;
-      font-weight: 400;
+      font-size: var(--font-size-0);
+      font-weight: var(--font-weight-4);
       color: #777;
-      line-height: 1.8;
-      margin: 0 0 16px 0;
+      line-height: var(--font-lineheight-5);
+      margin: 0 0 var(--size-3) 0;
     }
     .mono-text {
       font-family: 'Courier New', Courier, monospace;
-      font-size: 0.75rem;
+      font-size: var(--font-size-0);
       background: white;
-      padding: 3px 8px;
+      padding: var(--size-1) var(--size-2);
       border-bottom: 1px solid #ddd;
       color: #444;
       text-transform: uppercase;
-      letter-spacing: 0.08em;
+      letter-spacing: var(--font-letterspacing-3);
     }
     .mono-block {
       font-family: 'Courier New', Courier, monospace;
-      font-size: 0.75rem;
+      font-size: var(--font-size-0);
       background: white;
-      padding: 16px 20px;
-      border-left: 2px solid #ccc;
+      padding: var(--size-3) var(--size-4);
+      border-left: var(--border-size-2) solid #ccc;
       color: #555;
       margin: 0;
       overflow-x: auto;
-      line-height: 1.6;
-      letter-spacing: 0.05em;
+      line-height: var(--font-lineheight-4);
+      letter-spacing: var(--font-letterspacing-2);
     }
     .scanline {
       position: absolute;
@@ -174,9 +174,9 @@ export class MyGreeting extends LitElement {
       background: repeating-linear-gradient(
         0deg,
         transparent,
-        transparent 2px,
-        rgba(0, 0, 0, 0.02) 2px,
-        rgba(0, 0, 0, 0.02) 4px
+        transparent var(--size-1),
+        rgba(0, 0, 0, 0.02) var(--size-1),
+        rgba(0, 0, 0, 0.02) var(--size-2)
       );
       pointer-events: none;
       opacity: 0.5;

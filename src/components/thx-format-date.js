@@ -89,9 +89,9 @@ export class ThxFormatDate extends LitElement {
     .date-container {
       display: inline-flex;
       align-items: center;
-      gap: 4px;
-      font-size: 0.8125rem;
-      letter-spacing: 0.05em;
+      gap: var(--size-1);
+      font-size: var(--font-size-0);
+      letter-spacing: var(--font-letterspacing-2);
       text-transform: uppercase;
     }
 
@@ -102,26 +102,26 @@ export class ThxFormatDate extends LitElement {
     /* CRT display variant */
     :host([variant='crt']) .date-container {
       background: var(--crt-bg, #111);
-      padding: 8px 12px;
-      border: 2px solid var(--crt-border, #2a2a2a);
+      padding: var(--size-2) calc(var(--size-2) + var(--size-1));
+      border: var(--border-size-2) solid var(--crt-border, #2a2a2a);
       color: var(--atmos-primary, #a6c8e1);
-      text-shadow: 0 0 4px rgba(166, 200, 225, 0.4);
+      text-shadow: 0 0 var(--size-1) rgba(166, 200, 225, 0.4);
     }
 
     /* Label style */
     .date-label {
-      font-size: 0.625rem;
+      font-size: var(--font-size-0);
       color: var(--neutral-600, #666);
-      margin-right: 8px;
-      letter-spacing: 0.1em;
+      margin-right: var(--size-2);
+      letter-spacing: var(--font-letterspacing-4);
     }
 
     :host([show-label]) .date-container::before {
       content: 'DATE //';
-      font-size: 0.625rem;
+      font-size: var(--font-size-0);
       color: var(--neutral-600, #666);
-      margin-right: 8px;
-      letter-spacing: 0.1em;
+      margin-right: var(--size-2);
+      letter-spacing: var(--font-letterspacing-4);
     }
 
     :host([variant='crt'][show-label]) .date-container::before {

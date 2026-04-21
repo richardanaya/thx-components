@@ -30,30 +30,30 @@ export class ThxMultiSelect extends LitElement {
     .multi-select-wrapper {
       display: flex;
       flex-direction: column;
-      gap: 6px;
+      gap: var(--size-1);
     }
 
     .label {
-      font-size: 0.6875rem;
+      font-size: var(--font-size-0);
       text-transform: uppercase;
-      letter-spacing: 0.1em;
+      letter-spacing: var(--font-letterspacing-4);
       color: var(--neutral-600, #666);
     }
 
     .required-indicator {
       color: var(--accent-error, #d44000);
-      margin-left: 2px;
+      margin-left: var(--size-1);
     }
 
     .trigger {
-      height: 40px;
-      padding: 0 40px 0 12px;
+      height: calc(var(--size-7) + var(--size-2));
+      padding: 0 calc(var(--size-7) + var(--size-2)) 0 calc(var(--size-2) + var(--size-1));
       border: none;
-      border-bottom: 2px solid #ccc;
+      border-bottom: var(--border-size-2) solid #ccc;
       font-family: inherit;
-      font-size: 0.875rem;
+      font-size: var(--font-size-1);
       text-transform: uppercase;
-      letter-spacing: 0.05em;
+      letter-spacing: var(--font-letterspacing-2);
       background: white;
       color: var(--neutral-800, #333);
       cursor: pointer;
@@ -61,8 +61,8 @@ export class ThxMultiSelect extends LitElement {
       align-items: center;
       position: relative;
       transition:
-        border-color 0.2s,
-        box-shadow 0.2s;
+        border-color var(--duration-moderate-1),
+        box-shadow var(--duration-moderate-1);
       width: 100%;
       box-sizing: border-box;
     }
@@ -97,12 +97,12 @@ export class ThxMultiSelect extends LitElement {
 
     .arrow {
       position: absolute;
-      right: 12px;
+      right: calc(var(--size-2) + var(--size-1));
       top: 50%;
       transform: translateY(-50%);
-      width: 16px;
-      height: 16px;
-      transition: transform 0.2s;
+      width: var(--size-3);
+      height: var(--size-3);
+      transition: transform var(--duration-moderate-1);
       color: var(--neutral-600, #666);
     }
 
@@ -116,10 +116,10 @@ export class ThxMultiSelect extends LitElement {
       left: 0;
       right: 0;
       background: white;
-      border: 1px solid var(--atmos-primary, #a6c8e1);
+      border: var(--border-size-1) solid var(--atmos-primary, #a6c8e1);
       border-top: none;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-      z-index: 1000;
+      box-shadow: 0 var(--size-1) calc(var(--size-2) + var(--size-1)) rgba(0, 0, 0, 0.15);
+      z-index: var(--layer-5);
       max-height: 250px;
       overflow-y: auto;
       display: none;
@@ -132,15 +132,15 @@ export class ThxMultiSelect extends LitElement {
     .option {
       display: flex;
       align-items: center;
-      gap: 12px;
-      padding: 10px 12px;
-      font-size: 0.8125rem;
+      gap: calc(var(--size-2) + var(--size-1));
+      padding: var(--size-2) calc(var(--size-2) + var(--size-1));
+      font-size: var(--font-size-0);
       text-transform: uppercase;
-      letter-spacing: 0.05em;
+      letter-spacing: var(--font-letterspacing-2);
       color: var(--neutral-800, #333);
       cursor: pointer;
-      transition: all 0.15s;
-      border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+      transition: all var(--duration-quick-2);
+      border-bottom: var(--border-size-1) solid rgba(0, 0, 0, 0.04);
     }
 
     .option:last-child {
@@ -162,9 +162,9 @@ export class ThxMultiSelect extends LitElement {
     }
 
     .checkbox {
-      width: 16px;
-      height: 16px;
-      border: 2px solid #999;
+      width: var(--size-3);
+      height: var(--size-3);
+      border: var(--border-size-2) solid #999;
       background: white;
       display: flex;
       align-items: center;
@@ -179,8 +179,8 @@ export class ThxMultiSelect extends LitElement {
 
     .checkbox::after {
       content: '';
-      width: 4px;
-      height: 8px;
+      width: var(--size-1);
+      height: var(--size-2);
       border: solid white;
       border-width: 0 2px 2px 0;
       transform: rotate(45deg) translate(-1px, -1px);
@@ -192,10 +192,10 @@ export class ThxMultiSelect extends LitElement {
     }
 
     .no-options {
-      padding: 16px;
+      padding: var(--size-3);
       text-align: center;
       color: var(--neutral-600, #666);
-      font-size: 0.75rem;
+      font-size: var(--font-size-0);
     }
 
     .select-container {
@@ -206,14 +206,14 @@ export class ThxMultiSelect extends LitElement {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      min-width: 20px;
-      height: 20px;
-      padding: 0 6px;
+      min-width: var(--size-4);
+      height: var(--size-4);
+      padding: 0 var(--size-1);
       background: var(--atmos-primary, #a6c8e1);
       color: var(--neutral-800, #333);
-      font-size: 0.6875rem;
-      font-weight: 600;
-      margin-left: 8px;
+      font-size: var(--font-size-0);
+      font-weight: var(--font-weight-6);
+      margin-left: var(--size-2);
     }
   `;
 

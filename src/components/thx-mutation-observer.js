@@ -36,11 +36,11 @@ export class ThxMutationObserver extends LitElement {
     /* CRT Monitor display for mutation log */
     .observer-log {
       background: var(--crt-bg, #111);
-      border: 12px solid var(--crt-border, #2a2a2a);
-      border-radius: 4px;
+      border: calc(var(--size-2) + var(--size-1)) solid var(--crt-border, #2a2a2a);
+      border-radius: var(--size-1);
       position: relative;
       overflow: hidden;
-      box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.5);
+      box-shadow: inset 0 0 var(--size-4) rgba(0, 0, 0, 0.5);
     }
 
     .observer-log::before {
@@ -52,10 +52,10 @@ export class ThxMutationObserver extends LitElement {
         transparent,
         transparent 2px,
         rgba(166, 200, 225, 0.04) 2px,
-        rgba(166, 200, 225, 0.04) 4px
+        rgba(166, 200, 225, 0.04) var(--size-1)
       );
       pointer-events: none;
-      z-index: 10;
+      z-index: var(--layer-2);
     }
 
     .observer-log::after {
@@ -64,24 +64,24 @@ export class ThxMutationObserver extends LitElement {
       inset: 0;
       background: radial-gradient(ellipse at center, transparent 50%, rgba(0, 0, 0, 0.4) 100%);
       pointer-events: none;
-      z-index: 11;
+      z-index: calc(var(--layer-2) + 1);
     }
 
     .log-label {
       position: absolute;
-      top: 4px;
-      right: 8px;
-      font-size: 0.625rem;
+      top: var(--size-1);
+      right: var(--size-2);
+      font-size: var(--font-size-0);
       color: #666;
       text-transform: uppercase;
-      letter-spacing: 0.1em;
-      z-index: 15;
+      letter-spacing: var(--font-letterspacing-4);
+      z-index: calc(var(--layer-2) + 5);
     }
 
     .log-content {
       position: relative;
-      z-index: 5;
-      padding: 24px;
+      z-index: var(--layer-1);
+      padding: var(--size-5);
       max-height: 300px;
       overflow-y: auto;
     }
@@ -89,10 +89,10 @@ export class ThxMutationObserver extends LitElement {
     /* Mutation entries */
     .mutation-entry {
       display: flex;
-      gap: 12px;
-      padding: 6px 0;
-      font-size: 0.75rem;
-      border-bottom: 1px solid rgba(166, 200, 225, 0.1);
+      gap: calc(var(--size-2) + var(--size-1));
+      padding: var(--size-1) 0;
+      font-size: var(--font-size-0);
+      border-bottom: var(--border-size-1) solid rgba(166, 200, 225, 0.1);
       color: var(--atmos-primary, #a6c8e1);
     }
 
@@ -136,42 +136,42 @@ export class ThxMutationObserver extends LitElement {
     .observer-status {
       display: flex;
       align-items: center;
-      gap: 8px;
-      padding: 8px 12px;
+      gap: var(--size-2);
+      padding: var(--size-2) calc(var(--size-2) + var(--size-1));
       background: rgba(0, 0, 0, 0.3);
-      border-bottom: 1px solid rgba(166, 200, 225, 0.1);
-      font-size: 0.625rem;
+      border-bottom: var(--border-size-1) solid rgba(166, 200, 225, 0.1);
+      font-size: var(--font-size-0);
       text-transform: uppercase;
-      letter-spacing: 0.1em;
+      letter-spacing: var(--font-letterspacing-4);
       color: var(--atmos-secondary, #707e91);
     }
 
     .status-led {
-      width: 8px;
-      height: 8px;
+      width: var(--size-2);
+      height: var(--size-2);
       background: #333;
-      border: 1px solid #444;
+      border: var(--border-size-1) solid #444;
     }
 
     .status-led.active {
       background: var(--atmos-primary, #a6c8e1);
-      box-shadow: 0 0 6px rgba(166, 200, 225, 0.8);
+      box-shadow: 0 0 var(--size-1) rgba(166, 200, 225, 0.8);
     }
 
     .observer-controls {
       display: flex;
-      gap: 8px;
+      gap: var(--size-2);
       margin-left: auto;
     }
 
     .observer-btn {
       background: transparent;
-      border: 1px solid var(--atmos-secondary, #707e91);
+      border: var(--border-size-1) solid var(--atmos-secondary, #707e91);
       color: var(--atmos-secondary, #707e91);
-      padding: 4px 10px;
-      font-size: 0.5625rem;
+      padding: var(--size-1) var(--size-2);
+      font-size: var(--font-size-00);
       text-transform: uppercase;
-      letter-spacing: 0.1em;
+      letter-spacing: var(--font-letterspacing-4);
       cursor: pointer;
       font-family: inherit;
     }
@@ -185,28 +185,28 @@ export class ThxMutationObserver extends LitElement {
     /* Empty state */
     .log-empty {
       text-align: center;
-      padding: 32px;
+      padding: var(--size-7);
       color: var(--atmos-secondary, #707e91);
-      font-size: 0.75rem;
-      letter-spacing: 0.1em;
+      font-size: var(--font-size-0);
+      letter-spacing: var(--font-letterspacing-4);
     }
 
     /* Content slot wrapper */
     .content-slot {
-      margin-top: 16px;
-      padding: 16px;
+      margin-top: var(--size-3);
+      padding: var(--size-3);
       background: var(--neutral-100, #fafafa);
-      box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.06);
+      box-shadow: var(--inner-shadow-0);
     }
 
     .content-label {
-      font-size: 0.6875rem;
+      font-size: var(--font-size-0);
       color: var(--neutral-600, #666);
-      letter-spacing: 0.15em;
+      letter-spacing: var(--font-letterspacing-5);
       text-transform: uppercase;
-      margin-bottom: 12px;
-      padding-bottom: 8px;
-      border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+      margin-bottom: calc(var(--size-2) + var(--size-1));
+      padding-bottom: var(--size-2);
+      border-bottom: var(--border-size-1) solid rgba(0, 0, 0, 0.08);
     }
   `;
 

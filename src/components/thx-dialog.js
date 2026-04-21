@@ -29,12 +29,12 @@ export class ThxDialog extends LitElement {
       display: flex;
       align-items: center;
       justify-content: center;
-      z-index: 1000;
+      z-index: var(--layer-5);
       opacity: 0;
       visibility: hidden;
       transition:
-        opacity 0.2s,
-        visibility 0.2s;
+        opacity var(--duration-moderate-1),
+        visibility var(--duration-moderate-1);
     }
 
     .dialog-overlay.open {
@@ -44,15 +44,15 @@ export class ThxDialog extends LitElement {
 
     .dialog-container {
       background: var(--neutral-100, #fafafa);
-      border: 12px solid var(--crt-border, #2a2a2a);
-      border-radius: 4px;
+      border: calc(var(--size-2) + var(--size-1)) solid var(--crt-border, #2a2a2a);
+      border-radius: var(--size-1);
       box-shadow:
-        inset 0 0 0 1px rgba(0, 0, 0, 0.06),
-        0 0 40px rgba(0, 0, 0, 0.5);
+        var(--inner-shadow-0),
+        0 0 calc(var(--size-7) + var(--size-2)) rgba(0, 0, 0, 0.5);
       position: relative;
       overflow: hidden;
       transform: scale(0.95);
-      transition: transform 0.2s;
+      transition: transform var(--duration-moderate-1);
       max-height: 90vh;
       display: flex;
       flex-direction: column;
@@ -84,75 +84,75 @@ export class ThxDialog extends LitElement {
         transparent,
         transparent 2px,
         rgba(166, 200, 225, 0.03) 2px,
-        rgba(166, 200, 225, 0.03) 4px
+        rgba(166, 200, 225, 0.03) var(--size-1)
       );
       pointer-events: none;
-      z-index: 10;
+      z-index: var(--layer-2);
     }
 
     .dialog-header {
       background: var(--crt-bg, #111);
-      padding: 12px 20px;
+      padding: calc(var(--size-2) + var(--size-1)) var(--size-4);
       display: flex;
       align-items: center;
       justify-content: space-between;
-      border-bottom: 1px solid #333;
+      border-bottom: var(--border-size-1) solid #333;
       position: relative;
-      z-index: 5;
+      z-index: var(--layer-1);
     }
 
     .dialog-label {
       font-family: var(--font-mono, 'Courier New', monospace);
-      font-size: 0.625rem;
+      font-size: var(--font-size-0);
       color: var(--atmos-primary, #a6c8e1);
       text-transform: uppercase;
-      letter-spacing: 0.15em;
-      text-shadow: 0 0 4px rgba(166, 200, 225, 0.5);
+      letter-spacing: var(--font-letterspacing-5);
+      text-shadow: 0 0 var(--size-1) rgba(166, 200, 225, 0.5);
     }
 
     .dialog-close {
-      width: 28px;
-      height: 28px;
+      width: var(--size-6);
+      height: var(--size-6);
       background: transparent;
-      border: 1px solid var(--atmos-secondary, #707e91);
+      border: var(--border-size-1) solid var(--atmos-secondary, #707e91);
       color: var(--atmos-secondary, #707e91);
       font-family: var(--font-mono, 'Courier New', monospace);
-      font-size: 0.875rem;
+      font-size: var(--font-size-1);
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      transition: all 0.15s;
+      transition: all var(--duration-quick-2);
       padding: 0;
     }
 
     .dialog-close:hover {
       border-color: var(--atmos-primary, #a6c8e1);
       color: var(--atmos-primary, #a6c8e1);
-      box-shadow: 0 0 8px rgba(166, 200, 225, 0.4);
+      box-shadow: 0 0 var(--size-2) rgba(166, 200, 225, 0.4);
     }
 
     .dialog-body {
-      padding: 24px 20px;
+      padding: var(--size-5) var(--size-4);
       overflow-y: auto;
       flex: 1;
       position: relative;
-      z-index: 5;
+      z-index: var(--layer-1);
     }
 
     .dialog-footer {
-      padding: 16px 20px;
-      border-top: 1px solid rgba(0, 0, 0, 0.08);
+      padding: var(--size-3) var(--size-4);
+      border-top: var(--border-size-1) solid rgba(0, 0, 0, 0.08);
       display: flex;
       justify-content: flex-end;
-      gap: 12px;
+      gap: calc(var(--size-2) + var(--size-1));
       position: relative;
-      z-index: 5;
+      z-index: var(--layer-1);
     }
 
     ::slotted([slot='footer']) {
       display: flex;
-      gap: 12px;
+      gap: calc(var(--size-2) + var(--size-1));
     }
   `;
 
@@ -275,17 +275,17 @@ export class ThxDialog extends LitElement {
                       class="btn btn-secondary"
                       @click=${this.hide}
                       style="
-                        height: 36px;
-                        padding: 0 20px;
+                        height: calc(var(--size-7) + var(--size-1));
+                        padding: 0 var(--size-4);
                         background: var(--atmos-secondary, #707e91);
                         color: var(--neutral-100, #fafafa);
                         border: none;
                         font-family: var(--font-mono, 'Courier New', monospace);
-                        font-size: 0.625rem;
+                        font-size: var(--font-size-0);
                         text-transform: uppercase;
-                        letter-spacing: 0.1em;
+                        letter-spacing: var(--font-letterspacing-4);
                         cursor: pointer;
-                        transition: all 0.15s;
+                        transition: all var(--duration-quick-2);
                       "
                       type="button"
                     >
@@ -298,17 +298,17 @@ export class ThxDialog extends LitElement {
                           new CustomEvent('thx-confirm', { bubbles: true, composed: true })
                         )}
                       style="
-                        height: 36px;
-                        padding: 0 20px;
+                        height: calc(var(--size-7) + var(--size-1));
+                        padding: 0 var(--size-4);
                         background: var(--atmos-primary, #a6c8e1);
                         color: var(--neutral-800, #333);
                         border: none;
                         font-family: var(--font-mono, 'Courier New', monospace);
-                        font-size: 0.625rem;
+                        font-size: var(--font-size-0);
                         text-transform: uppercase;
-                        letter-spacing: 0.1em;
+                        letter-spacing: var(--font-letterspacing-4);
                         cursor: pointer;
-                        transition: all 0.15s;
+                        transition: all var(--duration-quick-2);
                       "
                       type="button"
                     >

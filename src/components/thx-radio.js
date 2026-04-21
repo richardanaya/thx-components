@@ -35,18 +35,18 @@ export class ThxRadio extends LitElement {
     .radio-wrapper {
       display: inline-flex;
       align-items: center;
-      gap: 8px;
+      gap: var(--size-2);
     }
 
     input[type='radio'] {
       appearance: none;
-      width: 18px;
-      height: 18px;
-      border: 2px solid var(--neutral-600, #666);
-      border-radius: 50%;
+      width: var(--size-3);
+      height: var(--size-3);
+      border: var(--border-size-2) solid var(--neutral-600, #666);
+      border-radius: var(--radius-round);
       background: white;
       cursor: pointer;
-      transition: all 0.15s;
+      transition: all var(--duration-quick-2);
       margin: 0;
       position: relative;
     }
@@ -65,10 +65,10 @@ export class ThxRadio extends LitElement {
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      width: 8px;
-      height: 8px;
+      width: var(--size-2);
+      height: var(--size-2);
       background: var(--neutral-800, #333);
-      border-radius: 50%;
+      border-radius: var(--radius-round);
     }
 
     input[type='radio']:focus {
@@ -78,7 +78,7 @@ export class ThxRadio extends LitElement {
 
     .label {
       font-family: var(--font-mono, 'Courier New', Courier, monospace);
-      font-size: 0.8125rem;
+      font-size: var(--font-size-0);
       color: var(--neutral-800, #333);
       user-select: none;
     }

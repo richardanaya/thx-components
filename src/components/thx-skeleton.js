@@ -32,7 +32,7 @@ export class ThxSkeleton extends LitElement {
     .skeleton {
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: var(--size-2);
     }
 
     .skeleton__item {
@@ -90,7 +90,7 @@ export class ThxSkeleton extends LitElement {
 
     /* Circle variant */
     .skeleton__item--circle {
-      border-radius: 50%;
+      border-radius: var(--radius-round);
     }
 
     /* Rect variant */
@@ -120,11 +120,11 @@ export class ThxSkeleton extends LitElement {
       0%,
       100% {
         opacity: 0.6;
-        box-shadow: 0 0 4px rgba(166, 200, 225, 0.3);
+        box-shadow: 0 0 var(--size-1) rgba(166, 200, 225, 0.3);
       }
       50% {
         opacity: 1;
-        box-shadow: 0 0 8px rgba(166, 200, 225, 0.5);
+        box-shadow: 0 0 var(--size-2) rgba(166, 200, 225, 0.5);
       }
     }
 
@@ -138,26 +138,26 @@ export class ThxSkeleton extends LitElement {
         transparent,
         transparent 2px,
         rgba(166, 200, 225, 0.05) 2px,
-        rgba(166, 200, 225, 0.05) 4px
+        rgba(166, 200, 225, 0.05) var(--size-1)
       );
       pointer-events: none;
     }
 
     /* Size presets */
     .skeleton__item--sm {
-      height: 16px;
+      height: var(--size-3);
     }
 
     .skeleton__item--md {
-      height: 24px;
+      height: var(--size-5);
     }
 
     .skeleton__item--lg {
-      height: 32px;
+      height: var(--size-7);
     }
 
     .skeleton__item--xl {
-      height: 48px;
+      height: var(--size-8);
     }
   `;
 

@@ -27,32 +27,32 @@ export class ThxColorPicker extends LitElement {
     .color-picker-wrapper {
       display: flex;
       flex-direction: column;
-      gap: 6px;
+      gap: var(--size-1);
     }
 
     .label {
       font-family: var(--font-mono, 'Courier New', Courier, monospace);
-      font-size: 0.6875rem;
+      font-size: var(--font-size-0);
       text-transform: uppercase;
-      letter-spacing: 0.1em;
+      letter-spacing: var(--font-letterspacing-4);
       color: var(--neutral-600, #666);
     }
 
     .input-row {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: calc(var(--size-2) + var(--size-1));
     }
 
     .color-swatch {
-      width: 40px;
-      height: 40px;
-      border: 2px solid #999;
+      width: calc(var(--size-7) + var(--size-2));
+      height: calc(var(--size-7) + var(--size-2));
+      border: var(--border-size-2) solid #999;
       background: white;
       cursor: pointer;
       position: relative;
       overflow: hidden;
-      transition: all 0.15s;
+      transition: all var(--duration-quick-2);
     }
 
     .color-swatch:hover {
@@ -82,17 +82,17 @@ export class ThxColorPicker extends LitElement {
 
     .value-display {
       font-family: var(--font-mono, 'Courier New', Courier, monospace);
-      font-size: 0.8125rem;
+      font-size: var(--font-size-0);
       text-transform: uppercase;
-      letter-spacing: 0.05em;
+      letter-spacing: var(--font-letterspacing-2);
       color: var(--neutral-800, #333);
-      padding: 0 12px;
-      height: 40px;
+      padding: 0 calc(var(--size-2) + var(--size-1));
+      height: calc(var(--size-7) + var(--size-2));
       display: flex;
       align-items: center;
-      border-bottom: 2px solid #ccc;
+      border-bottom: var(--border-size-2) solid #ccc;
       background: white;
-      min-width: 80px;
+      min-width: var(--size-10);
       flex: 1;
     }
 
@@ -109,16 +109,16 @@ export class ThxColorPicker extends LitElement {
     .swatch-grid {
       display: grid;
       grid-template-columns: repeat(8, 1fr);
-      gap: 4px;
-      margin-top: 8px;
+      gap: var(--size-1);
+      margin-top: var(--size-2);
     }
 
     .preset-swatch {
-      width: 24px;
-      height: 24px;
-      border: 1px solid #999;
+      width: var(--size-5);
+      height: var(--size-5);
+      border: var(--border-size-1) solid #999;
       cursor: pointer;
-      transition: all 0.15s;
+      transition: all var(--duration-quick-2);
     }
 
     .preset-swatch:hover {

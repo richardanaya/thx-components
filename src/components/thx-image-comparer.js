@@ -19,16 +19,18 @@ export class ThxImageComparer extends LitElement {
     :host {
       display: block;
       position: relative;
+      overflow: hidden;
     }
 
     .comparer-container {
       position: relative;
       width: 100%;
+      height: 100%;
       overflow: hidden;
       background: var(--crt-bg, #111);
-      border: 8px solid var(--crt-border, #2a2a2a);
-      border-radius: 4px;
-      box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.5);
+      border: var(--size-2) solid var(--crt-border, #2a2a2a);
+      border-radius: var(--size-1);
+      box-shadow: inset 0 0 var(--size-4) rgba(0, 0, 0, 0.5);
     }
 
     /* CRT scanline effect */
@@ -41,7 +43,7 @@ export class ThxImageComparer extends LitElement {
         transparent,
         transparent 2px,
         rgba(166, 200, 225, 0.04) 2px,
-        rgba(166, 200, 225, 0.04) 4px
+        rgba(166, 200, 225, 0.04) var(--size-1)
       );
       pointer-events: none;
       z-index: 20;
@@ -83,15 +85,15 @@ export class ThxImageComparer extends LitElement {
       position: absolute;
       top: 0;
       bottom: 0;
-      left: var(--position, 50%);
+      /* Handle is var(--size-7) wide; clamp keeps it fully visible at extremes */
+      left: clamp(calc(var(--size-7) / 2), var(--position, 50%), calc(100% - var(--size-7) / 2));
       width: 2px;
       background: var(--atmos-primary, #a6c8e1);
-      transform: translateX(-50%);
       cursor: ew-resize;
-      z-index: 15;
+      z-index: calc(var(--layer-2) + 5);
       box-shadow:
-        0 0 10px rgba(166, 200, 225, 0.8),
-        0 0 20px rgba(166, 200, 225, 0.4);
+        0 0 var(--size-2) rgba(166, 200, 225, 0.8),
+        0 0 var(--size-4) rgba(166, 200, 225, 0.4);
     }
 
     .divider::before,
@@ -106,14 +108,14 @@ export class ThxImageComparer extends LitElement {
     }
 
     .divider::before {
-      top: 12px;
-      border-width: 8px 8px 8px 0;
+      top: calc(var(--size-2) + var(--size-1));
+      border-width: var(--size-2) var(--size-2) var(--size-2) 0;
       border-color: transparent var(--atmos-primary, #a6c8e1) transparent transparent;
     }
 
     .divider::after {
-      bottom: 12px;
-      border-width: 8px 0 8px 8px;
+      bottom: calc(var(--size-2) + var(--size-1));
+      border-width: var(--size-2) 0 var(--size-2) var(--size-2);
       border-color: transparent transparent transparent var(--atmos-primary, #a6c8e1);
     }
 
@@ -122,10 +124,10 @@ export class ThxImageComparer extends LitElement {
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      width: 32px;
-      height: 32px;
+      width: var(--size-7);
+      height: var(--size-7);
       background: var(--crt-bg, #111);
-      border: 2px solid var(--atmos-primary, #a6c8e1);
+      border: var(--border-size-2) solid var(--atmos-primary, #a6c8e1);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -135,31 +137,31 @@ export class ThxImageComparer extends LitElement {
 
     .divider-handle-icon {
       color: var(--atmos-primary, #a6c8e1);
-      font-size: 0.75rem;
+      font-size: var(--font-size-0);
       font-family: var(--font-mono, 'Courier New', monospace);
       letter-spacing: -2px;
     }
 
     .labels {
       position: absolute;
-      top: 16px;
-      left: 16px;
-      right: 16px;
+      top: var(--size-3);
+      left: var(--size-3);
+      right: var(--size-3);
       display: flex;
       justify-content: space-between;
-      z-index: 15;
+      z-index: calc(var(--layer-2) + 5);
       pointer-events: none;
     }
 
     .label {
       font-family: var(--font-mono, 'Courier New', monospace);
-      font-size: 0.5625rem;
+      font-size: var(--font-size-00);
       text-transform: uppercase;
-      letter-spacing: 0.1em;
-      padding: 6px 10px;
+      letter-spacing: var(--font-letterspacing-4);
+      padding: var(--size-1) var(--size-2);
       background: rgba(17, 17, 17, 0.8);
       color: var(--atmos-primary, #a6c8e1);
-      border: 1px solid var(--atmos-secondary, #707e91);
+      border: var(--border-size-1) solid var(--atmos-secondary, #707e91);
     }
 
     .label-after {
@@ -172,16 +174,16 @@ export class ThxImageComparer extends LitElement {
       bottom: 0;
       left: 0;
       right: 0;
-      padding: 8px 12px;
+      padding: var(--size-2) calc(var(--size-2) + var(--size-1));
       background: rgba(17, 17, 17, 0.9);
       display: flex;
       justify-content: space-between;
       align-items: center;
-      z-index: 15;
+      z-index: calc(var(--layer-2) + 5);
       font-family: var(--font-mono, 'Courier New', monospace);
-      font-size: 0.5625rem;
+      font-size: var(--font-size-00);
       text-transform: uppercase;
-      letter-spacing: 0.1em;
+      letter-spacing: var(--font-letterspacing-4);
       color: var(--atmos-secondary, #707e91);
     }
 
@@ -197,7 +199,7 @@ export class ThxImageComparer extends LitElement {
     }
 
     .comparer-container:hover .divider-handle {
-      box-shadow: 0 0 20px rgba(166, 200, 225, 0.8);
+      box-shadow: 0 0 var(--size-4) rgba(166, 200, 225, 0.8);
     }
   `;
 
@@ -226,6 +228,11 @@ export class ThxImageComparer extends LitElement {
     this.position = 50;
     /** @type {string} */
     this.height = '300px';
+
+    // Apply default height to host if user hasn't set one via inline style
+    if (!this.style.height) {
+      this.style.height = this.height;
+    }
     /** @type {boolean} */
     this.showLabels = true;
     /** @type {boolean} */
@@ -333,11 +340,7 @@ export class ThxImageComparer extends LitElement {
     const positionStyle = `--position: ${this.position}%`;
 
     return html`
-      <div
-        class="comparer-container"
-        style="height: ${this.height}; ${positionStyle}"
-        @click=${this._handleContainerClick}
-      >
+      <div class="comparer-container" style="${positionStyle}" @click=${this._handleContainerClick}>
         ${this.showLabels
           ? html`
               <div class="labels">

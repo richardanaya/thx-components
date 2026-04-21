@@ -31,26 +31,26 @@ export class ThxDropdown extends LitElement {
     }
 
     .dropdown-trigger {
-      height: 40px;
-      padding: 0 16px;
+      height: calc(var(--size-7) + var(--size-2));
+      padding: 0 var(--size-3);
       background: var(--neutral-100, #fafafa);
-      border: 1px solid var(--atmos-secondary, #707e91);
+      border: var(--border-size-1) solid var(--atmos-secondary, #707e91);
       font-family: var(--font-mono, 'Courier New', monospace);
-      font-size: 0.6875rem;
+      font-size: var(--font-size-0);
       text-transform: uppercase;
-      letter-spacing: 0.1em;
+      letter-spacing: var(--font-letterspacing-4);
       color: var(--neutral-800, #333);
       cursor: pointer;
       display: inline-flex;
       align-items: center;
-      gap: 12px;
-      transition: all 0.15s;
+      gap: calc(var(--size-2) + var(--size-1));
+      transition: all var(--duration-quick-2);
       white-space: nowrap;
     }
 
     .dropdown-trigger:hover {
       border-color: var(--atmos-primary, #a6c8e1);
-      box-shadow: 0 0 8px rgba(166, 200, 225, 0.3);
+      box-shadow: 0 0 var(--size-2) rgba(166, 200, 225, 0.3);
     }
 
     .dropdown-trigger.open {
@@ -65,8 +65,8 @@ export class ThxDropdown extends LitElement {
     }
 
     .dropdown-arrow {
-      font-size: 0.5rem;
-      transition: transform 0.2s;
+      font-size: var(--font-size-00);
+      transition: transform var(--duration-moderate-1);
       color: var(--atmos-secondary, #707e91);
     }
 
@@ -79,17 +79,17 @@ export class ThxDropdown extends LitElement {
       position: absolute;
       min-width: 100%;
       background: var(--crt-bg, #111);
-      border: 8px solid var(--crt-border, #2a2a2a);
-      border-radius: 2px;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
-      z-index: 100;
+      border: var(--size-2) solid var(--crt-border, #2a2a2a);
+      border-radius: var(--radius-1);
+      box-shadow: 0 var(--size-1) var(--size-4) rgba(0, 0, 0, 0.5);
+      z-index: var(--layer-4);
       opacity: 0;
       visibility: hidden;
       transform: translateY(-8px);
       transition:
-        opacity 0.15s,
-        visibility 0.15s,
-        transform 0.15s;
+        opacity var(--duration-quick-2),
+        visibility var(--duration-quick-2),
+        transform var(--duration-quick-2);
       max-height: 300px;
       overflow-y: auto;
     }
@@ -104,13 +104,13 @@ export class ThxDropdown extends LitElement {
     .dropdown-menu.bottom {
       top: 100%;
       left: 0;
-      margin-top: 4px;
+      margin-top: var(--size-1);
     }
 
     .dropdown-menu.top {
       bottom: 100%;
       left: 0;
-      margin-bottom: 4px;
+      margin-bottom: var(--size-1);
       transform: translateY(8px);
     }
 
@@ -121,7 +121,7 @@ export class ThxDropdown extends LitElement {
     .dropdown-menu.left {
       right: 100%;
       top: 0;
-      margin-right: 4px;
+      margin-right: var(--size-1);
       transform: translateX(8px);
     }
 
@@ -132,7 +132,7 @@ export class ThxDropdown extends LitElement {
     .dropdown-menu.right {
       left: 100%;
       top: 0;
-      margin-left: 4px;
+      margin-left: var(--size-1);
       transform: translateX(-8px);
     }
 
@@ -150,36 +150,36 @@ export class ThxDropdown extends LitElement {
         transparent,
         transparent 2px,
         rgba(166, 200, 225, 0.04) 2px,
-        rgba(166, 200, 225, 0.04) 4px
+        rgba(166, 200, 225, 0.04) var(--size-1)
       );
       pointer-events: none;
-      z-index: 10;
+      z-index: var(--layer-2);
     }
 
     .dropdown-header {
-      padding: 12px 16px;
+      padding: calc(var(--size-2) + var(--size-1)) var(--size-3);
       font-family: var(--font-mono, 'Courier New', monospace);
-      font-size: 0.5625rem;
+      font-size: var(--font-size-00);
       color: var(--atmos-secondary, #707e91);
       text-transform: uppercase;
-      letter-spacing: 0.15em;
-      border-bottom: 1px solid #333;
+      letter-spacing: var(--font-letterspacing-5);
+      border-bottom: var(--border-size-1) solid #333;
     }
 
     .dropdown-item {
-      padding: 12px 16px;
+      padding: calc(var(--size-2) + var(--size-1)) var(--size-3);
       font-family: var(--font-mono, 'Courier New', monospace);
-      font-size: 0.6875rem;
+      font-size: var(--font-size-0);
       text-transform: uppercase;
-      letter-spacing: 0.08em;
+      letter-spacing: var(--font-letterspacing-3);
       color: var(--atmos-primary, #a6c8e1);
       cursor: pointer;
-      transition: all 0.15s;
+      transition: all var(--duration-quick-2);
       display: flex;
       align-items: center;
       justify-content: space-between;
       position: relative;
-      z-index: 5;
+      z-index: var(--layer-1);
     }
 
     .dropdown-item:hover {
@@ -193,7 +193,7 @@ export class ThxDropdown extends LitElement {
 
     .dropdown-item.selected::before {
       content: '>';
-      margin-right: 8px;
+      margin-right: var(--size-2);
       color: var(--atmos-primary, #a6c8e1);
     }
 
@@ -221,13 +221,13 @@ export class ThxDropdown extends LitElement {
     .dropdown-divider {
       height: 1px;
       background: #333;
-      margin: 8px 0;
+      margin: var(--size-2) 0;
     }
 
     .dropdown-empty {
-      padding: 16px;
+      padding: var(--size-3);
       font-family: var(--font-mono, 'Courier New', monospace);
-      font-size: 0.625rem;
+      font-size: var(--font-size-0);
       color: var(--atmos-secondary, #707e91);
       text-transform: uppercase;
       text-align: center;

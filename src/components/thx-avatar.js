@@ -36,12 +36,12 @@ export class ThxAvatar extends LitElement {
       overflow: hidden;
       position: relative;
       font-family: var(--font-mono, 'Courier New', Courier, monospace);
-      font-weight: 600;
+      font-weight: var(--font-weight-6);
       text-transform: uppercase;
       background: var(--neutral-200, #e0e0e0);
       color: var(--neutral-800, #333);
-      border: 2px solid transparent;
-      transition: all 0.15s;
+      border: var(--border-size-2) solid transparent;
+      transition: all var(--duration-quick-2);
     }
 
     .avatar__image {
@@ -56,38 +56,38 @@ export class ThxAvatar extends LitElement {
 
     /* Sizes */
     .avatar--xs {
-      width: 24px;
-      height: 24px;
-      font-size: 0.625rem;
-      letter-spacing: 0.05em;
+      width: var(--size-5);
+      height: var(--size-5);
+      font-size: var(--font-size-0);
+      letter-spacing: var(--font-letterspacing-2);
     }
 
     .avatar--sm {
-      width: 32px;
-      height: 32px;
-      font-size: 0.75rem;
-      letter-spacing: 0.05em;
+      width: var(--size-7);
+      height: var(--size-7);
+      font-size: var(--font-size-0);
+      letter-spacing: var(--font-letterspacing-2);
     }
 
     .avatar--md {
-      width: 40px;
-      height: 40px;
-      font-size: 0.875rem;
-      letter-spacing: 0.08em;
+      width: calc(var(--size-7) + var(--size-2));
+      height: calc(var(--size-7) + var(--size-2));
+      font-size: var(--font-size-1);
+      letter-spacing: var(--font-letterspacing-3);
     }
 
     .avatar--lg {
       width: 56px;
       height: 56px;
       font-size: 1.125rem;
-      letter-spacing: 0.1em;
+      letter-spacing: var(--font-letterspacing-4);
     }
 
     .avatar--xl {
       width: 72px;
       height: 72px;
-      font-size: 1.5rem;
-      letter-spacing: 0.1em;
+      font-size: var(--font-size-4);
+      letter-spacing: var(--font-letterspacing-4);
     }
 
     /* Shapes */
@@ -96,11 +96,11 @@ export class ThxAvatar extends LitElement {
     }
 
     .avatar--rounded {
-      border-radius: 4px;
+      border-radius: var(--size-1);
     }
 
     .avatar--circle {
-      border-radius: 50%;
+      border-radius: var(--radius-round);
     }
 
     /* Variants */
@@ -119,7 +119,7 @@ export class ThxAvatar extends LitElement {
         transparent,
         transparent 2px,
         rgba(166, 200, 225, 0.05) 2px,
-        rgba(166, 200, 225, 0.05) 4px
+        rgba(166, 200, 225, 0.05) var(--size-1)
       );
       pointer-events: none;
     }
@@ -141,7 +141,7 @@ export class ThxAvatar extends LitElement {
     }
 
     .avatar--interactive:hover {
-      box-shadow: 0 0 10px rgba(166, 200, 225, 0.4);
+      box-shadow: 0 0 var(--size-2) rgba(166, 200, 225, 0.4);
     }
 
     /* Status indicator */
@@ -151,9 +151,9 @@ export class ThxAvatar extends LitElement {
       right: 0;
       width: 25%;
       height: 25%;
-      min-width: 8px;
-      min-height: 8px;
-      border: 2px solid var(--neutral-100, #fafafa);
+      min-width: var(--size-2);
+      min-height: var(--size-2);
+      border: var(--border-size-2) solid var(--neutral-100, #fafafa);
       background: var(--neutral-600, #666);
     }
 
@@ -163,11 +163,11 @@ export class ThxAvatar extends LitElement {
     }
 
     .avatar--rounded .avatar__status {
-      border-radius: 2px;
+      border-radius: var(--radius-1);
     }
 
     .avatar--circle .avatar__status {
-      border-radius: 50%;
+      border-radius: var(--radius-round);
     }
 
     .avatar__status--online {

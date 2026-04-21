@@ -30,17 +30,17 @@ export class ThxRating extends LitElement {
     .rating-wrapper {
       display: inline-flex;
       align-items: center;
-      gap: 4px;
+      gap: var(--size-1);
     }
 
     .rating-items {
       display: flex;
-      gap: 4px;
+      gap: var(--size-1);
     }
 
     .rating-item {
       cursor: pointer;
-      transition: all 0.15s;
+      transition: all var(--duration-quick-2);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -56,18 +56,18 @@ export class ThxRating extends LitElement {
 
     /* Sizes */
     .size-sm .rating-item {
-      width: 16px;
-      height: 16px;
+      width: var(--size-3);
+      height: var(--size-3);
     }
 
     .size-md .rating-item {
-      width: 20px;
-      height: 20px;
+      width: var(--size-4);
+      height: var(--size-4);
     }
 
     .size-lg .rating-item {
-      width: 28px;
-      height: 28px;
+      width: var(--size-6);
+      height: var(--size-6);
     }
 
     .rating-item svg {
@@ -95,9 +95,9 @@ export class ThxRating extends LitElement {
 
     .value-display {
       font-family: var(--font-mono, 'Courier New', Courier, monospace);
-      font-size: 0.8125rem;
+      font-size: var(--font-size-0);
       color: var(--neutral-800, #333);
-      margin-left: 8px;
+      margin-left: var(--size-2);
       text-transform: uppercase;
     }
   `;

@@ -38,31 +38,31 @@ export class ThxSelect extends LitElement {
     .select-wrapper {
       display: flex;
       flex-direction: column;
-      gap: 6px;
+      gap: var(--size-1);
     }
 
     .label {
       font-family: var(--font-mono, 'Courier New', Courier, monospace);
-      font-size: 0.6875rem;
+      font-size: var(--font-size-0);
       text-transform: uppercase;
-      letter-spacing: 0.1em;
+      letter-spacing: var(--font-letterspacing-4);
       color: var(--neutral-600, #666);
     }
 
     .required-indicator {
       color: var(--accent-error, #d44000);
-      margin-left: 2px;
+      margin-left: var(--size-1);
     }
 
     .select-trigger {
-      height: 40px;
-      padding: 0 40px 0 12px;
+      height: calc(var(--size-7) + var(--size-2));
+      padding: 0 calc(var(--size-7) + var(--size-2)) 0 calc(var(--size-2) + var(--size-1));
       border: none;
-      border-bottom: 2px solid var(--neutral-200, #e0e0e0);
+      border-bottom: var(--border-size-2) solid var(--neutral-200, #e0e0e0);
       font-family: var(--font-mono, 'Courier New', Courier, monospace);
-      font-size: 0.875rem;
+      font-size: var(--font-size-1);
       text-transform: uppercase;
-      letter-spacing: 0.05em;
+      letter-spacing: var(--font-letterspacing-2);
       background: white;
       color: var(--neutral-800, #333);
       cursor: pointer;
@@ -70,8 +70,8 @@ export class ThxSelect extends LitElement {
       align-items: center;
       position: relative;
       transition:
-        border-color 0.2s,
-        box-shadow 0.2s;
+        border-color var(--duration-moderate-1),
+        box-shadow var(--duration-moderate-1);
       width: 100%;
       box-sizing: border-box;
     }
@@ -106,12 +106,12 @@ export class ThxSelect extends LitElement {
 
     .arrow {
       position: absolute;
-      right: 12px;
+      right: calc(var(--size-2) + var(--size-1));
       top: 50%;
       transform: translateY(-50%);
-      width: 12px;
-      height: 12px;
-      transition: transform 0.2s;
+      width: calc(var(--size-2) + var(--size-1));
+      height: calc(var(--size-2) + var(--size-1));
+      transition: transform var(--duration-moderate-1);
       pointer-events: none;
     }
 
@@ -125,10 +125,10 @@ export class ThxSelect extends LitElement {
       left: 0;
       right: 0;
       background: white;
-      border: 1px solid var(--neutral-200, #e0e0e0);
+      border: var(--border-size-1) solid var(--neutral-200, #e0e0e0);
       border-top: none;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-      z-index: 1000;
+      box-shadow: 0 var(--size-1) var(--size-2) rgba(0, 0, 0, 0.1);
+      z-index: var(--layer-5);
       max-height: 200px;
       overflow-y: auto;
       display: none;
@@ -139,14 +139,14 @@ export class ThxSelect extends LitElement {
     }
 
     .option {
-      padding: 10px 12px;
+      padding: var(--size-2) calc(var(--size-2) + var(--size-1));
       font-family: var(--font-mono, 'Courier New', Courier, monospace);
-      font-size: 0.8125rem;
+      font-size: var(--font-size-0);
       text-transform: uppercase;
-      letter-spacing: 0.05em;
+      letter-spacing: var(--font-letterspacing-2);
       color: var(--neutral-800, #333);
       cursor: pointer;
-      transition: background 0.15s;
+      transition: background var(--duration-quick-2);
     }
 
     .option:hover:not(.disabled) {
@@ -164,9 +164,9 @@ export class ThxSelect extends LitElement {
     }
 
     .no-options {
-      padding: 12px;
+      padding: calc(var(--size-2) + var(--size-1));
       font-family: var(--font-mono, 'Courier New', Courier, monospace);
-      font-size: 0.75rem;
+      font-size: var(--font-size-0);
       color: var(--neutral-600, #666);
       text-transform: uppercase;
       text-align: center;

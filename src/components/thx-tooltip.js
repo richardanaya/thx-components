@@ -31,25 +31,25 @@ export class ThxTooltip extends LitElement {
     .tooltip-content {
       position: absolute;
       background: var(--crt-bg-dark, #0a0a0a);
-      border: 1px solid var(--atmos-primary, #a6c8e1);
-      padding: 8px 12px;
+      border: var(--border-size-1) solid var(--atmos-primary, #a6c8e1);
+      padding: var(--size-2) calc(var(--size-2) + var(--size-1));
       font-family: var(--font-mono, 'Courier New', monospace);
-      font-size: 0.625rem;
+      font-size: var(--font-size-0);
       text-transform: uppercase;
-      letter-spacing: 0.1em;
+      letter-spacing: var(--font-letterspacing-4);
       color: var(--atmos-primary, #a6c8e1);
       white-space: nowrap;
-      z-index: 1000;
+      z-index: var(--layer-5);
       opacity: 0;
       visibility: hidden;
       transition:
-        opacity 0.15s,
-        visibility 0.15s,
-        transform 0.15s;
+        opacity var(--duration-quick-2),
+        visibility var(--duration-quick-2),
+        transform var(--duration-quick-2);
       pointer-events: none;
       box-shadow:
-        0 0 10px rgba(166, 200, 225, 0.3),
-        0 0 20px rgba(166, 200, 225, 0.1);
+        0 0 var(--size-2) rgba(166, 200, 225, 0.3),
+        0 0 var(--size-4) rgba(166, 200, 225, 0.1);
       max-width: 300px;
       white-space: normal;
     }
@@ -77,16 +77,16 @@ export class ThxTooltip extends LitElement {
     /* Arrow */
     .tooltip-arrow {
       position: absolute;
-      width: 8px;
-      height: 8px;
+      width: var(--size-2);
+      height: var(--size-2);
       background: var(--crt-bg-dark, #0a0a0a);
-      border: 1px solid var(--atmos-primary, #a6c8e1);
+      border: var(--border-size-1) solid var(--atmos-primary, #a6c8e1);
       transform: rotate(45deg);
     }
 
     /* Top placement - arrow at bottom */
     .tooltip-content.top {
-      bottom: calc(100% + 8px);
+      bottom: calc(100% + var(--size-2));
       left: 50%;
       transform: translateX(-50%) translateY(4px);
     }
@@ -105,7 +105,7 @@ export class ThxTooltip extends LitElement {
 
     /* Bottom placement - arrow at top */
     .tooltip-content.bottom {
-      top: calc(100% + 8px);
+      top: calc(100% + var(--size-2));
       left: 50%;
       transform: translateX(-50%) translateY(-4px);
     }
@@ -124,7 +124,7 @@ export class ThxTooltip extends LitElement {
 
     /* Left placement - arrow at right */
     .tooltip-content.left {
-      right: calc(100% + 8px);
+      right: calc(100% + var(--size-2));
       top: 50%;
       transform: translateY(-50%) translateX(4px);
     }
@@ -143,7 +143,7 @@ export class ThxTooltip extends LitElement {
 
     /* Right placement - arrow at left */
     .tooltip-content.right {
-      left: calc(100% + 8px);
+      left: calc(100% + var(--size-2));
       top: 50%;
       transform: translateY(-50%) translateX(-4px);
     }
@@ -165,8 +165,8 @@ export class ThxTooltip extends LitElement {
       border-color: var(--accent-warning, #d4aa00);
       color: var(--accent-warning, #d4aa00);
       box-shadow:
-        0 0 10px rgba(212, 170, 0, 0.3),
-        0 0 20px rgba(212, 170, 0, 0.1);
+        0 0 var(--size-2) rgba(212, 170, 0, 0.3),
+        0 0 var(--size-4) rgba(212, 170, 0, 0.1);
     }
 
     .tooltip-content.warning .tooltip-arrow {
@@ -178,8 +178,8 @@ export class ThxTooltip extends LitElement {
       border-color: var(--accent-error, #d44000);
       color: var(--accent-error, #d44000);
       box-shadow:
-        0 0 10px rgba(212, 64, 0, 0.3),
-        0 0 20px rgba(212, 64, 0, 0.1);
+        0 0 var(--size-2) rgba(212, 64, 0, 0.3),
+        0 0 var(--size-4) rgba(212, 64, 0, 0.1);
     }
 
     .tooltip-content.error .tooltip-arrow {
@@ -189,7 +189,7 @@ export class ThxTooltip extends LitElement {
     /* Label prefix styling */
     .tooltip-label {
       color: var(--atmos-secondary, #707e91);
-      margin-right: 4px;
+      margin-right: var(--size-1);
     }
 
     /* Data value styling */

@@ -36,38 +36,38 @@ export class ThxTextarea extends LitElement {
     .textarea-wrapper {
       display: flex;
       flex-direction: column;
-      gap: 6px;
+      gap: var(--size-1);
     }
 
     .label {
       font-family: var(--font-mono, 'Courier New', Courier, monospace);
-      font-size: 0.6875rem;
+      font-size: var(--font-size-0);
       text-transform: uppercase;
-      letter-spacing: 0.1em;
+      letter-spacing: var(--font-letterspacing-4);
       color: var(--neutral-600, #666);
     }
 
     .required-indicator {
       color: var(--accent-error, #d44000);
-      margin-left: 2px;
+      margin-left: var(--size-1);
     }
 
     textarea {
-      padding: 12px;
+      padding: calc(var(--size-2) + var(--size-1));
       border: none;
-      border-bottom: 2px solid var(--neutral-200, #e0e0e0);
+      border-bottom: var(--border-size-2) solid var(--neutral-200, #e0e0e0);
       font-family: var(--font-mono, 'Courier New', Courier, monospace);
-      font-size: 0.875rem;
+      font-size: var(--font-size-1);
       text-transform: uppercase;
-      letter-spacing: 0.05em;
+      letter-spacing: var(--font-letterspacing-2);
       background: white;
       color: var(--neutral-800, #333);
       transition:
-        border-color 0.2s,
-        box-shadow 0.2s;
+        border-color var(--duration-moderate-1),
+        box-shadow var(--duration-moderate-1);
       width: 100%;
       box-sizing: border-box;
-      line-height: 1.6;
+      line-height: var(--font-lineheight-4);
     }
 
     textarea::placeholder {
@@ -115,10 +115,10 @@ export class ThxTextarea extends LitElement {
 
     .char-count {
       font-family: var(--font-mono, 'Courier New', Courier, monospace);
-      font-size: 0.625rem;
+      font-size: var(--font-size-0);
       color: var(--neutral-600, #666);
       text-transform: uppercase;
-      letter-spacing: 0.05em;
+      letter-spacing: var(--font-letterspacing-2);
     }
 
     .char-count.warning {
@@ -131,9 +131,9 @@ export class ThxTextarea extends LitElement {
 
     .help-text {
       font-family: var(--font-mono, 'Courier New', Courier, monospace);
-      font-size: 0.625rem;
+      font-size: var(--font-size-0);
       text-transform: uppercase;
-      letter-spacing: 0.05em;
+      letter-spacing: var(--font-letterspacing-2);
       color: var(--neutral-600, #666);
     }
 

@@ -29,15 +29,15 @@ export class ThxChartMonitors extends LitElement {
     .monitor-bank {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-      gap: 8px;
+      gap: var(--size-2);
       background: var(--crt-grid, #1a1a1a);
-      padding: 16px;
-      border: 4px solid #333;
+      padding: var(--size-3);
+      border: var(--size-1) solid #333;
     }
 
     .monitor-unit {
       background: var(--crt-bg, #111);
-      border: 2px solid #333;
+      border: var(--border-size-2) solid #333;
       aspect-ratio: 4/3;
       position: relative;
       overflow: hidden;
@@ -67,52 +67,52 @@ export class ThxChartMonitors extends LitElement {
 
     .monitor-label {
       position: absolute;
-      bottom: 4px;
-      left: 4px;
+      bottom: var(--size-1);
+      left: var(--size-1);
       font-family: var(--font-mono, 'Courier New', Courier, monospace);
-      font-size: 0.5rem;
+      font-size: var(--font-size-00);
       color: var(--atmos-secondary, #707e91);
       text-transform: uppercase;
-      letter-spacing: 0.05em;
+      letter-spacing: var(--font-letterspacing-2);
       opacity: 0.8;
     }
 
     .monitor-content {
       position: absolute;
-      inset: 8px;
+      inset: var(--size-2);
       display: flex;
       align-items: center;
       justify-content: center;
       font-family: var(--font-mono, 'Courier New', Courier, monospace);
-      font-size: 1.25rem;
+      font-size: var(--font-size-3);
       color: var(--atmos-primary, #a6c8e1);
-      text-shadow: 0 0 8px rgba(166, 200, 225, 0.7);
+      text-shadow: 0 0 var(--size-2) rgba(166, 200, 225, 0.7);
     }
 
     .monitor-content.alert {
       color: var(--accent-warning, #d4aa00);
-      text-shadow: 0 0 8px rgba(212, 170, 0, 0.7);
+      text-shadow: 0 0 var(--size-2) rgba(212, 170, 0, 0.7);
     }
 
     .monitor-bar {
       position: absolute;
-      bottom: 20px;
-      left: 8px;
-      right: 8px;
-      height: 4px;
+      bottom: var(--size-4);
+      left: var(--size-2);
+      right: var(--size-2);
+      height: var(--size-1);
       background: rgba(166, 200, 225, 0.2);
     }
 
     .monitor-bar-fill {
       height: 100%;
       background: var(--atmos-primary, #a6c8e1);
-      box-shadow: 0 0 6px rgba(166, 200, 225, 0.8);
-      transition: width 0.3s ease;
+      box-shadow: 0 0 var(--size-1) rgba(166, 200, 225, 0.8);
+      transition: width var(--duration-moderate-2) ease;
     }
 
     .monitor-bar-fill.alert {
       background: var(--accent-warning, #d4aa00);
-      box-shadow: 0 0 6px rgba(212, 170, 0, 0.8);
+      box-shadow: 0 0 var(--size-1) rgba(212, 170, 0, 0.8);
     }
   `;
 

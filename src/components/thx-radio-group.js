@@ -37,25 +37,25 @@ export class ThxRadioGroup extends LitElement {
     .group-wrapper {
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: var(--size-2);
     }
 
     .group-label {
       font-family: var(--font-mono, 'Courier New', Courier, monospace);
-      font-size: 0.6875rem;
+      font-size: var(--font-size-0);
       text-transform: uppercase;
-      letter-spacing: 0.1em;
+      letter-spacing: var(--font-letterspacing-4);
       color: var(--neutral-600, #666);
     }
 
     .required-indicator {
       color: var(--accent-error, #d44000);
-      margin-left: 2px;
+      margin-left: var(--size-1);
     }
 
     .radio-container {
       display: flex;
-      gap: 16px;
+      gap: var(--size-3);
     }
 
     .orientation-horizontal {
@@ -74,19 +74,19 @@ export class ThxRadioGroup extends LitElement {
     .radio-option {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: var(--size-2);
       cursor: pointer;
     }
 
     .radio-option input[type='radio'] {
       appearance: none;
-      width: 18px;
-      height: 18px;
-      border: 2px solid #999;
-      border-radius: 50%;
+      width: var(--size-3);
+      height: var(--size-3);
+      border: var(--border-size-2) solid #999;
+      border-radius: var(--radius-round);
       background: white;
       cursor: pointer;
-      transition: all 0.15s;
+      transition: all var(--duration-quick-2);
       margin: 0;
     }
 
@@ -104,10 +104,10 @@ export class ThxRadioGroup extends LitElement {
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      width: 8px;
-      height: 8px;
+      width: var(--size-2);
+      height: var(--size-2);
       background: #444;
-      border-radius: 50%;
+      border-radius: var(--radius-round);
     }
 
     .radio-option input[type='radio']:focus {
@@ -122,7 +122,7 @@ export class ThxRadioGroup extends LitElement {
 
     .radio-label {
       font-family: var(--font-mono, 'Courier New', Courier, monospace);
-      font-size: 0.8125rem;
+      font-size: var(--font-size-0);
       color: var(--neutral-800, #333);
       user-select: none;
     }
@@ -134,21 +134,21 @@ export class ThxRadioGroup extends LitElement {
     /* Button style variant */
     .button-group {
       display: inline-flex;
-      border: 1px solid var(--atmos-secondary, #707e91);
+      border: var(--border-size-1) solid var(--atmos-secondary, #707e91);
     }
 
     .button-group .radio-option {
       display: flex;
-      padding: 8px 16px;
+      padding: var(--size-2) var(--size-3);
       font-family: var(--font-mono, 'Courier New', Courier, monospace);
-      font-size: 0.6875rem;
+      font-size: var(--font-size-0);
       text-transform: uppercase;
-      letter-spacing: 0.12em;
+      letter-spacing: var(--font-letterspacing-4);
       background: transparent;
       color: var(--atmos-secondary, #707e91);
-      border-right: 1px solid var(--atmos-secondary, #707e91);
+      border-right: var(--border-size-1) solid var(--atmos-secondary, #707e91);
       cursor: pointer;
-      transition: all 0.15s;
+      transition: all var(--duration-quick-2);
       margin: 0;
     }
 

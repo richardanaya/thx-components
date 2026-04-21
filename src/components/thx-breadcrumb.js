@@ -20,25 +20,25 @@ export class ThxBreadcrumb extends LitElement {
       flex-wrap: wrap;
       gap: 0;
       font-family: var(--font-mono, 'Courier New', Courier, monospace);
-      font-size: 0.6875rem;
+      font-size: var(--font-size-0);
       text-transform: uppercase;
-      letter-spacing: 0.1em;
+      letter-spacing: var(--font-letterspacing-4);
       color: var(--neutral-600, #666);
     }
 
     ::slotted(thx-breadcrumb-item:not(:last-child))::after {
       content: '/';
-      margin: 0 8px;
+      margin: 0 var(--size-2);
       color: var(--neutral-600, #666);
     }
 
     /* Navigation path prefix */
     .breadcrumb-prefix {
       font-family: var(--font-mono, 'Courier New', Courier, monospace);
-      font-size: 0.625rem;
+      font-size: var(--font-size-0);
       color: var(--neutral-600, #666);
-      margin-right: 12px;
-      letter-spacing: 0.15em;
+      margin-right: calc(var(--size-2) + var(--size-1));
+      letter-spacing: var(--font-letterspacing-5);
     }
 
     .breadcrumb-prefix::before {

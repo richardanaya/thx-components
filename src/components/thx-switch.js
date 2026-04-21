@@ -38,14 +38,14 @@ export class ThxSwitch extends LitElement {
     .switch-wrapper {
       display: inline-flex;
       align-items: center;
-      gap: 10px;
+      gap: var(--size-2);
     }
 
     .switch-track {
       position: relative;
       background: var(--neutral-600, #666);
       cursor: pointer;
-      transition: all 0.2s;
+      transition: all var(--duration-moderate-1);
     }
 
     .switch-track.checked {
@@ -54,13 +54,13 @@ export class ThxSwitch extends LitElement {
 
     /* Sizes */
     .size-sm .switch-track {
-      width: 32px;
-      height: 18px;
+      width: var(--size-7);
+      height: var(--size-3);
     }
 
     .size-md .switch-track {
       width: 44px;
-      height: 24px;
+      height: var(--size-5);
     }
 
     .size-lg .switch-track {
@@ -73,17 +73,17 @@ export class ThxSwitch extends LitElement {
       top: 2px;
       left: 2px;
       background: white;
-      transition: transform 0.2s;
+      transition: transform var(--duration-moderate-1);
     }
 
     .size-sm .switch-thumb {
-      width: 14px;
-      height: 14px;
+      width: var(--size-3);
+      height: var(--size-3);
     }
 
     .size-md .switch-thumb {
-      width: 20px;
-      height: 20px;
+      width: var(--size-4);
+      height: var(--size-4);
     }
 
     .size-lg .switch-thumb {
@@ -116,19 +116,19 @@ export class ThxSwitch extends LitElement {
 
     .switch-label {
       font-family: var(--font-mono, 'Courier New', Courier, monospace);
-      font-size: 0.8125rem;
+      font-size: var(--font-size-0);
       color: var(--neutral-800, #333);
       text-transform: uppercase;
-      letter-spacing: 0.05em;
+      letter-spacing: var(--font-letterspacing-2);
       user-select: none;
     }
 
     .state-label {
       font-family: var(--font-mono, 'Courier New', Courier, monospace);
-      font-size: 0.625rem;
+      font-size: var(--font-size-0);
       color: var(--neutral-600, #666);
       text-transform: uppercase;
-      letter-spacing: 0.1em;
+      letter-spacing: var(--font-letterspacing-4);
       min-width: 30px;
     }
   `;

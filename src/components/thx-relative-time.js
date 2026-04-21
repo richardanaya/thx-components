@@ -129,32 +129,32 @@ export class ThxRelativeTime extends LitElement {
     .time-container {
       display: inline-flex;
       align-items: center;
-      gap: 4px;
-      font-size: 0.75rem;
-      letter-spacing: 0.05em;
+      gap: var(--size-1);
+      font-size: var(--font-size-0);
+      letter-spacing: var(--font-letterspacing-2);
       text-transform: uppercase;
     }
 
     .time-value {
       color: var(--neutral-800, #333);
-      font-weight: 600;
+      font-weight: var(--font-weight-6);
     }
 
     .time-label {
       color: var(--neutral-600, #666);
-      font-size: 0.625rem;
+      font-size: var(--font-size-0);
     }
 
     /* CRT display variant */
     :host([variant='crt']) .time-container {
       background: var(--crt-bg, #111);
-      padding: 6px 10px;
-      border: 2px solid var(--crt-border, #2a2a2a);
+      padding: var(--size-1) var(--size-2);
+      border: var(--border-size-2) solid var(--crt-border, #2a2a2a);
     }
 
     :host([variant='crt']) .time-value {
       color: var(--atmos-primary, #a6c8e1);
-      text-shadow: 0 0 4px rgba(166, 200, 225, 0.4);
+      text-shadow: 0 0 var(--size-1) rgba(166, 200, 225, 0.4);
     }
 
     :host([variant='crt']) .time-label {
@@ -165,8 +165,8 @@ export class ThxRelativeTime extends LitElement {
     :host([variant='badge']) .time-container {
       background: var(--atmos-secondary, #707e91);
       color: var(--neutral-100, #fafafa);
-      padding: 4px 8px;
-      font-size: 0.625rem;
+      padding: var(--size-1) var(--size-2);
+      font-size: var(--font-size-0);
     }
 
     :host([variant='badge']) .time-value {
@@ -180,8 +180,8 @@ export class ThxRelativeTime extends LitElement {
     /* Warning state for old times */
     :host([variant='warning']) .time-container {
       background: rgba(212, 170, 0, 0.15);
-      border: 1px solid var(--accent-warning, #d4aa00);
-      padding: 4px 8px;
+      border: var(--border-size-1) solid var(--accent-warning, #d4aa00);
+      padding: var(--size-1) var(--size-2);
     }
 
     :host([variant='warning']) .time-value {
@@ -191,8 +191,8 @@ export class ThxRelativeTime extends LitElement {
     /* Error state for very old times */
     :host([variant='error']) .time-container {
       background: rgba(212, 64, 0, 0.15);
-      border: 1px solid var(--accent-error, #d44000);
-      padding: 4px 8px;
+      border: var(--border-size-1) solid var(--accent-error, #d44000);
+      padding: var(--size-1) var(--size-2);
     }
 
     :host([variant='error']) .time-value {
@@ -201,11 +201,11 @@ export class ThxRelativeTime extends LitElement {
 
     /* Live indicator */
     .live-indicator {
-      width: 6px;
-      height: 6px;
+      width: var(--size-1);
+      height: var(--size-1);
       background: var(--accent-warning, #d4aa00);
-      border-radius: 50%;
-      margin-left: 4px;
+      border-radius: var(--radius-round);
+      margin-left: var(--size-1);
       animation: pulse 2s infinite;
     }
 

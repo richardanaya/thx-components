@@ -26,42 +26,42 @@ export class ThxStatusLeds extends LitElement {
 
     .status-array {
       display: flex;
-      gap: 4px;
+      gap: var(--size-1);
       justify-content: center;
-      padding: 16px 0;
+      padding: var(--size-3) 0;
     }
 
     .status-led {
-      width: 8px;
-      height: 8px;
+      width: var(--size-2);
+      height: var(--size-2);
       background: #333;
-      border: 1px solid #444;
-      transition: all 0.2s ease;
+      border: var(--border-size-1) solid #444;
+      transition: all var(--duration-moderate-1) ease;
     }
 
     .status-led.active {
       background: var(--atmos-primary, #a6c8e1);
-      box-shadow: 0 0 6px rgba(166, 200, 225, 0.8);
+      box-shadow: 0 0 var(--size-1) rgba(166, 200, 225, 0.8);
     }
 
     .status-led.warning {
       background: var(--accent-warning, #d4aa00);
-      box-shadow: 0 0 6px rgba(212, 170, 0, 0.8);
+      box-shadow: 0 0 var(--size-1) rgba(212, 170, 0, 0.8);
     }
 
     .status-led.error {
       background: var(--accent-error, #d44000);
-      box-shadow: 0 0 6px rgba(212, 64, 0, 0.8);
+      box-shadow: 0 0 var(--size-1) rgba(212, 64, 0, 0.8);
     }
 
     .led-label {
       font-family: var(--font-mono, 'Courier New', Courier, monospace);
-      font-size: 0.5625rem;
+      font-size: var(--font-size-00);
       color: var(--atmos-secondary, #707e91);
       text-transform: uppercase;
       text-align: center;
-      margin-bottom: 8px;
-      letter-spacing: 0.1em;
+      margin-bottom: var(--size-2);
+      letter-spacing: var(--font-letterspacing-4);
     }
   `;
 

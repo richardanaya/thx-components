@@ -30,16 +30,16 @@ export class ThxAlert extends LitElement {
     .alert {
       display: flex;
       align-items: flex-start;
-      gap: 12px;
-      padding: 16px 20px;
+      gap: calc(var(--size-2) + var(--size-1));
+      padding: var(--size-3) var(--size-4);
       font-family: var(--font-mono, 'Courier New', Courier, monospace);
-      font-size: 0.75rem;
-      line-height: 1.5;
-      letter-spacing: 0.05em;
+      font-size: var(--font-size-0);
+      line-height: var(--font-lineheight-3);
+      letter-spacing: var(--font-letterspacing-2);
       text-transform: uppercase;
-      border-left: 3px solid transparent;
+      border-left: calc(var(--border-size-1) + var(--border-size-2)) solid transparent;
       background: var(--neutral-100, #fafafa);
-      box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.06);
+      box-shadow: var(--inner-shadow-0);
       position: relative;
     }
 
@@ -81,14 +81,14 @@ export class ThxAlert extends LitElement {
 
     .alert__icon {
       flex-shrink: 0;
-      width: 20px;
-      height: 20px;
+      width: var(--size-4);
+      height: var(--size-4);
       display: flex;
       align-items: center;
       justify-content: center;
       font-family: var(--font-mono, 'Courier New', Courier, monospace);
-      font-size: 0.875rem;
-      font-weight: 600;
+      font-size: var(--font-size-1);
+      font-weight: var(--font-weight-6);
     }
 
     .alert--info .alert__icon {
@@ -114,8 +114,8 @@ export class ThxAlert extends LitElement {
 
     .alert__label {
       display: block;
-      font-weight: 600;
-      margin-bottom: 4px;
+      font-weight: var(--font-weight-6);
+      margin-bottom: var(--size-1);
       color: var(--neutral-800, #333);
     }
 
@@ -127,8 +127,8 @@ export class ThxAlert extends LitElement {
 
     .alert__close {
       flex-shrink: 0;
-      width: 24px;
-      height: 24px;
+      width: var(--size-5);
+      height: var(--size-5);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -137,10 +137,10 @@ export class ThxAlert extends LitElement {
       cursor: pointer;
       color: var(--neutral-600, #666);
       font-family: var(--font-mono, 'Courier New', Courier, monospace);
-      font-size: 1rem;
+      font-size: var(--font-size-1);
       line-height: 1;
       padding: 0;
-      transition: color 0.15s;
+      transition: color var(--duration-quick-2);
     }
 
     .alert__close:hover {

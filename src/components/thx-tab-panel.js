@@ -16,12 +16,12 @@ export class ThxTabPanel extends LitElement {
   static styles = css`
     :host {
       display: none;
-      padding: 24px;
+      padding: var(--size-5);
     }
 
     :host([active]) {
       display: block;
-      animation: panelFadeIn 0.2s ease-out;
+      animation: panelFadeIn var(--duration-moderate-1) ease-out;
     }
 
     @keyframes panelFadeIn {
@@ -37,21 +37,21 @@ export class ThxTabPanel extends LitElement {
 
     /* CRT variant */
     :host([variant='crt']) {
-      padding: 20px;
+      padding: var(--size-4);
       background: var(--crt-bg-dark, #0a0a0a);
       color: var(--atmos-primary, #a6c8e1);
     }
 
     :host([variant='crt']) slot {
       font-family: var(--font-mono, 'Courier New', Courier, monospace);
-      font-size: 0.8125rem;
+      font-size: var(--font-size-0);
       text-transform: uppercase;
-      letter-spacing: 0.05em;
+      letter-spacing: var(--font-letterspacing-2);
     }
 
     /* Compact variant */
     :host([variant='compact']) {
-      padding: 16px 0;
+      padding: var(--size-3) 0;
     }
   `;
 

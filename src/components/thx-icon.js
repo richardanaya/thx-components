@@ -37,27 +37,27 @@ export class ThxIcon extends LitElement {
     }
 
     .icon--sm {
-      width: 16px;
-      height: 16px;
-      font-size: 14px;
+      width: var(--size-3);
+      height: var(--size-3);
+      font-size: var(--font-size-1);
     }
 
     .icon--md {
-      width: 20px;
-      height: 20px;
-      font-size: 18px;
+      width: var(--size-4);
+      height: var(--size-4);
+      font-size: var(--font-size-1);
     }
 
     .icon--lg {
-      width: 24px;
-      height: 24px;
+      width: var(--size-5);
+      height: var(--size-5);
       font-size: 22px;
     }
 
     .icon--xl {
-      width: 32px;
-      height: 32px;
-      font-size: 28px;
+      width: var(--size-7);
+      height: var(--size-7);
+      font-size: var(--font-size-5);
     }
 
     .icon--current {

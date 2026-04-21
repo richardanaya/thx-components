@@ -36,21 +36,21 @@ export class ThxInclude extends LitElement {
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 24px;
+      padding: var(--size-5);
       color: var(--neutral-600, #666);
-      font-size: 0.75rem;
-      letter-spacing: 0.1em;
+      font-size: var(--font-size-0);
+      letter-spacing: var(--font-letterspacing-4);
       text-transform: uppercase;
     }
 
     .include-loading::before {
       content: '';
-      width: 12px;
-      height: 12px;
-      border: 2px solid var(--neutral-200, #e0e0e0);
+      width: calc(var(--size-2) + var(--size-1));
+      height: calc(var(--size-2) + var(--size-1));
+      border: var(--border-size-2) solid var(--neutral-200, #e0e0e0);
       border-top-color: var(--atmos-primary, #a6c8e1);
-      border-radius: 50%;
-      margin-right: 8px;
+      border-radius: var(--radius-round);
+      margin-right: var(--size-2);
       animation: spin 1s linear infinite;
     }
 
@@ -61,29 +61,30 @@ export class ThxInclude extends LitElement {
     }
 
     .include-error {
-      padding: 16px 20px;
+      padding: var(--size-3) var(--size-4);
       background: rgba(212, 64, 0, 0.1);
-      border-left: 3px solid var(--accent-error, #d44000);
+      border-left: calc(var(--border-size-1) + var(--border-size-2)) solid
+        var(--accent-error, #d44000);
       color: var(--accent-error, #d44000);
-      font-size: 0.75rem;
-      letter-spacing: 0.05em;
+      font-size: var(--font-size-0);
+      letter-spacing: var(--font-letterspacing-2);
     }
 
     .include-error::before {
       content: 'ERR // ';
-      font-weight: 600;
+      font-weight: var(--font-weight-6);
     }
 
     .include-content {
-      font-size: 0.8125rem;
-      line-height: 1.6;
+      font-size: var(--font-size-0);
+      line-height: var(--font-lineheight-4);
     }
 
     /* CRT variant */
     :host([variant='crt']) .include-container {
       background: var(--crt-bg, #111);
-      border: 2px solid var(--crt-border, #2a2a2a);
-      padding: 16px;
+      border: var(--border-size-2) solid var(--crt-border, #2a2a2a);
+      padding: var(--size-3);
     }
 
     :host([variant='crt']) .include-content {
@@ -93,35 +94,35 @@ export class ThxInclude extends LitElement {
     /* Panel variant */
     :host([variant='panel']) .include-container {
       background: var(--neutral-100, #fafafa);
-      padding: 24px;
-      box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.06);
+      padding: var(--size-5);
+      box-shadow: var(--inner-shadow-0);
     }
 
     .include-header {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding-bottom: 12px;
-      margin-bottom: 12px;
-      border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+      padding-bottom: calc(var(--size-2) + var(--size-1));
+      margin-bottom: calc(var(--size-2) + var(--size-1));
+      border-bottom: var(--border-size-1) solid rgba(0, 0, 0, 0.08);
     }
 
     .include-label {
-      font-size: 0.6875rem;
+      font-size: var(--font-size-0);
       color: var(--neutral-600, #666);
-      letter-spacing: 0.15em;
+      letter-spacing: var(--font-letterspacing-5);
       text-transform: uppercase;
     }
 
     .include-refresh {
-      font-size: 0.625rem;
+      font-size: var(--font-size-0);
       color: var(--atmos-secondary, #707e91);
       cursor: pointer;
       background: none;
-      border: 1px solid var(--atmos-secondary, #707e91);
-      padding: 4px 8px;
+      border: var(--border-size-1) solid var(--atmos-secondary, #707e91);
+      padding: var(--size-1) var(--size-2);
       text-transform: uppercase;
-      letter-spacing: 0.1em;
+      letter-spacing: var(--font-letterspacing-4);
     }
 
     .include-refresh:hover {

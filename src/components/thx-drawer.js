@@ -26,12 +26,12 @@ export class ThxDrawer extends LitElement {
       inset: 0;
       background: rgba(10, 10, 10, 0.7);
       backdrop-filter: blur(1px);
-      z-index: 1000;
+      z-index: var(--layer-5);
       opacity: 0;
       visibility: hidden;
       transition:
-        opacity 0.3s,
-        visibility 0.3s;
+        opacity var(--duration-moderate-2),
+        visibility var(--duration-moderate-2);
     }
 
     .drawer-overlay.open {
@@ -42,12 +42,12 @@ export class ThxDrawer extends LitElement {
     .drawer-panel {
       position: fixed;
       background: var(--neutral-100, #fafafa);
-      border: 8px solid var(--crt-border, #2a2a2a);
-      box-shadow: 0 0 40px rgba(0, 0, 0, 0.5);
+      border: var(--size-2) solid var(--crt-border, #2a2a2a);
+      box-shadow: 0 0 calc(var(--size-7) + var(--size-2)) rgba(0, 0, 0, 0.5);
       display: flex;
       flex-direction: column;
       overflow: hidden;
-      transition: transform 0.3s ease-out;
+      transition: transform var(--duration-moderate-2) ease-out;
     }
 
     /* CRT scanline effect */
@@ -60,10 +60,10 @@ export class ThxDrawer extends LitElement {
         transparent,
         transparent 2px,
         rgba(166, 200, 225, 0.03) 2px,
-        rgba(166, 200, 225, 0.03) 4px
+        rgba(166, 200, 225, 0.03) var(--size-1)
       );
       pointer-events: none;
-      z-index: 10;
+      z-index: var(--layer-2);
     }
 
     /* Left placement */
@@ -71,7 +71,7 @@ export class ThxDrawer extends LitElement {
       left: 0;
       top: 0;
       bottom: 0;
-      border-right-width: 8px;
+      border-right-width: var(--size-2);
       border-left-width: 0;
       transform: translateX(-100%);
     }
@@ -85,7 +85,7 @@ export class ThxDrawer extends LitElement {
       right: 0;
       top: 0;
       bottom: 0;
-      border-left-width: 8px;
+      border-left-width: var(--size-2);
       border-right-width: 0;
       transform: translateX(100%);
     }
@@ -99,7 +99,7 @@ export class ThxDrawer extends LitElement {
       top: 0;
       left: 0;
       right: 0;
-      border-bottom-width: 8px;
+      border-bottom-width: var(--size-2);
       border-top-width: 0;
       transform: translateY(-100%);
     }
@@ -113,7 +113,7 @@ export class ThxDrawer extends LitElement {
       bottom: 0;
       left: 0;
       right: 0;
-      border-top-width: 8px;
+      border-top-width: var(--size-2);
       border-bottom-width: 0;
       transform: translateY(100%);
     }
@@ -176,63 +176,63 @@ export class ThxDrawer extends LitElement {
 
     .drawer-header {
       background: var(--crt-bg, #111);
-      padding: 16px 20px;
+      padding: var(--size-3) var(--size-4);
       display: flex;
       align-items: center;
       justify-content: space-between;
-      border-bottom: 1px solid #333;
+      border-bottom: var(--border-size-1) solid #333;
       position: relative;
-      z-index: 5;
+      z-index: var(--layer-1);
       flex-shrink: 0;
     }
 
     .drawer-label {
       font-family: var(--font-mono, 'Courier New', monospace);
-      font-size: 0.75rem;
+      font-size: var(--font-size-0);
       color: var(--atmos-primary, #a6c8e1);
       text-transform: uppercase;
-      letter-spacing: 0.12em;
-      text-shadow: 0 0 4px rgba(166, 200, 225, 0.5);
+      letter-spacing: var(--font-letterspacing-4);
+      text-shadow: 0 0 var(--size-1) rgba(166, 200, 225, 0.5);
     }
 
     .drawer-close {
-      width: 32px;
-      height: 32px;
+      width: var(--size-7);
+      height: var(--size-7);
       background: transparent;
-      border: 1px solid var(--atmos-secondary, #707e91);
+      border: var(--border-size-1) solid var(--atmos-secondary, #707e91);
       color: var(--atmos-secondary, #707e91);
       font-family: var(--font-mono, 'Courier New', monospace);
-      font-size: 1rem;
+      font-size: var(--font-size-1);
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      transition: all 0.15s;
+      transition: all var(--duration-quick-2);
       padding: 0;
     }
 
     .drawer-close:hover {
       border-color: var(--atmos-primary, #a6c8e1);
       color: var(--atmos-primary, #a6c8e1);
-      box-shadow: 0 0 10px rgba(166, 200, 225, 0.4);
+      box-shadow: 0 0 var(--size-2) rgba(166, 200, 225, 0.4);
     }
 
     .drawer-body {
-      padding: 24px;
+      padding: var(--size-5);
       overflow-y: auto;
       flex: 1;
       position: relative;
-      z-index: 5;
+      z-index: var(--layer-1);
     }
 
     .drawer-footer {
-      padding: 16px 20px;
-      border-top: 1px solid rgba(0, 0, 0, 0.08);
+      padding: var(--size-3) var(--size-4);
+      border-top: var(--border-size-1) solid rgba(0, 0, 0, 0.08);
       display: flex;
       justify-content: flex-end;
-      gap: 12px;
+      gap: calc(var(--size-2) + var(--size-1));
       position: relative;
-      z-index: 5;
+      z-index: var(--layer-1);
       flex-shrink: 0;
     }
   `;

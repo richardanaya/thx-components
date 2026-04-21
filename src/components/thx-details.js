@@ -17,9 +17,9 @@ export class ThxDetails extends LitElement {
     :host {
       display: block;
       background: rgba(0, 0, 0, 0.02);
-      margin: 12px 0;
-      border-left: 2px solid transparent;
-      transition: border-color 0.2s;
+      margin: calc(var(--size-2) + var(--size-1)) 0;
+      border-left: var(--border-size-2) solid transparent;
+      transition: border-color var(--duration-moderate-1);
     }
 
     :host([open]) {
@@ -28,20 +28,20 @@ export class ThxDetails extends LitElement {
     }
 
     summary {
-      padding: 12px 16px;
-      font-size: 0.8125rem;
+      padding: calc(var(--size-2) + var(--size-1)) var(--size-3);
+      font-size: var(--font-size-0);
       font-family: var(--font-mono, 'Courier New', Courier, monospace);
       text-transform: uppercase;
-      letter-spacing: 0.05em;
+      letter-spacing: var(--font-letterspacing-2);
       color: var(--neutral-800, #333);
       cursor: pointer;
-      font-weight: 500;
+      font-weight: var(--font-weight-5);
       list-style: none;
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: calc(var(--size-2) + var(--size-1));
       user-select: none;
-      transition: color 0.15s;
+      transition: color var(--duration-quick-2);
     }
 
     summary::-webkit-details-marker {
@@ -51,12 +51,12 @@ export class ThxDetails extends LitElement {
     summary::before {
       content: '▸';
       display: inline-block;
-      font-size: 0.75rem;
+      font-size: var(--font-size-0);
       color: var(--atmos-secondary, #707e91);
       transition:
-        transform 0.2s,
-        color 0.2s;
-      width: 12px;
+        transform var(--duration-moderate-1),
+        color var(--duration-moderate-1);
+      width: calc(var(--size-2) + var(--size-1));
       text-align: center;
     }
 
@@ -67,8 +67,8 @@ export class ThxDetails extends LitElement {
 
     :host([open]) summary {
       color: var(--atmos-primary, #a6c8e1);
-      border-bottom: 1px solid rgba(166, 200, 225, 0.2);
-      text-shadow: 0 0 8px rgba(166, 200, 225, 0.3);
+      border-bottom: var(--border-size-1) solid rgba(166, 200, 225, 0.2);
+      text-shadow: 0 0 var(--size-2) rgba(166, 200, 225, 0.3);
     }
 
     summary:hover {
@@ -80,10 +80,10 @@ export class ThxDetails extends LitElement {
     }
 
     .content {
-      padding: 16px;
-      font-size: 0.875rem;
+      padding: var(--size-3);
+      font-size: var(--font-size-1);
       color: var(--neutral-600, #666);
-      line-height: 1.6;
+      line-height: var(--font-lineheight-4);
     }
 
     /* Disabled state */
@@ -99,9 +99,9 @@ export class ThxDetails extends LitElement {
     /* Label suffix indicator */
     .label-suffix {
       margin-left: auto;
-      font-size: 0.625rem;
+      font-size: var(--font-size-0);
       color: var(--neutral-600, #666);
-      letter-spacing: 0.1em;
+      letter-spacing: var(--font-letterspacing-4);
     }
   `;
 

@@ -31,7 +31,7 @@ export class ThxIconButton extends LitElement {
       justify-content: center;
       border: none;
       cursor: pointer;
-      transition: all 0.15s;
+      transition: all var(--duration-quick-2);
       position: relative;
       overflow: hidden;
       font-family: var(--font-mono, 'Courier New', monospace);
@@ -45,21 +45,21 @@ export class ThxIconButton extends LitElement {
 
     /* Size variants */
     .icon-button.sm {
-      width: 32px;
-      height: 32px;
-      font-size: 0.875rem;
+      width: var(--size-7);
+      height: var(--size-7);
+      font-size: var(--font-size-1);
     }
 
     .icon-button.md {
-      width: 40px;
-      height: 40px;
-      font-size: 1rem;
+      width: calc(var(--size-7) + var(--size-2));
+      height: calc(var(--size-7) + var(--size-2));
+      font-size: var(--font-size-1);
     }
 
     .icon-button.lg {
-      width: 48px;
-      height: 48px;
-      font-size: 1.25rem;
+      width: var(--size-8);
+      height: var(--size-8);
+      font-size: var(--font-size-3);
     }
 
     /* Variant: primary */
@@ -88,13 +88,13 @@ export class ThxIconButton extends LitElement {
     .icon-button.ghost {
       background: transparent;
       color: var(--neutral-600, #666);
-      border: 1px solid transparent;
+      border: var(--border-size-1) solid transparent;
     }
 
     .icon-button.ghost:hover:not(:disabled) {
       color: var(--atmos-primary, #a6c8e1);
       border-color: var(--atmos-primary, #a6c8e1);
-      box-shadow: 0 0 8px rgba(166, 200, 225, 0.3);
+      box-shadow: 0 0 var(--size-2) rgba(166, 200, 225, 0.3);
     }
 
     /* Variant: warning */
@@ -121,10 +121,10 @@ export class ThxIconButton extends LitElement {
     @keyframes phosphor-pulse {
       0%,
       100% {
-        box-shadow: 0 0 8px rgba(166, 200, 225, 0.4);
+        box-shadow: 0 0 var(--size-2) rgba(166, 200, 225, 0.4);
       }
       50% {
-        box-shadow: 0 0 20px rgba(166, 200, 225, 0.8);
+        box-shadow: 0 0 var(--size-4) rgba(166, 200, 225, 0.8);
       }
     }
 
@@ -139,10 +139,10 @@ export class ThxIconButton extends LitElement {
     @keyframes amber-pulse {
       0%,
       100% {
-        box-shadow: 0 0 8px rgba(212, 170, 0, 0.4);
+        box-shadow: 0 0 var(--size-2) rgba(212, 170, 0, 0.4);
       }
       50% {
-        box-shadow: 0 0 20px rgba(212, 170, 0, 0.8);
+        box-shadow: 0 0 var(--size-4) rgba(212, 170, 0, 0.8);
       }
     }
 
@@ -150,11 +150,11 @@ export class ThxIconButton extends LitElement {
     .icon-button.loading::after {
       content: '';
       position: absolute;
-      width: 16px;
-      height: 16px;
-      border: 2px solid transparent;
+      width: var(--size-3);
+      height: var(--size-3);
+      border: var(--border-size-2) solid transparent;
       border-top-color: currentColor;
-      border-radius: 50%;
+      border-radius: var(--radius-round);
       animation: spin 1s linear infinite;
     }
 
@@ -180,12 +180,12 @@ export class ThxIconButton extends LitElement {
 
     /* Rounded variant */
     .icon-button.rounded {
-      border-radius: 4px;
+      border-radius: var(--size-1);
     }
 
     /* Circle variant */
     .icon-button.circle {
-      border-radius: 50%;
+      border-radius: var(--radius-round);
     }
 
     /* CRT scanline effect overlay */

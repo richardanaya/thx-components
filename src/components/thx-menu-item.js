@@ -21,16 +21,16 @@ export class ThxMenuItem extends LitElement {
     .menu-item {
       display: flex;
       align-items: center;
-      gap: 12px;
-      padding: 10px 16px;
+      gap: calc(var(--size-2) + var(--size-1));
+      padding: var(--size-2) var(--size-3);
       font-family: var(--font-mono, 'Courier New', Courier, monospace);
-      font-size: 0.75rem;
+      font-size: var(--font-size-0);
       text-transform: uppercase;
-      letter-spacing: 0.05em;
+      letter-spacing: var(--font-letterspacing-2);
       color: var(--neutral-800, #333);
       cursor: pointer;
-      transition: all 0.15s;
-      border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+      transition: all var(--duration-quick-2);
+      border-bottom: var(--border-size-1) solid rgba(0, 0, 0, 0.04);
       background: transparent;
       text-decoration: none;
       position: relative;
@@ -51,12 +51,12 @@ export class ThxMenuItem extends LitElement {
     :host([active]) .menu-item::before {
       content: '▸';
       position: absolute;
-      left: 4px;
-      font-size: 0.625rem;
+      left: var(--size-1);
+      font-size: var(--font-size-0);
     }
 
     :host([active]) .menu-item {
-      padding-left: 20px;
+      padding-left: var(--size-4);
     }
 
     .menu-item.disabled,
@@ -75,23 +75,23 @@ export class ThxMenuItem extends LitElement {
     :host([variant='crt']) .menu-item:hover {
       color: var(--atmos-tertiary, #deffff);
       background: rgba(166, 200, 225, 0.15);
-      text-shadow: 0 0 8px rgba(166, 200, 225, 0.5);
+      text-shadow: 0 0 var(--size-2) rgba(166, 200, 225, 0.5);
     }
 
     :host([variant='crt']) .menu-item.active {
       background: rgba(166, 200, 225, 0.25);
       color: var(--atmos-tertiary, #deffff);
-      text-shadow: 0 0 8px rgba(166, 200, 225, 0.8);
+      text-shadow: 0 0 var(--size-2) rgba(166, 200, 225, 0.8);
     }
 
     /* Badge/pill indicator */
     .indicator {
       margin-left: auto;
-      font-size: 0.625rem;
-      padding: 2px 6px;
+      font-size: var(--font-size-0);
+      padding: var(--size-1) var(--size-1);
       background: var(--atmos-secondary, #707e91);
       color: var(--neutral-100, #fafafa);
-      min-width: 20px;
+      min-width: var(--size-4);
       text-align: center;
     }
 
@@ -107,8 +107,8 @@ export class ThxMenuItem extends LitElement {
 
     /* Icon slot */
     ::slotted([slot='icon']) {
-      width: 16px;
-      height: 16px;
+      width: var(--size-3);
+      height: var(--size-3);
       display: flex;
       align-items: center;
       justify-content: center;

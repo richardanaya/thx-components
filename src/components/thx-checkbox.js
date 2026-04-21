@@ -36,17 +36,17 @@ export class ThxCheckbox extends LitElement {
     .checkbox-wrapper {
       display: inline-flex;
       align-items: center;
-      gap: 8px;
+      gap: var(--size-2);
     }
 
     .checkbox {
       appearance: none;
-      width: 18px;
-      height: 18px;
-      border: 2px solid var(--neutral-600, #666);
+      width: var(--size-3);
+      height: var(--size-3);
+      border: var(--border-size-2) solid var(--neutral-600, #666);
       background: white;
       cursor: pointer;
-      transition: all 0.15s;
+      transition: all var(--duration-quick-2);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -73,11 +73,11 @@ export class ThxCheckbox extends LitElement {
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      width: 14px;
-      height: 14px;
+      width: var(--size-3);
+      height: var(--size-3);
       pointer-events: none;
       opacity: 0;
-      transition: opacity 0.15s;
+      transition: opacity var(--duration-quick-2);
     }
 
     .checkbox:checked ~ .check-icon,
@@ -105,7 +105,7 @@ export class ThxCheckbox extends LitElement {
 
     .label {
       font-family: var(--font-mono, 'Courier New', Courier, monospace);
-      font-size: 0.8125rem;
+      font-size: var(--font-size-0);
       color: var(--neutral-800, #333);
       user-select: none;
     }

@@ -31,10 +31,10 @@ export class ThxRadioButton extends LitElement {
       justify-content: center;
       font-family: var(--font-mono, 'Courier New', Courier, monospace);
       text-transform: uppercase;
-      letter-spacing: 0.12em;
-      border: 1px solid var(--atmos-secondary, #707e91);
+      letter-spacing: var(--font-letterspacing-4);
+      border: var(--border-size-1) solid var(--atmos-secondary, #707e91);
       cursor: pointer;
-      transition: all 0.15s;
+      transition: all var(--duration-quick-2);
       background: transparent;
       color: var(--atmos-secondary, #707e91);
     }
@@ -57,21 +57,21 @@ export class ThxRadioButton extends LitElement {
 
     /* Sizes */
     .size-sm {
-      padding: 6px 12px;
-      font-size: 0.5625rem;
-      height: 28px;
+      padding: var(--size-1) calc(var(--size-2) + var(--size-1));
+      font-size: var(--font-size-00);
+      height: var(--size-6);
     }
 
     .size-md {
-      padding: 10px 20px;
-      font-size: 0.6875rem;
-      height: 40px;
+      padding: var(--size-2) var(--size-4);
+      font-size: var(--font-size-0);
+      height: calc(var(--size-7) + var(--size-2));
     }
 
     .size-lg {
-      padding: 14px 28px;
-      font-size: 0.75rem;
-      height: 48px;
+      padding: var(--size-3) var(--size-6);
+      font-size: var(--font-size-0);
+      height: var(--size-8);
     }
 
     button:active:not(:disabled) {

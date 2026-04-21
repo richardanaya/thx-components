@@ -59,7 +59,7 @@ export class ThxSpinner extends LitElement {
 
     .spinner--circle.spinner--crt circle {
       stroke: var(--atmos-primary, #a6c8e1);
-      filter: drop-shadow(0 0 4px rgba(166, 200, 225, 0.6));
+      filter: drop-shadow(0 0 var(--size-1) rgba(166, 200, 225, 0.6));
     }
 
     .spinner--circle.spinner--warning circle {
@@ -73,19 +73,19 @@ export class ThxSpinner extends LitElement {
     /* Dots spinner */
     .spinner--dots {
       display: flex;
-      gap: 4px;
+      gap: var(--size-1);
     }
 
     .spinner--dots .dot {
-      width: 8px;
-      height: 8px;
+      width: var(--size-2);
+      height: var(--size-2);
       background: var(--neutral-600, #666);
       animation: dots 1.4s ease-in-out infinite both;
     }
 
     .spinner--dots.spinner--crt .dot {
       background: var(--atmos-primary, #a6c8e1);
-      box-shadow: 0 0 6px rgba(166, 200, 225, 0.6);
+      box-shadow: 0 0 var(--size-1) rgba(166, 200, 225, 0.6);
     }
 
     .spinner--dots.spinner--warning .dot {
@@ -119,19 +119,19 @@ export class ThxSpinner extends LitElement {
     /* Bars spinner */
     .spinner--bars {
       display: flex;
-      gap: 2px;
+      gap: var(--size-1);
       align-items: center;
     }
 
     .spinner--bars .bar {
-      width: 4px;
+      width: var(--size-1);
       background: var(--neutral-600, #666);
       animation: bars 1.2s ease-in-out infinite;
     }
 
     .spinner--bars.spinner--crt .bar {
       background: var(--atmos-primary, #a6c8e1);
-      box-shadow: 0 0 6px rgba(166, 200, 225, 0.6);
+      box-shadow: 0 0 var(--size-1) rgba(166, 200, 225, 0.6);
     }
 
     .spinner--bars.spinner--warning .bar {
@@ -144,15 +144,15 @@ export class ThxSpinner extends LitElement {
 
     .spinner--bars .bar:nth-child(1) {
       animation-delay: -0.4s;
-      height: 12px;
+      height: calc(var(--size-2) + var(--size-1));
     }
     .spinner--bars .bar:nth-child(2) {
-      animation-delay: -0.2s;
-      height: 16px;
+      animation-delay: calc(-1 * var(--duration-moderate-1));
+      height: var(--size-3);
     }
     .spinner--bars .bar:nth-child(3) {
       animation-delay: 0s;
-      height: 12px;
+      height: calc(var(--size-2) + var(--size-1));
     }
 
     @keyframes bars {
@@ -204,51 +204,51 @@ export class ThxSpinner extends LitElement {
 
     /* Size variants */
     .spinner--sm.spinner--circle svg {
-      width: 16px;
-      height: 16px;
+      width: var(--size-3);
+      height: var(--size-3);
     }
     .spinner--md.spinner--circle svg {
-      width: 24px;
-      height: 24px;
+      width: var(--size-5);
+      height: var(--size-5);
     }
     .spinner--lg.spinner--circle svg {
-      width: 32px;
-      height: 32px;
+      width: var(--size-7);
+      height: var(--size-7);
     }
     .spinner--xl.spinner--circle svg {
-      width: 48px;
-      height: 48px;
+      width: var(--size-8);
+      height: var(--size-8);
     }
 
     .spinner--sm.spinner--dots .dot {
-      width: 6px;
-      height: 6px;
+      width: var(--size-1);
+      height: var(--size-1);
     }
     .spinner--lg.spinner--dots .dot,
     .spinner--xl.spinner--dots .dot {
-      width: 10px;
-      height: 10px;
+      width: var(--size-2);
+      height: var(--size-2);
     }
 
     .spinner--sm.spinner--pulse::before,
     .spinner--sm.spinner--pulse::after {
-      width: 12px;
-      height: 12px;
+      width: calc(var(--size-2) + var(--size-1));
+      height: calc(var(--size-2) + var(--size-1));
     }
     .spinner--md.spinner--pulse::before,
     .spinner--md.spinner--pulse::after {
-      width: 20px;
-      height: 20px;
+      width: var(--size-4);
+      height: var(--size-4);
     }
     .spinner--lg.spinner--pulse::before,
     .spinner--lg.spinner--pulse::after {
-      width: 28px;
-      height: 28px;
+      width: var(--size-6);
+      height: var(--size-6);
     }
     .spinner--xl.spinner--pulse::before,
     .spinner--xl.spinner--pulse::after {
-      width: 40px;
-      height: 40px;
+      width: calc(var(--size-7) + var(--size-2));
+      height: calc(var(--size-7) + var(--size-2));
     }
   `;
 

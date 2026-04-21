@@ -35,11 +35,11 @@ export class ThxResizeObserver extends LitElement {
     /* CRT Monitor display for dimensions */
     .dimension-display {
       background: var(--crt-bg, #111);
-      border: 12px solid var(--crt-border, #2a2a2a);
-      border-radius: 4px;
+      border: calc(var(--size-2) + var(--size-1)) solid var(--crt-border, #2a2a2a);
+      border-radius: var(--size-1);
       position: relative;
       overflow: hidden;
-      box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.5);
+      box-shadow: inset 0 0 var(--size-4) rgba(0, 0, 0, 0.5);
     }
 
     .dimension-display::before {
@@ -51,10 +51,10 @@ export class ThxResizeObserver extends LitElement {
         transparent,
         transparent 2px,
         rgba(166, 200, 225, 0.04) 2px,
-        rgba(166, 200, 225, 0.04) 4px
+        rgba(166, 200, 225, 0.04) var(--size-1)
       );
       pointer-events: none;
-      z-index: 10;
+      z-index: var(--layer-2);
     }
 
     .dimension-display::after {
@@ -63,70 +63,70 @@ export class ThxResizeObserver extends LitElement {
       inset: 0;
       background: radial-gradient(ellipse at center, transparent 50%, rgba(0, 0, 0, 0.4) 100%);
       pointer-events: none;
-      z-index: 11;
+      z-index: calc(var(--layer-2) + 1);
     }
 
     .display-label {
       position: absolute;
-      top: 4px;
-      right: 8px;
-      font-size: 0.625rem;
+      top: var(--size-1);
+      right: var(--size-2);
+      font-size: var(--font-size-0);
       color: #666;
       text-transform: uppercase;
-      letter-spacing: 0.1em;
-      z-index: 15;
+      letter-spacing: var(--font-letterspacing-4);
+      z-index: calc(var(--layer-2) + 5);
     }
 
     .display-content {
       position: relative;
-      z-index: 5;
-      padding: 20px;
+      z-index: var(--layer-1);
+      padding: var(--size-4);
     }
 
     /* Dimension readout */
     .dimension-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 12px;
+      gap: calc(var(--size-2) + var(--size-1));
     }
 
     .dimension-cell {
       display: flex;
       flex-direction: column;
-      gap: 4px;
-      padding: 12px;
+      gap: var(--size-1);
+      padding: calc(var(--size-2) + var(--size-1));
       background: rgba(166, 200, 225, 0.05);
-      border: 1px solid rgba(166, 200, 225, 0.1);
+      border: var(--border-size-1) solid rgba(166, 200, 225, 0.1);
     }
 
     .dimension-label {
-      font-size: 0.625rem;
+      font-size: var(--font-size-0);
       color: var(--atmos-secondary, #707e91);
       text-transform: uppercase;
-      letter-spacing: 0.1em;
+      letter-spacing: var(--font-letterspacing-4);
     }
 
     .dimension-value {
-      font-size: 1.25rem;
+      font-size: var(--font-size-3);
       color: var(--atmos-primary, #a6c8e1);
-      font-weight: 600;
-      text-shadow: 0 0 8px rgba(166, 200, 225, 0.5);
+      font-weight: var(--font-weight-6);
+      text-shadow: 0 0 var(--size-2) rgba(166, 200, 225, 0.5);
     }
 
     .dimension-unit {
-      font-size: 0.6875rem;
+      font-size: var(--font-size-0);
       color: var(--atmos-secondary, #707e91);
-      margin-left: 4px;
+      margin-left: var(--size-1);
     }
 
     /* Additional measurements */
     .measurements-detail {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      gap: 8px;
-      margin-top: 12px;
-      padding-top: 12px;
-      border-top: 1px solid rgba(166, 200, 225, 0.1);
+      gap: var(--size-2);
+      margin-top: calc(var(--size-2) + var(--size-1));
+      padding-top: calc(var(--size-2) + var(--size-1));
+      border-top: var(--border-size-1) solid rgba(166, 200, 225, 0.1);
     }
 
     .measurement-item {
@@ -135,16 +135,16 @@ export class ThxResizeObserver extends LitElement {
 
     .measurement-item label {
       display: block;
-      font-size: 0.5rem;
+      font-size: var(--font-size-00);
       color: var(--atmos-secondary, #707e91);
       text-transform: uppercase;
-      letter-spacing: 0.08em;
-      margin-bottom: 2px;
+      letter-spacing: var(--font-letterspacing-3);
+      margin-bottom: var(--size-1);
     }
 
     .measurement-item value {
       display: block;
-      font-size: 0.75rem;
+      font-size: var(--font-size-0);
       color: var(--atmos-tertiary, #deffff);
     }
 
@@ -152,40 +152,40 @@ export class ThxResizeObserver extends LitElement {
     .status-bar {
       display: flex;
       align-items: center;
-      gap: 12px;
-      padding: 8px 12px;
+      gap: calc(var(--size-2) + var(--size-1));
+      padding: var(--size-2) calc(var(--size-2) + var(--size-1));
       background: rgba(0, 0, 0, 0.3);
-      border-bottom: 1px solid rgba(166, 200, 225, 0.1);
-      font-size: 0.625rem;
+      border-bottom: var(--border-size-1) solid rgba(166, 200, 225, 0.1);
+      font-size: var(--font-size-0);
       text-transform: uppercase;
-      letter-spacing: 0.1em;
+      letter-spacing: var(--font-letterspacing-4);
       color: var(--atmos-secondary, #707e91);
     }
 
     .status-led {
-      width: 8px;
-      height: 8px;
+      width: var(--size-2);
+      height: var(--size-2);
       background: #333;
-      border: 1px solid #444;
+      border: var(--border-size-1) solid #444;
     }
 
     .status-led.active {
       background: var(--atmos-primary, #a6c8e1);
-      box-shadow: 0 0 6px rgba(166, 200, 225, 0.8);
+      box-shadow: 0 0 var(--size-1) rgba(166, 200, 225, 0.8);
     }
 
     .aspect-ratio {
       margin-left: auto;
-      font-size: 0.625rem;
+      font-size: var(--font-size-0);
     }
 
     /* Content slot wrapper */
     .content-slot {
-      margin-top: 16px;
-      padding: 16px;
+      margin-top: var(--size-3);
+      padding: var(--size-3);
       background: var(--neutral-100, #fafafa);
-      box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.06);
-      min-height: 100px;
+      box-shadow: var(--inner-shadow-0);
+      min-height: var(--size-11);
       resize: both;
       overflow: hidden;
     }
@@ -195,22 +195,22 @@ export class ThxResizeObserver extends LitElement {
     }
 
     .content-label {
-      font-size: 0.6875rem;
+      font-size: var(--font-size-0);
       color: var(--neutral-600, #666);
-      letter-spacing: 0.15em;
+      letter-spacing: var(--font-letterspacing-5);
       text-transform: uppercase;
-      margin-bottom: 12px;
-      padding-bottom: 8px;
-      border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+      margin-bottom: calc(var(--size-2) + var(--size-1));
+      padding-bottom: var(--size-2);
+      border-bottom: var(--border-size-1) solid rgba(0, 0, 0, 0.08);
     }
 
     /* Empty state */
     .no-content {
       text-align: center;
-      padding: 24px;
+      padding: var(--size-5);
       color: var(--neutral-600, #666);
-      font-size: 0.75rem;
-      letter-spacing: 0.1em;
+      font-size: var(--font-size-0);
+      letter-spacing: var(--font-letterspacing-4);
       text-transform: uppercase;
     }
   `;

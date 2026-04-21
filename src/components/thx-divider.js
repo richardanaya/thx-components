@@ -43,7 +43,7 @@ export class ThxDivider extends LitElement {
       flex: 1;
       height: 0;
       border: none;
-      border-top: 1px solid rgba(0, 0, 0, 0.1);
+      border-top: var(--border-size-1) solid rgba(0, 0, 0, 0.1);
     }
 
     .divider--solid .divider__line {
@@ -55,7 +55,7 @@ export class ThxDivider extends LitElement {
     }
 
     .divider--inset {
-      padding: 0 16px;
+      padding: 0 var(--size-3);
     }
 
     .divider--inset .divider__line {
@@ -64,15 +64,15 @@ export class ThxDivider extends LitElement {
 
     .divider--crt .divider__line {
       border-top-color: rgba(166, 200, 225, 0.3);
-      box-shadow: 0 0 4px rgba(166, 200, 225, 0.5);
+      box-shadow: 0 0 var(--size-1) rgba(166, 200, 225, 0.5);
     }
 
     .divider__label {
-      padding: 0 16px;
+      padding: 0 var(--size-3);
       font-family: var(--font-mono, 'Courier New', Courier, monospace);
-      font-size: 0.625rem;
+      font-size: var(--font-size-0);
       text-transform: uppercase;
-      letter-spacing: 0.15em;
+      letter-spacing: var(--font-letterspacing-5);
       color: var(--neutral-600, #666);
     }
 
@@ -82,15 +82,15 @@ export class ThxDivider extends LitElement {
 
     /* Spacing variants */
     .divider--spacing-sm {
-      margin: 16px 0;
+      margin: var(--size-3) 0;
     }
 
     .divider--spacing-md {
-      margin: 24px 0;
+      margin: var(--size-5) 0;
     }
 
     .divider--spacing-lg {
-      margin: 32px 0;
+      margin: var(--size-7) 0;
     }
 
     /* Vertical divider */
@@ -106,7 +106,7 @@ export class ThxDivider extends LitElement {
       width: 0;
       height: 100%;
       border-top: none;
-      border-left: 1px solid rgba(0, 0, 0, 0.1);
+      border-left: var(--border-size-1) solid rgba(0, 0, 0, 0.1);
     }
 
     .divider--vertical.divider--dashed .divider__line {
@@ -118,21 +118,21 @@ export class ThxDivider extends LitElement {
     }
 
     .divider--vertical .divider__label {
-      padding: 8px 0;
+      padding: var(--size-2) 0;
       writing-mode: vertical-rl;
       text-orientation: mixed;
     }
 
     .divider--vertical.divider--spacing-sm {
-      margin: 0 16px;
+      margin: 0 var(--size-3);
     }
 
     .divider--vertical.divider--spacing-md {
-      margin: 0 24px;
+      margin: 0 var(--size-5);
     }
 
     .divider--vertical.divider--spacing-lg {
-      margin: 0 32px;
+      margin: 0 var(--size-7);
     }
   `;
 

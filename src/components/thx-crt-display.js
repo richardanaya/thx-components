@@ -21,11 +21,11 @@ export class ThxCrtDisplay extends LitElement {
 
     .crt-display {
       background: var(--crt-bg, #111);
-      border: 12px solid var(--crt-border, #2a2a2a);
-      border-radius: 4px;
+      border: calc(var(--size-2) + var(--size-1)) solid var(--crt-border, #2a2a2a);
+      border-radius: var(--size-1);
       position: relative;
       overflow: hidden;
-      box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.5);
+      box-shadow: inset 0 0 var(--size-4) rgba(0, 0, 0, 0.5);
     }
 
     .crt-display::before {
@@ -37,11 +37,11 @@ export class ThxCrtDisplay extends LitElement {
         transparent,
         transparent 2px,
         rgba(166, 200, 225, 0.04) 2px,
-        rgba(166, 200, 225, 0.04) 4px
+        rgba(166, 200, 225, 0.04) var(--size-1)
       );
       pointer-events: none;
-      z-index: 10;
-      animation: scanlines 8s linear infinite;
+      z-index: var(--layer-2);
+      animation: var(--duration-pause) linear infinite;
     }
 
     @keyframes scanlines {
@@ -59,25 +59,25 @@ export class ThxCrtDisplay extends LitElement {
       inset: 0;
       background: radial-gradient(ellipse at center, transparent 50%, rgba(0, 0, 0, 0.4) 100%);
       pointer-events: none;
-      z-index: 11;
+      z-index: calc(var(--layer-2) + 1);
     }
 
     .crt-content {
       position: relative;
-      z-index: 5;
-      padding: 20px;
+      z-index: var(--layer-1);
+      padding: var(--size-4);
     }
 
     .crt-label {
       position: absolute;
-      top: 4px;
-      right: 8px;
+      top: var(--size-1);
+      right: var(--size-2);
       font-family: var(--font-mono, 'Courier New', Courier, monospace);
-      font-size: 0.625rem;
+      font-size: var(--font-size-0);
       color: #666;
       text-transform: uppercase;
-      letter-spacing: 0.1em;
-      z-index: 15;
+      letter-spacing: var(--font-letterspacing-4);
+      z-index: calc(var(--layer-2) + 5);
     }
 
     /* Tektronix scope variant */
@@ -93,31 +93,31 @@ export class ThxCrtDisplay extends LitElement {
       background-image:
         linear-gradient(rgba(166, 200, 225, 0.2) 1px, transparent 1px),
         linear-gradient(90deg, rgba(166, 200, 225, 0.2) 1px, transparent 1px);
-      background-size: 20px 20px;
+      background-size: var(--size-4) var(--size-4);
       pointer-events: none;
       animation: none;
     }
 
     .crt-display.scope .crt-content {
-      padding: 24px;
+      padding: var(--size-5);
     }
 
     /* Small variant */
     .crt-display.small {
-      border-width: 8px;
+      border-width: var(--size-2);
     }
 
     .crt-display.small .crt-content {
-      padding: 12px;
+      padding: calc(var(--size-2) + var(--size-1));
     }
 
     /* Large variant */
     .crt-display.large {
-      border-width: 16px;
+      border-width: var(--size-3);
     }
 
     .crt-display.large .crt-content {
-      padding: 32px;
+      padding: var(--size-7);
     }
   `;
 

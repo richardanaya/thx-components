@@ -31,14 +31,14 @@ export class ThxBadge extends LitElement {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      padding: 4px 10px;
+      padding: var(--size-1) var(--size-2);
       font-family: var(--font-mono, 'Courier New', Courier, monospace);
-      font-size: 0.625rem;
-      font-weight: 600;
-      letter-spacing: 0.1em;
+      font-size: var(--font-size-0);
+      font-weight: var(--font-weight-6);
+      letter-spacing: var(--font-letterspacing-4);
       text-transform: uppercase;
-      border: 1px solid transparent;
-      transition: all 0.15s;
+      border: var(--border-size-1) solid transparent;
+      transition: all var(--duration-quick-2);
       line-height: 1;
     }
 
@@ -96,21 +96,21 @@ export class ThxBadge extends LitElement {
     }
 
     .badge--pill {
-      border-radius: 9999px;
+      border-radius: var(--radius-round);
     }
 
     .badge--icon-only {
-      width: 24px;
-      height: 24px;
+      width: var(--size-5);
+      height: var(--size-5);
       padding: 0;
-      font-size: 0.75rem;
+      font-size: var(--font-size-0);
     }
 
     ::slotted(svg),
     ::slotted(img) {
-      width: 12px;
-      height: 12px;
-      margin-right: 4px;
+      width: calc(var(--size-2) + var(--size-1));
+      height: calc(var(--size-2) + var(--size-1));
+      margin-right: var(--size-1);
     }
 
     .badge--icon-only ::slotted(svg),
