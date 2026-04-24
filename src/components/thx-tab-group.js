@@ -173,16 +173,60 @@ export class ThxTabGroup extends LitElement {
     const tabs = this.querySelectorAll('thx-tab');
     const panels = this.querySelectorAll('thx-tab-panel');
 
-    tabs.forEach(tab => {
+    tabs.forEach((tab, index) => {
       const thxTab = /** @type {ThxTab} */ (/** @type {unknown} */ (tab));
       const panelId = thxTab.getAttribute('panel');
       thxTab.active = panelId === this.activeTab;
+      if (!thxTab.id) thxTab.id = `thx-tab-${index + 1}`;
+      thxTab.setAttribute('aria-controls', panelId || '');
+      thxTab.setAttribute('tabindex', thxTab.active && !thxTab.disabled ? '0' : '-1');
     });
 
     panels.forEach(panel => {
       const thxPanel = /** @type {ThxTabPanel} */ (/** @type {unknown} */ (panel));
       thxPanel.active = thxPanel.id === this.activeTab;
+      const tab = Array.from(tabs).find(tab => tab.getAttribute('panel') === thxPanel.id);
+      if (tab?.id) thxPanel.setAttribute('aria-labelledby', tab.id);
     });
+  }
+
+  /** @returns {ThxTab[]} */
+  _getEnabledTabs() {
+    return /** @type {ThxTab[]} */ (
+      Array.from(this.querySelectorAll('thx-tab')).filter(tab => {
+        const thxTab = /** @type {ThxTab} */ (/** @type {unknown} */ (tab));
+        return !thxTab.disabled;
+      })
+    );
+  }
+
+  /**
+   * @param {KeyboardEvent} e
+   * @returns {void}
+   */
+  _handleKeydown(e) {
+    const keys = ['ArrowRight', 'ArrowDown', 'ArrowLeft', 'ArrowUp', 'Home', 'End'];
+    if (!keys.includes(e.key)) return;
+
+    const tabs = this._getEnabledTabs();
+    if (tabs.length === 0) return;
+
+    e.preventDefault();
+    const currentIndex = Math.max(
+      0,
+      tabs.findIndex(tab => tab === document.activeElement || tab.shadowRoot?.activeElement)
+    );
+    let nextIndex = currentIndex;
+
+    if (e.key === 'Home') nextIndex = 0;
+    else if (e.key === 'End') nextIndex = tabs.length - 1;
+    else if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+      nextIndex = (currentIndex + 1) % tabs.length;
+    } else nextIndex = (currentIndex - 1 + tabs.length) % tabs.length;
+
+    const nextTab = /** @type {ThxTab} */ (/** @type {unknown} */ (tabs[nextIndex]));
+    nextTab.focus();
+    if (nextTab.panel) this.selectTab(nextTab.panel);
   }
 
   /**
@@ -214,7 +258,7 @@ export class ThxTabGroup extends LitElement {
    */
   render() {
     return html`
-      <div class="tab-nav" role="tablist">
+      <div class="tab-nav" role="tablist" @keydown="${this._handleKeydown}">
         <slot name="tab" @slotchange="${this._handleSlotChange}"></slot>
       </div>
       <div class="tab-panels">

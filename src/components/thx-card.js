@@ -103,7 +103,7 @@ export class ThxCard extends LitElement {
       );
       pointer-events: none;
       z-index: var(--layer-2);
-      animation: var(--duration-pause) linear infinite;
+      animation: scanlines var(--duration-pause) linear infinite;
     }
 
     @keyframes scanlines {
@@ -139,6 +139,12 @@ export class ThxCard extends LitElement {
 
     .card--crt .card__inner-border {
       border-color: rgba(166, 200, 225, 0.1);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .card--crt::before {
+        animation: none;
+      }
     }
   `;
 

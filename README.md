@@ -1,6 +1,6 @@
 # thx-components
 
-THX 1138 web components — a classless CSS framework + 66 custom elements, designed for AI/LLM authoring. Zero dependency, zero class soup.
+THX 1138 web components — a classless CSS framework + 64 custom elements, designed for AI/LLM authoring. Zero runtime dependency, zero class soup.
 
 ## For AI agents (and humans who hate boilerplate)
 
@@ -21,6 +21,8 @@ This is a **classless CSS framework**. Write semantic HTML and it already looks 
 
 1. `aesthetics.css` — bare HTML tags (`<h1>`, `<p>`, `<button>`, etc.) are styled automatically. No utility classes needed.
 2. `webcomponents.js` — drop `<thx-*>` custom elements anywhere. Together they produce extremely minimal HTML with no classes and no build step.
+
+`aesthetics.css` loads Open Props tokens with CSS `@import`. Load it before rendering pages that depend on the design tokens or the classless base theme.
 
 ## Quick Start
 
@@ -49,6 +51,45 @@ npm install thx-components
 ```js
 import 'thx-components';
 ```
+
+The package vendors the runtime Lit module under `vendor/lit.js`, so published consumers do not need a runtime `lit` dependency. The npm `lit` dependency is only used for local type checking.
+
+## Selective imports
+
+Use the package entry to register all 64 custom elements:
+
+```js
+import 'thx-components';
+```
+
+Use the component barrel when you need class references:
+
+```js
+import { ThxButton, ThxDialog } from 'thx-components';
+```
+
+Use direct component imports when you only want specific custom elements registered:
+
+```js
+import 'thx-components/src/components/thx-button.js';
+import 'thx-components/src/components/thx-dialog.js';
+```
+
+For the theme, load the CSS explicitly:
+
+```js
+import 'thx-components/aesthetics.css';
+```
+
+## Verification
+
+```bash
+npm run typecheck
+npm test
+npm run check
+```
+
+`npm test` runs browser tests that import `webcomponents.js`, verify all 64 custom elements register, verify the package entry exports component classes, and cover key behavior for button, select, form, and include fixes.
 
 ## License
 

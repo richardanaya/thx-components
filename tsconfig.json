@@ -16,6 +16,6 @@
       "lit/*": ["./node_modules/lit/development/*"]
     }
   },
-  "include": ["src/**/*.js"],
+  "include": ["src/**/*.js", "src/**/*.d.ts", "webcomponents.js"],
   "exclude": ["node_modules"]
 }

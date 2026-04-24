@@ -231,6 +231,25 @@ export class ThxTooltip extends LitElement {
     this._showTimeout = undefined;
     /** @type {number|undefined} */
     this._hideTimeout = undefined;
+    /** @type {string} */
+    this._tooltipId = `thx-tooltip-${Math.random().toString(36).slice(2)}`;
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    clearTimeout(this._showTimeout);
+    clearTimeout(this._hideTimeout);
+  }
+
+  /**
+   * @param {Event} e
+   * @returns {void}
+   */
+  _handleTriggerSlotChange(e) {
+    const slot = /** @type {HTMLSlotElement} */ (e.target);
+    const trigger = /** @type {HTMLElement|undefined} */ (slot.assignedElements()[0]);
+    if (!trigger || trigger.hasAttribute('aria-describedby')) return;
+    trigger.setAttribute('aria-describedby', this._tooltipId);
   }
 
   /**
@@ -311,11 +330,12 @@ export class ThxTooltip extends LitElement {
         @focus=${this._show}
         @blur=${this._hide}
       >
-        <slot></slot>
+        <slot @slotchange=${this._handleTriggerSlotChange}></slot>
       </span>
 
       <div
         class="tooltip-content ${this.placement} ${this.variant} ${this._visible ? 'visible' : ''}"
+        id="${this._tooltipId}"
         role="tooltip"
         aria-hidden="${!this._visible}"
       >

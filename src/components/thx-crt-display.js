@@ -41,7 +41,7 @@ export class ThxCrtDisplay extends LitElement {
       );
       pointer-events: none;
       z-index: var(--layer-2);
-      animation: var(--duration-pause) linear infinite;
+      animation: scanlines var(--duration-pause) linear infinite;
     }
 
     @keyframes scanlines {
@@ -100,6 +100,12 @@ export class ThxCrtDisplay extends LitElement {
 
     .crt-display.scope .crt-content {
       padding: var(--size-5);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .crt-display::before {
+        animation: none;
+      }
     }
 
     /* Small variant */

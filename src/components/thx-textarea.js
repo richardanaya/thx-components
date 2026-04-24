@@ -7,6 +7,8 @@
 
 import { LitElement, html, css } from '../../vendor/lit.js';
 
+let textareaIdCounter = 0;
+
 /**
  * @typedef {Object} TextareaProps
  * @property {string} value - The textarea value
@@ -15,6 +17,7 @@ import { LitElement, html, css } from '../../vendor/lit.js';
  * @property {boolean} disabled - Whether the textarea is disabled
  * @property {boolean} readonly - Whether the textarea is readonly
  * @property {boolean} required - Whether the textarea is required
+ * @property {string} name - The textarea name
  * @property {number} rows - Number of visible text lines
  * @property {number} cols - Visible width in average character widths
  * @property {number} minlength - Minimum length
@@ -28,6 +31,8 @@ import { LitElement, html, css } from '../../vendor/lit.js';
  * @extends {LitElement}
  */
 export class ThxTextarea extends LitElement {
+  static formAssociated = true;
+
   static styles = css`
     :host {
       display: block;
@@ -149,6 +154,7 @@ export class ThxTextarea extends LitElement {
     disabled: { type: Boolean, reflect: true },
     readonly: { type: Boolean, reflect: true },
     required: { type: Boolean },
+    name: { type: String },
     rows: { type: Number },
     cols: { type: Number },
     minlength: { type: Number },
@@ -161,8 +167,14 @@ export class ThxTextarea extends LitElement {
 
   constructor() {
     super();
+    this._internals = this.attachInternals?.();
+    this._textareaId = `thx-textarea-${++textareaIdCounter}`;
+    this._labelId = `${this._textareaId}-label`;
+    this._helpId = `${this._textareaId}-help`;
+    this._errorId = `${this._textareaId}-error`;
     /** @type {string} */
     this.value = '';
+    this._defaultValue = this.value;
     /** @type {string} */
     this.placeholder = '';
     /** @type {string} */
@@ -173,6 +185,8 @@ export class ThxTextarea extends LitElement {
     this.readonly = false;
     /** @type {boolean} */
     this.required = false;
+    /** @type {string} */
+    this.name = '';
     /** @type {number} */
     this.rows = 4;
     /** @type {number} */
@@ -191,6 +205,35 @@ export class ThxTextarea extends LitElement {
     this.showCharCount = false;
   }
 
+  /** @param {Map<string, unknown>} changedProperties */
+  updated(changedProperties) {
+    if (changedProperties.has('value') || changedProperties.has('disabled')) {
+      this._updateFormValue();
+    }
+  }
+
+  /** @returns {void} */
+  firstUpdated() {
+    this._defaultValue = this.value;
+    this._updateFormValue();
+  }
+
+  /** @returns {void} */
+  _updateFormValue() {
+    this._internals?.setFormValue(this.disabled ? null : this.value);
+  }
+
+  /** @returns {void} */
+  formResetCallback() {
+    this.value = this._defaultValue;
+  }
+
+  /** @returns {string|undefined} */
+  get describedBy() {
+    if (this.errorMessage) return this._errorId;
+    return this._helpId;
+  }
+
   /**
    * @returns {HTMLTextAreaElement|null}
    */
@@ -205,6 +248,7 @@ export class ThxTextarea extends LitElement {
   handleInput(event) {
     const target = /** @type {HTMLTextAreaElement} */ (event.target);
     this.value = target.value;
+    this._updateFormValue();
 
     if (this.autoresize) {
       this.autoResize(target);
@@ -226,6 +270,7 @@ export class ThxTextarea extends LitElement {
   handleChange(event) {
     const target = /** @type {HTMLTextAreaElement} */ (event.target);
     this.value = target.value;
+    this._updateFormValue();
     this.dispatchEvent(
       new CustomEvent('change', {
         bubbles: true,
@@ -295,7 +340,7 @@ export class ThxTextarea extends LitElement {
       <div class="textarea-wrapper">
         ${this.label
           ? html`
-              <label class="label">
+              <label class="label" id=${this._labelId} for=${this._textareaId}>
                 ${this.label}${this.required
                   ? html`<span class="required-indicator">*</span>`
                   : null}
@@ -303,23 +348,30 @@ export class ThxTextarea extends LitElement {
             `
           : null}
         <textarea
+          id=${this._textareaId}
           .value=${this.value}
           .placeholder=${this.placeholder}
           ?disabled=${this.disabled}
           ?readonly=${this.readonly}
           ?required=${this.required}
+          .name=${this.name}
           .rows=${this.rows}
           .cols=${this.cols}
           minlength=${this.minlength >= 0 ? this.minlength : undefined}
           maxlength=${this.maxlength >= 0 ? this.maxlength : undefined}
           class="resize-${this.resize}"
+          aria-describedby=${this.describedBy}
+          aria-invalid=${this.errorMessage ? 'true' : 'false'}
+          aria-required=${this.required ? 'true' : 'false'}
           @input=${this.handleInput}
           @change=${this.handleChange}
         ></textarea>
         <div class="status-row">
           ${this.errorMessage
-            ? html`<span class="help-text error">${this.errorMessage}</span>`
-            : html`<span class="help-text"><slot name="help-text"></slot></span>`}
+            ? html`<span class="help-text error" id=${this._errorId}>${this.errorMessage}</span>`
+            : html`<span class="help-text" id=${this._helpId}
+                ><slot name="help-text"></slot
+              ></span>`}
           ${this.showCharCount
             ? html`<span class="char-count ${this.charCountClass}">${this.charCountText}</span>`
             : null}

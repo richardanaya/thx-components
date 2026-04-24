@@ -22,6 +22,8 @@ import { LitElement, html, css } from '../../vendor/lit.js';
  * @extends {LitElement}
  */
 export class ThxRating extends LitElement {
+  static formAssociated = true;
+
   static styles = css`
     :host {
       display: inline-block;
@@ -36,6 +38,11 @@ export class ThxRating extends LitElement {
     .rating-items {
       display: flex;
       gap: var(--size-1);
+    }
+
+    .rating-items:focus {
+      outline: none;
+      box-shadow: 0 0 0 2px rgba(166, 200, 225, 0.5);
     }
 
     .rating-item {
@@ -109,12 +116,15 @@ export class ThxRating extends LitElement {
     disabled: { type: Boolean, reflect: true },
     precision: { type: Number },
     size: { type: String },
+    name: { type: String },
   };
 
   constructor() {
     super();
+    this._internals = this.attachInternals?.();
     /** @type {number} */
     this.value = 0;
+    this._defaultValue = this.value;
     /** @type {number} */
     this.max = 5;
     /** @type {boolean} */
@@ -125,6 +135,55 @@ export class ThxRating extends LitElement {
     this.precision = 1;
     /** @type {string} */
     this.size = 'md';
+    /** @type {string} */
+    this.name = '';
+  }
+
+  /** @param {Map<string, unknown>} changedProperties */
+  updated(changedProperties) {
+    if (changedProperties.has('value') || changedProperties.has('disabled')) {
+      this._updateFormValue();
+    }
+  }
+
+  /** @returns {void} */
+  firstUpdated() {
+    this._defaultValue = this.value;
+    this._updateFormValue();
+  }
+
+  /** @returns {void} */
+  _updateFormValue() {
+    this._internals?.setFormValue(this.disabled ? null : String(this.value));
+  }
+
+  /** @returns {void} */
+  formResetCallback() {
+    this.value = this._defaultValue;
+  }
+
+  /**
+   * @param {number} value
+   * @param {Event|null} originalEvent
+   * @returns {void}
+   */
+  setValue(value, originalEvent = null) {
+    if (this.readonly || this.disabled) return;
+
+    const precision = this.precision || 1;
+    const steppedValue = Math.round(value / precision) * precision;
+    const newValue = Math.max(0, Math.min(this.max, steppedValue));
+    if (newValue === this.value) return;
+
+    this.value = newValue;
+    this._updateFormValue();
+    this.dispatchEvent(
+      new CustomEvent('change', {
+        bubbles: true,
+        composed: true,
+        detail: { value: this.value, originalEvent },
+      })
+    );
   }
 
   /**
@@ -157,14 +216,32 @@ export class ThxRating extends LitElement {
     const isHalf = this.precision === 0.5 && x < rect.width / 2;
     const newValue = isHalf ? index + 0.5 : index + 1;
 
-    this.value = newValue;
-    this.dispatchEvent(
-      new CustomEvent('change', {
-        bubbles: true,
-        composed: true,
-        detail: { value: this.value },
-      })
-    );
+    this.setValue(newValue, event);
+  }
+
+  /**
+   * @param {KeyboardEvent} event
+   * @returns {void}
+   */
+  handleKeyDown(event) {
+    if (this.readonly || this.disabled) return;
+
+    const step = this.precision || 1;
+    let nextValue = this.value;
+    if (event.key === 'ArrowRight' || event.key === 'ArrowUp') {
+      nextValue += step;
+    } else if (event.key === 'ArrowLeft' || event.key === 'ArrowDown') {
+      nextValue -= step;
+    } else if (event.key === 'Home') {
+      nextValue = 0;
+    } else if (event.key === 'End') {
+      nextValue = this.max;
+    } else {
+      return;
+    }
+
+    event.preventDefault();
+    this.setValue(nextValue, event);
   }
 
   /**
@@ -217,7 +294,18 @@ export class ThxRating extends LitElement {
             </linearGradient>
           </defs>
         </svg>
-        <div class="rating-items">
+        <div
+          class="rating-items"
+          role="slider"
+          tabindex=${this.disabled || this.readonly ? '-1' : '0'}
+          aria-valuemin="0"
+          aria-valuemax=${this.max}
+          aria-valuenow=${this.value}
+          aria-valuetext=${`${this.value} of ${this.max}`}
+          aria-disabled=${this.disabled ? 'true' : 'false'}
+          aria-readonly=${this.readonly ? 'true' : 'false'}
+          @keydown=${this.handleKeyDown}
+        >
           ${Array.from({ length: this.max }, (_, i) => this.renderItem(i))}
         </div>
         <span class="value-display"

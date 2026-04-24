@@ -152,6 +152,11 @@ export class ThxRadio extends LitElement {
     }
   }
 
+  /** @returns {void} */
+  focus() {
+    /** @type {HTMLElement|null} */ (this.renderRoot?.querySelector('.radio-wrapper'))?.focus();
+  }
+
   /**
    * @returns {import('lit').TemplateResult}
    */

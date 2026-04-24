@@ -21,6 +21,8 @@ import { LitElement, html, css } from '../../vendor/lit.js';
  * @extends {LitElement}
  */
 export class ThxMultiSelect extends LitElement {
+  static formAssociated = true;
+
   static styles = css`
     :host {
       display: block;
@@ -223,18 +225,24 @@ export class ThxMultiSelect extends LitElement {
   static get properties() {
     return {
       label: { type: String },
+      name: { type: String },
       placeholder: { type: String },
       disabled: { type: Boolean, reflect: true },
       required: { type: Boolean },
       open: { type: Boolean, reflect: true },
       value: { type: Array },
+      _options: { type: Array, state: true },
+      _activeIndex: { type: Number, state: true },
     };
   }
 
   constructor() {
     super();
+    this._internals = this.attachInternals?.();
     /** @type {string} */
     this.label = '';
+    /** @type {string} */
+    this.name = '';
     /** @type {string} */
     this.placeholder = 'SELECT...';
     /** @type {boolean} */
@@ -245,14 +253,101 @@ export class ThxMultiSelect extends LitElement {
     this.open = false;
     /** @type {string[]} */
     this.value = /** @type {string[]} */ ([]);
+    this._defaultValue = [...this.value];
+    /** @type {Element[]} */
+    this._options = [];
+    /** @type {number} */
+    this._activeIndex = -1;
+    this._baseId = `thx-multi-select-${Math.random().toString(36).slice(2)}`;
+  }
+
+  /** @param {import('lit').PropertyValues} changedProperties */
+  updated(changedProperties) {
+    if (changedProperties.has('value') || changedProperties.has('disabled')) {
+      this._updateFormValue();
+    }
+  }
+
+  /**
+   * @returns {void}
+   */
+  connectedCallback() {
+    super.connectedCallback();
+    this._syncOptions();
+  }
+
+  /**
+   * @returns {void}
+   */
+  firstUpdated() {
+    this._defaultValue = [...this.value];
+    this._syncOptions();
+    this._updateActiveIndex();
+    this._updateFormValue();
+  }
+
+  /** @returns {void} */
+  _updateFormValue() {
+    if (this.disabled) {
+      this._internals?.setFormValue(null);
+      return;
+    }
+
+    if (!this.name || this.value.length <= 1) {
+      this._internals?.setFormValue(this.value[0] || '');
+      return;
+    }
+
+    const formData = new FormData();
+    this.value.forEach(value => formData.append(this.name, value));
+    this._internals?.setFormValue(formData);
+  }
+
+  /** @returns {void} */
+  formResetCallback() {
+    this.value = [...this._defaultValue];
+    this._updateActiveIndex();
   }
 
   /**
    * @returns {Element[]}
    */
   get options() {
-    const slot = this.renderRoot?.querySelector('slot');
-    return Array.from(slot?.assignedElements() || []);
+    return this._options;
+  }
+
+  /**
+   * @returns {void}
+   */
+  _syncOptions() {
+    this._options = Array.from(this.querySelectorAll(':scope > thx-option'));
+    this._updateActiveIndex();
+  }
+
+  /** @returns {number} */
+  _firstEnabledIndex() {
+    return this.optionData.findIndex(option => !option.disabled);
+  }
+
+  /** @returns {void} */
+  _updateActiveIndex() {
+    const selectedIndex = this.optionData.findIndex(option => option.selected && !option.disabled);
+    this._activeIndex = selectedIndex >= 0 ? selectedIndex : this._firstEnabledIndex();
+  }
+
+  /** @returns {void} */
+  _open() {
+    if (this.disabled) return;
+    this.open = true;
+    this._updateActiveIndex();
+  }
+
+  /**
+   * @param {string} value
+   * @returns {string}
+   */
+  _optionId(value) {
+    return `${this._baseId}-option-${value.replace(/[^a-zA-Z0-9_-]/g, '-')}`;
   }
 
   /**
@@ -261,7 +356,7 @@ export class ThxMultiSelect extends LitElement {
   get optionData() {
     return this.options.map(el => ({
       value: el.getAttribute('value') || '',
-      label: el.textContent?.trim() || '',
+      label: el.getAttribute('label') || el.textContent?.trim() || '',
       disabled: el.hasAttribute('disabled'),
       selected: this.value.includes(el.getAttribute('value') || ''),
     }));
@@ -286,7 +381,8 @@ export class ThxMultiSelect extends LitElement {
    */
   toggle() {
     if (this.disabled) return;
-    this.open = !this.open;
+    if (this.open) this.close();
+    else this._open();
   }
 
   /**
@@ -307,6 +403,8 @@ export class ThxMultiSelect extends LitElement {
     } else {
       this.value = [...this.value, value];
     }
+    this._updateActiveIndex();
+    this._updateFormValue();
     this.dispatchEvent(
       new CustomEvent('change', {
         bubbles: true,
@@ -327,6 +425,73 @@ export class ThxMultiSelect extends LitElement {
   }
 
   /**
+   * @param {KeyboardEvent} event
+   * @returns {void}
+   */
+  handleKeyDown(event) {
+    switch (event.key) {
+      case 'Enter':
+      case ' ':
+        event.preventDefault();
+        if (this.open && this.optionData[this._activeIndex]) {
+          this.toggleOption(this.optionData[this._activeIndex].value);
+        } else {
+          this._open();
+        }
+        break;
+      case 'Escape':
+        this.close();
+        break;
+      case 'Tab':
+        this.close();
+        break;
+      case 'ArrowDown':
+        event.preventDefault();
+        if (!this.open) this._open();
+        else this.navigateOption(1);
+        break;
+      case 'ArrowUp':
+        event.preventDefault();
+        if (!this.open) this._open();
+        else this.navigateOption(-1);
+        break;
+      case 'Home':
+        event.preventDefault();
+        this._open();
+        this._activeIndex = this._firstEnabledIndex();
+        break;
+      case 'End':
+        event.preventDefault();
+        this._open();
+        for (let i = this.optionData.length - 1; i >= 0; i--) {
+          if (!this.optionData[i].disabled) {
+            this._activeIndex = i;
+            break;
+          }
+        }
+        break;
+    }
+  }
+
+  /**
+   * @param {number} direction
+   * @returns {void}
+   */
+  navigateOption(direction) {
+    const options = this.optionData;
+    if (options.length === 0) return;
+
+    let index = this._activeIndex;
+    for (let i = 0; i < options.length; i++) {
+      index = (index + direction + options.length) % options.length;
+      if (!options[index].disabled) {
+        this._activeIndex = index;
+        break;
+      }
+    }
+  }
+
+  /**
    * @param {FocusEvent} e
    * @returns {void}
    */
@@ -343,12 +508,15 @@ export class ThxMultiSelect extends LitElement {
   render() {
     const hasValue = this.value.length > 0;
     const selectedCount = this.value.length;
+    const listboxId = `${this._baseId}-listbox`;
+    const labelId = `${this._baseId}-label`;
+    const activeOption = this.optionData[this._activeIndex];
 
     return html`
       <div class="multi-select-wrapper">
         ${this.label
           ? html`
-              <label class="label">
+              <label class="label" id=${labelId}>
                 ${this.label}${this.required
                   ? html`<span class="required-indicator">*</span>`
                   : null}
@@ -361,9 +529,17 @@ export class ThxMultiSelect extends LitElement {
             tabindex=${this.disabled ? '-1' : '0'}
             @click=${this.toggle}
             @blur=${this.handleBlur}
+            @keydown=${this.handleKeyDown}
             role="combobox"
             aria-expanded=${this.open}
-            aria-multiselectable="true"
+            aria-haspopup="listbox"
+            aria-controls=${listboxId}
+            aria-labelledby=${this.label ? labelId : undefined}
+            aria-activedescendant=${this.open && activeOption
+              ? this._optionId(activeOption.value)
+              : undefined}
+            aria-required=${this.required ? 'true' : 'false'}
+            aria-disabled=${this.disabled ? 'true' : 'false'}
           >
             <span class=${hasValue ? 'selected-text' : 'placeholder'}> ${this.displayValue} </span>
             ${selectedCount > 0 ? html`<span class="badge-count">${selectedCount}</span>` : ''}
@@ -371,7 +547,12 @@ export class ThxMultiSelect extends LitElement {
               <path d="M7 10l5 5 5-5z" />
             </svg>
           </div>
-          <div class="dropdown ${this.open ? 'open' : ''}" role="listbox">
+          <div
+            class="dropdown ${this.open ? 'open' : ''}"
+            id=${listboxId}
+            role="listbox"
+            aria-multiselectable="true"
+          >
             ${this.options.length === 0
               ? html`<div class="no-options">NO OPTIONS</div>`
               : this.optionData.map(
@@ -381,7 +562,9 @@ export class ThxMultiSelect extends LitElement {
                         ? 'disabled'
                         : ''}"
                       role="option"
+                      id=${this._optionId(option.value)}
                       aria-selected=${option.selected}
+                      aria-disabled=${option.disabled ? 'true' : 'false'}
                       data-value=${option.value}
                       @click=${option.disabled ? null : this.handleOptionClick}
                     >
@@ -392,7 +575,7 @@ export class ThxMultiSelect extends LitElement {
                 )}
           </div>
         </div>
-        <slot style="display: none;"></slot>
+        <slot style="display: none;" @slotchange=${this._syncOptions}></slot>
       </div>
     `;
   }

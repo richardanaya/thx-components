@@ -128,6 +128,58 @@ export class ThxMenu extends LitElement {
     this.variant = 'default';
   }
 
+  /** @returns {HTMLElement[]} */
+  _getItems() {
+    return /** @type {HTMLElement[]} */ (
+      Array.from(this.querySelectorAll('thx-menu-item')).filter(
+        item => !(/** @type {HTMLElement & {disabled?: boolean}} */ (item).disabled)
+      )
+    );
+  }
+
+  /**
+   * @param {HTMLElement|undefined} item
+   * @returns {void}
+   */
+  _focusItem(item) {
+    item?.focus();
+  }
+
+  /**
+   * @param {KeyboardEvent} e
+   * @returns {void}
+   */
+  _handleKeydown(e) {
+    const keys = ['ArrowDown', 'ArrowUp', 'Home', 'End', 'Enter', ' '];
+    if (!keys.includes(e.key)) return;
+
+    const items = this._getItems();
+    if (items.length === 0) return;
+
+    const currentIndex = Math.max(
+      0,
+      items.findIndex(item => item === document.activeElement || item.shadowRoot?.activeElement)
+    );
+
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      const currentItem = /** @type {HTMLElement & {activate?: () => void}|undefined} */ (
+        items[currentIndex]
+      );
+      currentItem?.activate?.();
+      return;
+    }
+
+    e.preventDefault();
+    let nextIndex = currentIndex;
+    if (e.key === 'Home') nextIndex = 0;
+    else if (e.key === 'End') nextIndex = items.length - 1;
+    else if (e.key === 'ArrowDown') nextIndex = (currentIndex + 1) % items.length;
+    else nextIndex = (currentIndex - 1 + items.length) % items.length;
+
+    this._focusItem(/** @type {HTMLElement} */ (items[nextIndex]));
+  }
+
   /**
    * @returns {import('lit').TemplateResult}
    */
@@ -135,7 +187,7 @@ export class ThxMenu extends LitElement {
     return html`
       ${this.variant === 'crt' ? html`<span class="crt-label">MENU-01</span>` : ''}
       ${this.label ? html`<div class="menu-header">${this.label}</div>` : ''}
-      <ul class="menu-list" role="menu">
+      <ul class="menu-list" role="menu" @keydown="${this._handleKeydown}">
         <slot></slot>
       </ul>
     `;

@@ -23,6 +23,8 @@ import { LitElement, html, css } from '../../vendor/lit.js';
  * @extends {LitElement}
  */
 export class ThxSwitch extends LitElement {
+  static formAssociated = true;
+
   static styles = css`
     :host {
       display: inline-flex;
@@ -145,8 +147,10 @@ export class ThxSwitch extends LitElement {
 
   constructor() {
     super();
+    this._internals = this.attachInternals?.();
     /** @type {boolean} */
     this.checked = false;
+    this._defaultChecked = this.checked;
     /** @type {boolean} */
     this.disabled = false;
     /** @type {string} */
@@ -161,12 +165,40 @@ export class ThxSwitch extends LitElement {
     this.offLabel = 'OFF';
   }
 
+  /** @param {Map<string, unknown>} changedProperties */
+  updated(changedProperties) {
+    if (
+      changedProperties.has('checked') ||
+      changedProperties.has('disabled') ||
+      changedProperties.has('value')
+    ) {
+      this._updateFormValue();
+    }
+  }
+
+  /** @returns {void} */
+  firstUpdated() {
+    this._defaultChecked = this.checked;
+    this._updateFormValue();
+  }
+
+  /** @returns {void} */
+  _updateFormValue() {
+    this._internals?.setFormValue(this.checked && !this.disabled ? this.value : null);
+  }
+
+  /** @returns {void} */
+  formResetCallback() {
+    this.checked = this._defaultChecked;
+  }
+
   /**
    * @returns {void}
    */
   toggle() {
     if (this.disabled) return;
     this.checked = !this.checked;
+    this._updateFormValue();
     this.dispatchEvent(
       new CustomEvent('change', {
         bubbles: true,

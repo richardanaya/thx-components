@@ -7,6 +7,8 @@
 
 import { LitElement, html, css } from '../../vendor/lit.js';
 
+let radioGroupIdCounter = 0;
+
 /**
  * @typedef {Object} RadioGroupProps
  * @property {string} value - The currently selected value
@@ -175,10 +177,16 @@ export class ThxRadioGroup extends LitElement {
     disabled: { type: Boolean, reflect: true },
     required: { type: Boolean },
     variant: { type: String },
+    errorMessage: { type: String },
   };
 
   constructor() {
     super();
+    this._groupId = `thx-radio-group-${++radioGroupIdCounter}`;
+    this._labelId = `${this._groupId}-label`;
+    this._helpId = `${this._groupId}-help`;
+    this._errorId = `${this._groupId}-error`;
+    this._radioDisabledState = new WeakMap();
     /** @type {string} */
     this.value = '';
     /** @type {string} */
@@ -193,15 +201,52 @@ export class ThxRadioGroup extends LitElement {
     this.required = false;
     /** @type {string} */
     this.variant = 'default';
+    /** @type {string} */
+    this.errorMessage = '';
+  }
+
+  /** @param {Map<string, unknown>} _changedProperties */
+  updated(_changedProperties) {
+    this.syncRadios();
+  }
+
+  /** @returns {string|undefined} */
+  get describedBy() {
+    if (this.errorMessage) return this._errorId;
+    return this._helpId;
+  }
+
+  /** @returns {Array<HTMLElement & {checked?: boolean, disabled?: boolean, name?: string, value?: string, focus?: () => void}>} */
+  get radioElements() {
+    return Array.from(this.querySelectorAll('thx-radio, thx-radio-button'));
+  }
+
+  /** @returns {void} */
+  syncRadios() {
+    for (const radio of this.radioElements) {
+      radio.name = this.name;
+      radio.checked = radio.value === this.value;
+
+      if (this.disabled) {
+        if (!this._radioDisabledState.has(radio)) {
+          this._radioDisabledState.set(radio, Boolean(radio.disabled));
+        }
+        radio.disabled = true;
+      } else if (this._radioDisabledState.has(radio)) {
+        radio.disabled = Boolean(this._radioDisabledState.get(radio));
+        this._radioDisabledState.delete(radio);
+      }
+    }
   }
 
   /**
-   * @param {string} value
+   * @param {string} [value]
    * @returns {void}
    */
-  select(value) {
+  select(value = this.value) {
     if (this.disabled) return;
     this.value = value;
+    this.syncRadios();
     this.dispatchEvent(
       new CustomEvent('change', {
         bubbles: true,
@@ -209,6 +254,37 @@ export class ThxRadioGroup extends LitElement {
         detail: { value: this.value, name: this.name },
       })
     );
+  }
+
+  /**
+   * @param {KeyboardEvent} event
+   * @returns {void}
+   */
+  handleKeyDown(event) {
+    const keys = ['ArrowRight', 'ArrowDown', 'ArrowLeft', 'ArrowUp', 'Home', 'End'];
+    if (this.disabled || !keys.includes(event.key)) return;
+
+    const radios = this.radioElements.filter(radio => !radio.disabled);
+    if (!radios.length) return;
+
+    event.preventDefault();
+    const checkedIndex = radios.findIndex(radio => radio.checked);
+    let nextIndex = checkedIndex >= 0 ? checkedIndex : 0;
+
+    if (event.key === 'ArrowRight' || event.key === 'ArrowDown') {
+      nextIndex = checkedIndex >= 0 ? (checkedIndex + 1) % radios.length : 0;
+    } else if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') {
+      nextIndex =
+        checkedIndex >= 0 ? (checkedIndex - 1 + radios.length) % radios.length : radios.length - 1;
+    } else if (event.key === 'Home') {
+      nextIndex = 0;
+    } else if (event.key === 'End') {
+      nextIndex = radios.length - 1;
+    }
+
+    const nextRadio = radios[nextIndex];
+    this.select(nextRadio.value || '');
+    nextRadio.focus?.();
   }
 
   /**
@@ -231,10 +307,18 @@ export class ThxRadioGroup extends LitElement {
     const isButtonVariant = this.variant === 'button';
 
     return html`
-      <div class="group-wrapper" role="radiogroup" aria-labelledby="group-label">
+      <div
+        class="group-wrapper"
+        role="radiogroup"
+        aria-labelledby=${this.label ? this._labelId : undefined}
+        aria-describedby=${this.describedBy}
+        aria-invalid=${this.errorMessage ? 'true' : 'false'}
+        aria-required=${this.required ? 'true' : 'false'}
+        @keydown=${this.handleKeyDown}
+      >
         ${this.label
           ? html`
-              <label class="group-label" id="group-label">
+              <label class="group-label" id=${this._labelId}>
                 ${this.label}${this.required
                   ? html`<span class="required-indicator">*</span>`
                   : null}
@@ -247,7 +331,10 @@ export class ThxRadioGroup extends LitElement {
             : `orientation-${this.orientation}`}"
         >
           <slot
-            @slotchange=${() => this.requestUpdate()}
+            @slotchange=${() => {
+              this.syncRadios();
+              this.requestUpdate();
+            }}
             @change=${(/** @type {CustomEvent} */ e) => {
               e.stopPropagation();
               const detail = /** @type {{value: string}} */ (e.detail);
@@ -258,6 +345,9 @@ export class ThxRadioGroup extends LitElement {
             ? html` <!-- Default radio options if no child elements provided --> `
             : null}
         </div>
+        ${this.errorMessage
+          ? html`<div class="group-label" id=${this._errorId}>${this.errorMessage}</div>`
+          : html`<div class="group-label" id=${this._helpId}><slot name="help-text"></slot></div>`}
       </div>
     `;
   }

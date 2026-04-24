@@ -1,0 +1,963 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>THX 1138 // ULTRA DASHBOARD</title>
+    <link rel="stylesheet" href="./aesthetics.css" />
+    <script type="module" src="./webcomponents.js"></script>
+    <style>
+      body {
+        padding: 0;
+        background:
+          linear-gradient(rgba(0, 0, 0, 0.035) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(0, 0, 0, 0.035) 1px, transparent 1px), var(--neutral-200);
+        background-size: 24px 24px;
+      }
+
+      .ultra-shell {
+        width: min(1560px, 100%);
+        margin: 0 auto;
+        padding: var(--size-4);
+      }
+
+      .command-strip {
+        position: sticky;
+        top: 0;
+        z-index: var(--layer-4);
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: var(--size-3);
+        align-items: center;
+        padding: var(--size-3) 0;
+        background: rgba(224, 224, 224, 0.92);
+        backdrop-filter: blur(8px);
+        border-bottom: var(--border-size-1) solid rgba(0, 0, 0, 0.12);
+      }
+
+      .identity-block {
+        min-width: 0;
+      }
+
+      .eyebrow,
+      .panel-label,
+      .metric-label,
+      .micro-label,
+      .timeline-time,
+      .operator-title {
+        font-family: var(--font-mono);
+        font-size: var(--font-size-0);
+        text-transform: uppercase;
+        letter-spacing: var(--font-letterspacing-4);
+        color: var(--neutral-600);
+      }
+
+      .command-strip h1 {
+        margin: var(--size-1) 0 0;
+        font-size: clamp(1.7rem, 3vw, 3.8rem);
+        line-height: 0.9;
+        letter-spacing: 0.16em;
+      }
+
+      .command-actions,
+      .inline-actions,
+      .badge-rack,
+      .operator-row,
+      .icon-rack {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: var(--size-2);
+      }
+
+      .hero-grid,
+      .section-grid,
+      .metrics-grid,
+      .sensor-grid,
+      .media-grid,
+      .forms-grid {
+        display: grid;
+        gap: var(--size-1);
+      }
+
+      .hero-grid {
+        grid-template-columns: minmax(0, 2fr) minmax(340px, 0.9fr);
+        margin-top: var(--size-3);
+      }
+
+      .section-grid {
+        grid-template-columns: minmax(0, 1.4fr) minmax(320px, 0.8fr);
+      }
+
+      .metrics-grid {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        margin: var(--size-1) 0;
+      }
+
+      .sensor-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .media-grid,
+      .forms-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .panel,
+      .metric-card,
+      .system-card,
+      .timeline,
+      .operator-card {
+        background: var(--neutral-100);
+        box-shadow: var(--inner-shadow-0);
+        padding: var(--size-4);
+        min-width: 0;
+      }
+
+      .panel {
+        position: relative;
+        overflow: hidden;
+      }
+
+      .panel::before {
+        content: attr(data-code);
+        position: absolute;
+        top: var(--size-2);
+        right: var(--size-2);
+        font-family: var(--font-mono);
+        font-size: var(--font-size-00);
+        color: rgba(0, 0, 0, 0.16);
+        letter-spacing: var(--font-letterspacing-5);
+      }
+
+      .dark-panel {
+        background: var(--crt-bg);
+        color: var(--atmos-primary);
+        border: var(--size-2) solid var(--crt-border);
+      }
+
+      .dark-panel .panel-label,
+      .dark-panel .micro-label {
+        color: var(--atmos-secondary);
+      }
+
+      .metric-value {
+        display: block;
+        margin: var(--size-2) 0;
+        font-family: var(--font-display);
+        font-size: clamp(1.8rem, 4vw, 3.1rem);
+        font-weight: var(--font-weight-3);
+        letter-spacing: 0.08em;
+        color: var(--neutral-800);
+      }
+
+      .dark-panel .metric-value,
+      .terminal-line strong {
+        color: var(--atmos-primary);
+        text-shadow: 0 0 var(--size-2) rgba(166, 200, 225, 0.35);
+      }
+
+      .terminal-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1.4fr) minmax(260px, 0.65fr);
+        gap: var(--size-4);
+        align-items: stretch;
+      }
+
+      .terminal-output {
+        min-height: 190px;
+        padding: var(--size-3);
+        background: rgba(0, 0, 0, 0.28);
+        border: var(--border-size-1) solid rgba(166, 200, 225, 0.16);
+        font-family: var(--font-mono);
+        font-size: var(--font-size-0);
+        line-height: var(--font-lineheight-4);
+        text-transform: uppercase;
+      }
+
+      .terminal-line {
+        display: flex;
+        justify-content: space-between;
+        gap: var(--size-3);
+        padding: var(--size-1) 0;
+        border-bottom: var(--border-size-1) solid rgba(166, 200, 225, 0.08);
+      }
+
+      .chart-frame {
+        min-height: 220px;
+        background: rgba(0, 0, 0, 0.16);
+        border: var(--border-size-1) solid rgba(166, 200, 225, 0.16);
+        padding: var(--size-2);
+      }
+
+      .status-column {
+        display: grid;
+        gap: var(--size-3);
+      }
+
+      .timeline-entry {
+        display: grid;
+        grid-template-columns: 74px 1fr auto;
+        gap: var(--size-3);
+        align-items: start;
+        padding: var(--size-3) 0;
+        border-bottom: var(--border-size-1) solid rgba(0, 0, 0, 0.08);
+      }
+
+      .timeline-entry:last-child {
+        border-bottom: none;
+      }
+
+      .timeline-message {
+        color: var(--neutral-800);
+        line-height: var(--font-lineheight-3);
+      }
+
+      .operator-card {
+        display: grid;
+        gap: var(--size-3);
+      }
+
+      .operator-row {
+        justify-content: space-between;
+        border-bottom: var(--border-size-1) solid rgba(0, 0, 0, 0.08);
+        padding-bottom: var(--size-2);
+      }
+
+      .operator-row:last-child {
+        border-bottom: none;
+      }
+
+      .map-grid {
+        display: grid;
+        grid-template-columns: repeat(8, 1fr);
+        gap: var(--size-1);
+        padding: var(--size-3);
+        background: var(--crt-bg-dark);
+        border: var(--border-size-1) solid rgba(166, 200, 225, 0.16);
+      }
+
+      .map-cell {
+        aspect-ratio: 1;
+        background: rgba(166, 200, 225, 0.08);
+        border: var(--border-size-1) solid rgba(166, 200, 225, 0.08);
+      }
+
+      .map-cell.hot {
+        background: rgba(212, 170, 0, 0.55);
+        box-shadow: 0 0 var(--size-2) rgba(212, 170, 0, 0.45);
+      }
+
+      .map-cell.critical {
+        background: rgba(212, 64, 0, 0.65);
+        box-shadow: 0 0 var(--size-2) rgba(212, 64, 0, 0.45);
+      }
+
+      .mission-slide {
+        min-height: 260px;
+        display: grid;
+        align-content: center;
+        gap: var(--size-3);
+        padding: var(--size-7);
+        background: var(--crt-bg);
+        color: var(--atmos-primary);
+        font-family: var(--font-mono);
+        text-transform: uppercase;
+      }
+
+      .mission-slide h3 {
+        color: var(--atmos-primary);
+        margin: 0;
+      }
+
+      .form-stack,
+      .control-stack,
+      .mini-stack {
+        display: grid;
+        gap: var(--size-3);
+      }
+
+      .form-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--size-2);
+        align-items: center;
+      }
+
+      .observed-feed {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--size-2);
+        min-height: 90px;
+        align-content: flex-start;
+      }
+
+      .audit-chip {
+        font-family: var(--font-mono);
+        font-size: var(--font-size-0);
+        text-transform: uppercase;
+        letter-spacing: var(--font-letterspacing-3);
+        padding: var(--size-1) var(--size-2);
+        background: rgba(166, 200, 225, 0.14);
+        border: var(--border-size-1) solid rgba(166, 200, 225, 0.22);
+      }
+
+      .footer-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: var(--size-1);
+        margin: var(--size-1) 0 var(--size-5);
+      }
+
+      .small-note {
+        color: var(--neutral-600);
+        font-size: var(--font-size-0);
+        line-height: var(--font-lineheight-3);
+      }
+
+      thx-tab-panel {
+        min-height: 420px;
+      }
+
+      thx-chart-line,
+      thx-chart-bar,
+      thx-chart-monitors {
+        width: 100%;
+      }
+
+      @media (max-width: 1180px) {
+        .hero-grid,
+        .section-grid,
+        .terminal-grid,
+        .media-grid,
+        .forms-grid,
+        .footer-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .metrics-grid,
+        .sensor-grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+      }
+
+      @media (max-width: 720px) {
+        .ultra-shell {
+          padding: var(--size-2);
+        }
+
+        .command-strip {
+          grid-template-columns: 1fr;
+        }
+
+        .metrics-grid,
+        .sensor-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .timeline-entry {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="ultra-shell">
+      <header class="command-strip">
+        <div class="identity-block">
+          <thx-breadcrumb>
+            <thx-breadcrumb-item href="#">CENTRAL</thx-breadcrumb-item>
+            <thx-breadcrumb-item href="#">SECTOR 7-G</thx-breadcrumb-item>
+            <thx-breadcrumb-item current>ULTRA DASHBOARD</thx-breadcrumb-item>
+          </thx-breadcrumb>
+          <div class="eyebrow">// TERMINAL LDS-1138 // LIVE OPERATIONS MATRIX</div>
+          <h1>CONTROL SURFACE</h1>
+        </div>
+
+        <div class="command-actions">
+          <thx-badge variant="pulse">LIVE</thx-badge>
+          <thx-relative-time id="boot-time" variant="crt" style="long"></thx-relative-time>
+          <thx-dropdown
+            id="mode-dropdown"
+            label="MODE"
+            header-label="SURVEILLANCE MODE"
+          ></thx-dropdown>
+          <thx-icon-button
+            id="drawer-open"
+            icon="▤"
+            label="Open command drawer"
+            pulse
+          ></thx-icon-button>
+          <thx-button id="dialog-open" variant="primary">ISSUE ORDER</thx-button>
+        </div>
+      </header>
+
+      <section class="hero-grid" aria-label="Primary command telemetry">
+        <thx-crt-display label="MAINFRAME-1138 // OSCILLOSCOPE" class="dark-panel">
+          <div class="terminal-grid">
+            <div class="chart-frame">
+              <div class="panel-label">// SUBJECT COMPLIANCE WAVEFORM</div>
+              <thx-chart-line id="compliance-line" height="220"></thx-chart-line>
+            </div>
+            <div class="status-column">
+              <div class="terminal-output">
+                <div class="terminal-line"><span>CORE TEMP</span><strong>031.8 C</strong></div>
+                <div class="terminal-line"><span>GRID HUM</span><strong>044 HZ</strong></div>
+                <div class="terminal-line"><span>OBEDIENCE</span><strong>98.4 PCT</strong></div>
+                <div class="terminal-line"><span>ANOMALY</span><strong>00.7 PCT</strong></div>
+                <div class="terminal-line"><span>LAST SYNC</span><strong>0004 SEC</strong></div>
+              </div>
+              <thx-status-leds id="core-leds" label="CORE RELAYS"></thx-status-leds>
+            </div>
+          </div>
+        </thx-crt-display>
+
+        <aside class="panel" data-code="BIO-TRACE">
+          <div class="panel-label">// OPERATOR PRESENCE</div>
+          <div class="operator-card">
+            <div class="operator-row">
+              <div class="operator-title">THX 1138</div>
+              <thx-avatar name="THX 1138" status="online" interactive></thx-avatar>
+            </div>
+            <div class="operator-row">
+              <div class="operator-title">LUH 3417</div>
+              <thx-avatar name="LUH 3417" status="warning" interactive></thx-avatar>
+            </div>
+            <div class="operator-row">
+              <div class="operator-title">SEN 5241</div>
+              <thx-avatar name="SEN 5241" status="offline" interactive></thx-avatar>
+            </div>
+          </div>
+
+          <thx-divider label="BIOMETRIC LOAD"></thx-divider>
+          <div class="sensor-grid">
+            <thx-chart-gauge value="73" label="CPU"></thx-chart-gauge>
+            <thx-chart-gauge value="88" label="SED" threshold="80"></thx-chart-gauge>
+            <thx-progress-ring value="64" label="NET"></thx-progress-ring>
+          </div>
+        </aside>
+      </section>
+
+      <section class="metrics-grid" aria-label="System metrics">
+        <div class="metric-card">
+          <span class="metric-label">SUBJECTS TRACKED</span>
+          <span class="metric-value"><thx-format-number value="12847"></thx-format-number></span>
+          <thx-tag>+031 SINCE SHIFT</thx-tag>
+        </div>
+        <div class="metric-card">
+          <span class="metric-label">ARCHIVE MASS</span>
+          <span class="metric-value"
+            ><thx-format-bytes value="9126805504000"></thx-format-bytes
+          ></span>
+          <thx-tag>SEALED</thx-tag>
+        </div>
+        <div class="metric-card">
+          <span class="metric-label">COMPLIANCE RATIO</span>
+          <span class="metric-value"
+            ><thx-format-number value="0.984" notation="percent"></thx-format-number
+          ></span>
+          <thx-badge variant="primary">NOMINAL</thx-badge>
+        </div>
+        <div class="metric-card">
+          <span class="metric-label">CURRENT WATCH</span>
+          <span class="metric-value"
+            ><thx-format-date id="watch-date" format="crt"></thx-format-date
+          ></span>
+          <thx-badge variant="secondary">SHIFT A</thx-badge>
+        </div>
+      </section>
+
+      <thx-tab-group active-tab="overview" variant="crt">
+        <thx-tab slot="tab" panel="overview" indicator="LIVE">OVERVIEW</thx-tab>
+        <thx-tab slot="tab" panel="forms" indicator="12">CONTROL</thx-tab>
+        <thx-tab slot="tab" panel="media" indicator="SCAN">MEDIA</thx-tab>
+        <thx-tab slot="tab" panel="audit" indicator="WARN">AUDIT</thx-tab>
+
+        <thx-tab-panel id="overview">
+          <section class="section-grid">
+            <div class="panel" data-code="INCIDENT-FEED">
+              <div class="panel-label">// ACTIVE INCIDENT FEED</div>
+              <div class="badge-rack">
+                <thx-alert variant="info" open label="SYS">NORTH TUNNEL SCAN COMPLETE</thx-alert>
+                <thx-alert variant="warning" open label="MED">SEDATION QUEUE RUNNING HOT</thx-alert>
+                <thx-alert variant="error" open label="SEC"
+                  >UNREGISTERED SIGNAL IN SECTOR 9</thx-alert
+                >
+              </div>
+
+              <div class="timeline">
+                <div class="timeline-entry">
+                  <span class="timeline-time">06:00:04</span>
+                  <span class="timeline-message"
+                    >Mass transit corridor cleared for batch LDS-77.</span
+                  >
+                  <thx-badge variant="primary">OK</thx-badge>
+                </div>
+                <div class="timeline-entry">
+                  <span class="timeline-time">06:03:19</span>
+                  <span class="timeline-message"
+                    >Citizen affect variance detected. Drone verification requested.</span
+                  >
+                  <thx-badge variant="warning">CHECK</thx-badge>
+                </div>
+                <div class="timeline-entry">
+                  <span class="timeline-time">06:05:42</span>
+                  <span class="timeline-message"
+                    >Central archive included a remote compliance memo.</span
+                  >
+                  <thx-badge variant="secondary">MEMO</thx-badge>
+                </div>
+              </div>
+            </div>
+
+            <div class="panel dark-panel" data-code="GRID-MAP">
+              <div class="panel-label">// SECTOR HEAT MAP</div>
+              <div class="map-grid" aria-label="Sector heat map">
+                <span class="map-cell"></span><span class="map-cell hot"></span
+                ><span class="map-cell"></span><span class="map-cell"></span>
+                <span class="map-cell"></span><span class="map-cell"></span
+                ><span class="map-cell hot"></span><span class="map-cell"></span>
+                <span class="map-cell"></span><span class="map-cell"></span
+                ><span class="map-cell critical"></span><span class="map-cell hot"></span>
+                <span class="map-cell"></span><span class="map-cell"></span
+                ><span class="map-cell"></span><span class="map-cell"></span>
+                <span class="map-cell hot"></span><span class="map-cell"></span
+                ><span class="map-cell"></span><span class="map-cell"></span>
+                <span class="map-cell"></span><span class="map-cell critical"></span
+                ><span class="map-cell"></span><span class="map-cell"></span>
+                <span class="map-cell"></span><span class="map-cell"></span
+                ><span class="map-cell"></span><span class="map-cell hot"></span>
+                <span class="map-cell"></span><span class="map-cell"></span
+                ><span class="map-cell"></span><span class="map-cell"></span>
+              </div>
+              <thx-divider label="RESOURCE BARS"></thx-divider>
+              <thx-chart-bar id="resource-bars"></thx-chart-bar>
+            </div>
+          </section>
+
+          <section class="section-grid" style="margin-top: var(--size-1)">
+            <thx-card label="MONITOR BANK" variant="default">
+              <thx-chart-monitors id="monitor-bank"></thx-chart-monitors>
+            </thx-card>
+            <thx-card label="REMOTE INCLUDE" variant="default">
+              <thx-include id="remote-brief" mode="html" show-refresh></thx-include>
+            </thx-card>
+          </section>
+        </thx-tab-panel>
+
+        <thx-tab-panel id="forms">
+          <section class="forms-grid">
+            <form id="control-form" class="panel form-stack" data-code="FORM-1138">
+              <div class="panel-label">// FORM ASSOCIATED CONTROLS</div>
+              <thx-input name="operator" label="OPERATOR" value="THX-1138" required>
+                <span slot="prefix">ID</span>
+                <span slot="help-text">Authenticated command identity.</span>
+              </thx-input>
+              <thx-textarea
+                name="order"
+                label="DIRECTIVE"
+                value="Maintain observation. Escalate only if threshold exceeds amber."
+                rows="4"
+              ></thx-textarea>
+              <div class="forms-grid">
+                <thx-select name="sector" label="SECTOR" value="7g" required>
+                  <thx-option value="7g">SECTOR 7-G</thx-option>
+                  <thx-option value="8h">SECTOR 8-H</thx-option>
+                  <thx-option value="9k">SECTOR 9-K</thx-option>
+                </thx-select>
+                <thx-multi-select id="asset-select" name="assets" label="ASSETS"></thx-multi-select>
+              </div>
+              <thx-range
+                name="sedation"
+                label="SEDATION CEILING"
+                value="68"
+                min="0"
+                max="100"
+                show-ticks
+              >
+                <span slot="help-text">Keyboard adjustable with arrows, Home, and End.</span>
+              </thx-range>
+              <div class="forms-grid">
+                <thx-checkbox name="sealed" checked>Seal directive to central archive</thx-checkbox>
+                <thx-switch name="override" value="armed" checked on-label="ARMED" off-label="SAFE">
+                  <span slot="label" class="micro-label">OVERRIDE BUS</span>
+                </thx-switch>
+              </div>
+              <thx-radio-group name="priority" label="PRIORITY" value="observe" required>
+                <thx-radio value="observe">OBSERVE</thx-radio>
+                <thx-radio value="intercept">INTERCEPT</thx-radio>
+                <thx-radio value="isolate">ISOLATE</thx-radio>
+              </thx-radio-group>
+              <div class="form-actions">
+                <thx-button type="submit" variant="primary">COMMIT ORDER</thx-button>
+                <thx-copy-button value="THX-1138-LDS-77" copy-text="COPY TOKEN"></thx-copy-button>
+                <thx-tag id="form-result">PENDING</thx-tag>
+              </div>
+            </form>
+
+            <aside class="panel control-stack" data-code="CONTROL-SET">
+              <div class="panel-label">// SPECIALIZED INPUTS</div>
+              <thx-color-picker id="accent-picker" label="PHOSPHOR TINT"></thx-color-picker>
+              <thx-rating name="risk" label="RISK SCORE" value="3" max="5"></thx-rating>
+              <thx-radio-group label="DISPLAY PROFILE" value="cold" variant="button">
+                <thx-radio-button value="cold">COLD</thx-radio-button>
+                <thx-radio-button value="scope">SCOPE</thx-radio-button>
+                <thx-radio-button value="black">BLACK</thx-radio-button>
+              </thx-radio-group>
+              <thx-details open>
+                <span slot="summary">CONTROL NOTES</span>
+                These controls now participate in native form flow where applicable, while
+                preserving the shadow DOM aesthetic.
+              </thx-details>
+              <div class="icon-rack">
+                <thx-icon name="check" color="primary" size="lg"></thx-icon>
+                <thx-icon name="warning" color="warning" size="lg"></thx-icon>
+                <thx-icon name="error" color="error" size="lg"></thx-icon>
+                <thx-icon-button
+                  icon="!"
+                  label="Pulse alarm"
+                  variant="warning"
+                  pulse
+                ></thx-icon-button>
+                <thx-spinner></thx-spinner>
+              </div>
+            </aside>
+          </section>
+        </thx-tab-panel>
+
+        <thx-tab-panel id="media">
+          <section class="media-grid">
+            <div class="panel dark-panel" data-code="MEDIA-CAROUSEL">
+              <div class="panel-label">// MISSION CAROUSEL</div>
+              <thx-carousel autoplay interval="4800" loop show-arrows show-dots variant="crt">
+                <thx-carousel-item label="Sedation corridor">
+                  <div class="mission-slide">
+                    <h3>SEDATION CORRIDOR</h3>
+                    <p>Queue temperature stable. Reagent allotment within compliance margin.</p>
+                    <thx-progress-bar value="74" label="PROCESSING"></thx-progress-bar>
+                  </div>
+                </thx-carousel-item>
+                <thx-carousel-item label="Archive vault">
+                  <div class="mission-slide">
+                    <h3>ARCHIVE VAULT</h3>
+                    <p>Data mirror complete. Illegal variance records sealed for review.</p>
+                    <thx-format-bytes value="420906795008"></thx-format-bytes>
+                  </div>
+                </thx-carousel-item>
+                <thx-carousel-item label="Observation dome">
+                  <div class="mission-slide">
+                    <h3>OBSERVATION DOME</h3>
+                    <p>Camera lattice recalibrated. All angles green except sector 9-K.</p>
+                    <thx-status-leds count="12" label="CAMERA LATTICE"></thx-status-leds>
+                  </div>
+                </thx-carousel-item>
+              </thx-carousel>
+            </div>
+
+            <div class="panel" data-code="IMAGE-OPS">
+              <div class="panel-label">// VISUAL PROCESSING</div>
+              <thx-animated-image
+                id="scanner-image"
+                variant="scope"
+                aspect-ratio="16:9"
+                scanlines
+                vignette
+                monochrome
+                alt="Abstract surveillance scan"
+              ></thx-animated-image>
+              <thx-divider label="BEFORE / AFTER ANALYSIS"></thx-divider>
+              <thx-image-comparer
+                id="image-comparer"
+                before-label="RAW"
+                after-label="CLASSIFIED"
+                position="42"
+                show-status
+                style="display: block; height: 280px"
+              ></thx-image-comparer>
+            </div>
+          </section>
+
+          <section class="panel" data-code="SPLIT-ANALYSIS" style="margin-top: var(--size-1)">
+            <div class="panel-label">// SPLIT PANEL ANALYSIS</div>
+            <thx-split-panel
+              start-label="RAW TELEMETRY"
+              end-label="HUMAN REVIEW"
+              position="54"
+              style="height: 360px; display: block"
+            >
+              <div slot="start" style="padding: var(--size-4)">
+                <thx-crt-display label="RAW-17">
+                  <div class="terminal-output">
+                    &gt; SIGNAL LOCK: TRUE<br />
+                    &gt; FACE VECTOR: 0.873<br />
+                    &gt; ANOMALY SPAN: 00:03:11<br />
+                    &gt; RECOMMENDATION: OBSERVE
+                  </div>
+                </thx-crt-display>
+              </div>
+              <div slot="end" style="padding: var(--size-4)">
+                <thx-alert variant="warning" open label="REVIEW"
+                  >Operator attention required before escalation.</thx-alert
+                >
+                <p class="small-note">
+                  Drag or keyboard-resize the divider to compare machine telemetry with human review
+                  notes.
+                </p>
+              </div>
+            </thx-split-panel>
+          </section>
+        </thx-tab-panel>
+
+        <thx-tab-panel id="audit">
+          <section class="section-grid">
+            <div class="panel" data-code="NAV-TRACE">
+              <div class="panel-label">// NAVIGATION AND COMMAND TREE</div>
+              <thx-menu label="COMMAND ROUTES" variant="crt">
+                <thx-menu-label>SECTOR COMMANDS</thx-menu-label>
+                <thx-menu-item value="scan" active>Run sector scan</thx-menu-item>
+                <thx-menu-item value="audit">Open audit trail</thx-menu-item>
+                <thx-menu-item value="isolate" variant="warning">Prepare isolation</thx-menu-item>
+                <thx-menu-item value="purge" variant="error"
+                  >Purge unauthorized signal</thx-menu-item
+                >
+              </thx-menu>
+              <thx-divider label="TREE"></thx-divider>
+              <thx-tree label="FACILITY GRAPH" selection="single" variant="compact">
+                <thx-tree-item value="central" type="system" expanded selected>
+                  CENTRAL CORE
+                  <thx-tree-item slot="children" value="sector-7g" type="sector" expanded>
+                    SECTOR 7-G
+                    <thx-tree-item slot="children" value="unit-1138" type="unit" status="normal"
+                      >UNIT 1138</thx-tree-item
+                    >
+                    <thx-tree-item slot="children" value="unit-3417" type="unit" status="warning"
+                      >UNIT 3417</thx-tree-item
+                    >
+                  </thx-tree-item>
+                  <thx-tree-item slot="children" value="sector-9k" type="sector" status="error"
+                    >SECTOR 9-K</thx-tree-item
+                  >
+                </thx-tree-item>
+              </thx-tree>
+            </div>
+
+            <div class="panel mini-stack" data-code="OBSERVERS">
+              <div class="panel-label">// OBSERVER INSTRUMENTS</div>
+              <thx-mutation-observer active>
+                <div id="observed-feed" class="observed-feed">
+                  <span class="audit-chip">BOOT</span>
+                  <span class="audit-chip">AUTH</span>
+                </div>
+              </thx-mutation-observer>
+              <div class="inline-actions">
+                <thx-button id="mutate-feed" variant="secondary">ADD MUTATION</thx-button>
+                <thx-tooltip
+                  content="Resize this observed block by dragging the browser or the resizable corner."
+                >
+                  <thx-tag slot="trigger">OBSERVER HELP</thx-tag>
+                </thx-tooltip>
+              </div>
+              <thx-resize-observer active detailed resizable>
+                <p class="small-note">
+                  Resizable diagnostic target. Measurements update as layout changes.
+                </p>
+                <thx-skeleton
+                  style="display: block; height: 42px; margin-top: var(--size-2)"
+                ></thx-skeleton>
+              </thx-resize-observer>
+            </div>
+          </section>
+        </thx-tab-panel>
+      </thx-tab-group>
+
+      <section class="footer-grid" aria-label="Utility components">
+        <div class="panel">
+          <div class="panel-label">// POPUP</div>
+          <thx-popup title="CLASSIFIED NOTE" placement="top" arrow>
+            <thx-button slot="trigger" variant="outline-primary">OPEN POPUP</thx-button>
+            <p style="color: var(--atmos-primary); font-family: var(--font-mono)">
+              This popup is positioned, dismissible, and rendered with CRT chrome.
+            </p>
+            <thx-button slot="footer" variant="secondary">ACK</thx-button>
+          </thx-popup>
+        </div>
+        <div class="panel">
+          <div class="panel-label">// COPY AND TAGS</div>
+          <div class="badge-rack">
+            <thx-tag removable>SEDATION</thx-tag>
+            <thx-tag removable>ARCHIVE</thx-tag>
+            <thx-copy-button value="LDS-1138-SECTOR-7G" variant="secondary"></thx-copy-button>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panel-label">// STATUS</div>
+          <thx-progress-bar value="87" label="DASHBOARD COVERAGE"></thx-progress-bar>
+        </div>
+      </section>
+    </main>
+
+    <thx-dialog id="command-dialog" header-label="ORDER-ISSUANCE" size="md">
+      <thx-alert variant="warning" open label="VERIFY"
+        >This command will be logged to the central archive.</thx-alert
+      >
+      <p class="small-note">
+        Directive target: sector 7-G. Current recommendation: observe, do not isolate.
+      </p>
+      <thx-button slot="footer" variant="secondary" id="dialog-cancel">CANCEL</thx-button>
+      <thx-button slot="footer" variant="primary" id="dialog-confirm">CONFIRM</thx-button>
+    </thx-dialog>
+
+    <thx-drawer id="command-drawer" header-label="COMMAND DRAWER" placement="right" size="lg">
+      <div class="form-stack">
+        <thx-alert variant="info" open label="DRAWER"
+          >Secondary command surface with live controls.</thx-alert
+        >
+        <thx-chart-bar id="drawer-bars"></thx-chart-bar>
+        <thx-details open>
+          <span slot="summary">RECOVERY PROTOCOL</span>
+          If sector 9-K escalates, isolate transit line, mirror archive, and notify medical control.
+        </thx-details>
+      </div>
+      <thx-button slot="footer" variant="secondary" id="drawer-close">CLOSE</thx-button>
+    </thx-drawer>
+
+    <script type="module">
+      const $ = id => document.getElementById(id);
+
+      const svgUri = svg => `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`;
+
+      const scanSvg = (title, accent, bg = '#111') =>
+        svgUri(`
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540">
+          <rect width="960" height="540" fill="${bg}"/>
+          <g stroke="${accent}" stroke-width="2" opacity="0.55">
+            <path d="M60 430 C180 220 260 460 390 230 S610 250 700 120 830 180 900 70" fill="none"/>
+            <path d="M80 150 H880 M80 270 H880 M80 390 H880 M160 70 V470 M320 70 V470 M480 70 V470 M640 70 V470 M800 70 V470" opacity="0.35"/>
+            <circle cx="690" cy="160" r="74" fill="none"/>
+            <circle cx="690" cy="160" r="8" fill="${accent}"/>
+          </g>
+          <text x="64" y="86" fill="${accent}" font-family="Courier New" font-size="30" letter-spacing="8">${title}</text>
+          <text x="64" y="500" fill="${accent}" font-family="Courier New" font-size="18" letter-spacing="5">LDS-1138 // IMAGE SOURCE VERIFIED</text>
+        </svg>
+      `);
+
+      const now = new Date();
+      $('boot-time').date = new Date(now.getTime() - 9 * 60 * 1000).toISOString();
+      $('watch-date').date = now.toISOString();
+
+      $('mode-dropdown').items = [
+        { value: 'observe', label: 'OBSERVE' },
+        { value: 'intercept', label: 'INTERCEPT' },
+        { value: 'isolate', label: 'ISOLATE', variant: 'warning' },
+        { value: 'purge', label: 'PURGE', variant: 'error' },
+      ];
+
+      $('compliance-line').data = {
+        labels: ['00', '04', '08', '12', '16', '20', '24', '28', '32', '36'],
+        min: 0,
+        max: 100,
+        series: [
+          { name: 'COMP', color: '#a6c8e1', data: [72, 78, 81, 86, 84, 91, 88, 94, 92, 98] },
+          {
+            name: 'VAR',
+            color: '#d4aa00',
+            data: [18, 14, 11, 9, 15, 7, 10, 5, 8, 3],
+            dasharray: '4 4',
+          },
+        ],
+      };
+
+      $('resource-bars').data = [
+        { label: 'CPU', value: 73, max: 100 },
+        { label: 'MEM', value: 62, max: 100 },
+        { label: 'NET', value: 88, max: 100, warning: true },
+        { label: 'PWR', value: 41, max: 100 },
+        { label: 'MED', value: 92, max: 100, warning: true },
+      ];
+
+      $('drawer-bars').data = [
+        { label: 'DOOR', value: 44, max: 100 },
+        { label: 'CAM', value: 79, max: 100 },
+        { label: 'AIR', value: 51, max: 100 },
+      ];
+
+      $('monitor-bank').columns = 4;
+      $('monitor-bank').data = [
+        { label: 'LDS-01', value: '98.4', percent: 98 },
+        { label: 'LDS-02', value: '91.2', percent: 91 },
+        { label: 'LDS-03', value: '72.0', percent: 72 },
+        { label: 'LDS-04', value: 'ERR', percent: 21, alert: true },
+        { label: 'MED-01', value: '88.0', percent: 88 },
+        { label: 'SEC-09', value: 'HOT', percent: 93, alert: true },
+        { label: 'ARC-11', value: '64.7', percent: 65 },
+        { label: 'TRN-04', value: '55.2', percent: 55 },
+      ];
+
+      $('core-leds').leds = [
+        { active: true },
+        { active: true },
+        { active: true },
+        { active: true, state: 'warning' },
+        { active: true },
+        { active: false },
+        { active: true },
+        { active: true, state: 'error' },
+      ];
+
+      $('remote-brief').src = `data:text/html;charset=utf-8,${encodeURIComponent(`
+        <div style="font-family: Courier New, monospace; text-transform: uppercase; letter-spacing: .08em">
+          <strong>REMOTE BRIEF // CENTRAL ARCHIVE</strong><br>
+          06:08:12 - Compliance waveform nominal.<br>
+          06:09:44 - Drone lattice rebalanced.<br>
+          06:10:07 - Continue observation. Do not escalate without human confirmation.
+        </div>
+      `)}`;
+
+      const before = scanSvg('RAW SURVEILLANCE', '#707e91', '#0a0a0a');
+      const after = scanSvg('CLASSIFIED VECTOR', '#a6c8e1', '#111111');
+      $('scanner-image').src = after;
+      $('image-comparer').beforeSrc = before;
+      $('image-comparer').afterSrc = after;
+
+      const assetSelect = $('asset-select');
+      assetSelect.innerHTML = `
+        <thx-option value="drone">DRONE LATTICE</thx-option>
+        <thx-option value="med">MEDICAL CONTROL</thx-option>
+        <thx-option value="archive">ARCHIVE MIRROR</thx-option>
+        <thx-option value="transit">TRANSIT LOCK</thx-option>
+      `;
+      assetSelect.value = ['drone', 'archive'];
+
+      $('dialog-open').addEventListener('click', () => $('command-dialog').show());
+      $('dialog-cancel').addEventListener('click', () => $('command-dialog').hide());
+      $('dialog-confirm').addEventListener('click', () => {
+        $('command-dialog').hide();
+        $('form-result').textContent = 'ORDER CONFIRMED';
+      });
+
+      $('drawer-open').addEventListener('click', () => $('command-drawer').show());
+      $('drawer-close').addEventListener('click', () => $('command-drawer').hide());
+
+      $('control-form').addEventListener('submit', event => {
+        event.preventDefault();
+        const data = new FormData(event.currentTarget);
+        $('form-result').textContent =
+          `${data.get('sector')} / ${data.get('priority')} / ${data.get('sedation')}`;
+      });
+
+      let mutationCount = 2;
+      $('mutate-feed').addEventListener('click', () => {
+        mutationCount += 1;
+        const chip = document.createElement('span');
+        chip.className = 'audit-chip';
+        chip.textContent = `TRACE-${String(mutationCount).padStart(2, '0')}`;
+        $('observed-feed').append(chip);
+      });
+
+      setInterval(() => {
+        const gauge = document.querySelector('thx-chart-gauge[label="CPU"]');
+        if (gauge) gauge.value = 65 + Math.round(Math.random() * 20);
+      }, 3600);
+    </script>
+  </body>
+</html>

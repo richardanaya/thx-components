@@ -263,6 +263,43 @@ export class ThxDrawer extends LitElement {
     this.noFooter = false;
     /** @type {boolean} */
     this.noOverlay = false;
+    /** @type {Element|null} */
+    this._previousFocus = null;
+  }
+
+  /** @param {import('lit').PropertyValues} changedProperties */
+  updated(changedProperties) {
+    if (changedProperties.has('open')) {
+      if (this.open) {
+        this._previousFocus = document.activeElement;
+        this.updateComplete.then(() => this._focusDrawer());
+      } else {
+        this._restoreFocus();
+      }
+    }
+  }
+
+  /** @returns {HTMLElement[]} */
+  _getFocusableElements() {
+    const selector =
+      'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+    return /** @type {HTMLElement[]} */ (
+      [...this.renderRoot.querySelectorAll(selector), ...this.querySelectorAll(selector)].filter(
+        el => !el.hasAttribute('disabled') && el.getAttribute('aria-hidden') !== 'true'
+      )
+    );
+  }
+
+  _focusDrawer() {
+    const firstFocusable = /** @type {HTMLElement|undefined} */ (this._getFocusableElements()[0]);
+    const panel = /** @type {HTMLElement|null} */ (this.renderRoot.querySelector('.drawer-panel'));
+    (firstFocusable || panel)?.focus();
+  }
+
+  _restoreFocus() {
+    const previousFocus = /** @type {HTMLElement|null} */ (this._previousFocus);
+    if (previousFocus?.isConnected) previousFocus.focus();
+    this._previousFocus = null;
   }
 
   /**
@@ -318,6 +355,26 @@ export class ThxDrawer extends LitElement {
   _handleKeydown(e) {
     if (e.key === 'Escape' && this.open) {
       this.hide();
+      return;
+    }
+
+    if (e.key === 'Tab' && this.open) {
+      const focusable = this._getFocusableElements();
+      if (focusable.length === 0) {
+        e.preventDefault();
+        this._focusDrawer();
+        return;
+      }
+
+      const first = /** @type {HTMLElement} */ (focusable[0]);
+      const last = /** @type {HTMLElement} */ (focusable[focusable.length - 1]);
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
     }
   }
 
@@ -336,7 +393,8 @@ export class ThxDrawer extends LitElement {
           class="drawer-panel ${this.placement} ${this.size}"
           role="dialog"
           aria-modal="true"
-          aria-labelledby="drawer-title"
+          aria-labelledby=${this.noHeader ? undefined : 'drawer-title'}
+          tabindex="-1"
           style="${this.noOverlay ? 'pointer-events: auto;' : ''}"
         >
           ${!this.noHeader

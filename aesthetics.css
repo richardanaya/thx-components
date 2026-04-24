@@ -820,6 +820,12 @@ header h3 {
   }
 }
 
+@media (prefers-reduced-motion: reduce) {
+  .crt-display::before {
+    animation: none;
+  }
+}
+
 .crt-display::after {
   content: '';
   position: absolute;

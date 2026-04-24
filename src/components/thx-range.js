@@ -7,6 +7,8 @@
 
 import { LitElement, html, css } from '../../vendor/lit.js';
 
+let rangeIdCounter = 0;
+
 /**
  * @typedef {Object} RangeProps
  * @property {number} value - The current value
@@ -15,6 +17,8 @@ import { LitElement, html, css } from '../../vendor/lit.js';
  * @property {number} step - The step increment
  * @property {boolean} disabled - Whether the slider is disabled
  * @property {string} label - The label text
+ * @property {string} name - The range name
+ * @property {boolean} required - Whether the range is required
  * @property {boolean} showValue - Whether to show the current value
  * @property {string} valueFormat - Format string for value display
  */
@@ -24,6 +28,8 @@ import { LitElement, html, css } from '../../vendor/lit.js';
  * @extends {LitElement}
  */
 export class ThxRange extends LitElement {
+  static formAssociated = true;
+
   static styles = css`
     :host {
       display: block;
@@ -57,6 +63,23 @@ export class ThxRange extends LitElement {
       padding: var(--size-1) var(--size-2);
       min-width: calc(var(--size-7) + var(--size-2));
       text-align: center;
+    }
+
+    .required-indicator {
+      color: var(--accent-error, #d44000);
+      margin-left: var(--size-1);
+    }
+
+    .range-status {
+      font-family: var(--font-mono, 'Courier New', Courier, monospace);
+      font-size: var(--font-size-0);
+      text-transform: uppercase;
+      letter-spacing: var(--font-letterspacing-2);
+      color: var(--neutral-600, #666);
+    }
+
+    .range-status.error {
+      color: var(--accent-error, #d44000);
     }
 
     .slider-container {
@@ -180,6 +203,9 @@ export class ThxRange extends LitElement {
     step: { type: Number },
     disabled: { type: Boolean, reflect: true },
     label: { type: String },
+    name: { type: String },
+    required: { type: Boolean },
+    errorMessage: { type: String },
     showValue: { type: Boolean },
     valueFormat: { type: String },
     showTicks: { type: Boolean },
@@ -188,8 +214,14 @@ export class ThxRange extends LitElement {
 
   constructor() {
     super();
+    this._internals = this.attachInternals?.();
+    this._rangeId = `thx-range-${++rangeIdCounter}`;
+    this._labelId = `${this._rangeId}-label`;
+    this._helpId = `${this._rangeId}-help`;
+    this._errorId = `${this._rangeId}-error`;
     /** @type {number} */
     this.value = 50;
+    this._defaultValue = this.value;
     /** @type {number} */
     this.min = 0;
     /** @type {number} */
@@ -200,6 +232,12 @@ export class ThxRange extends LitElement {
     this.disabled = false;
     /** @type {string} */
     this.label = '';
+    /** @type {string} */
+    this.name = '';
+    /** @type {boolean} */
+    this.required = false;
+    /** @type {string} */
+    this.errorMessage = '';
     /** @type {boolean} */
     this.showValue = true;
     /** @type {string} */
@@ -208,6 +246,34 @@ export class ThxRange extends LitElement {
     this.showTicks = false;
     /** @type {number} */
     this.tickCount = 5;
+  }
+
+  /** @param {Map<string, unknown>} changedProperties */
+  updated(changedProperties) {
+    if (changedProperties.has('value') || changedProperties.has('disabled')) {
+      this._updateFormValue();
+    }
+  }
+
+  /** @returns {void} */
+  firstUpdated() {
+    this._defaultValue = this.value;
+    this._updateFormValue();
+  }
+
+  /** @returns {void} */
+  _updateFormValue() {
+    this._internals?.setFormValue(this.disabled ? null : String(this.value));
+  }
+
+  /** @returns {void} */
+  formResetCallback() {
+    this.value = this._defaultValue;
+  }
+
+  /** @returns {string} */
+  get describedBy() {
+    return this.errorMessage ? this._errorId : this._helpId;
   }
 
   /**
@@ -243,6 +309,7 @@ export class ThxRange extends LitElement {
   handleInput(event) {
     const target = /** @type {HTMLInputElement} */ (event.target);
     this.value = Number(target.value);
+    this._updateFormValue();
     this.dispatchEvent(
       new CustomEvent('input', {
         bubbles: true,
@@ -259,6 +326,7 @@ export class ThxRange extends LitElement {
   handleChange(event) {
     const target = /** @type {HTMLInputElement} */ (event.target);
     this.value = Number(target.value);
+    this._updateFormValue();
     this.dispatchEvent(
       new CustomEvent('change', {
         bubbles: true,
@@ -275,18 +343,30 @@ export class ThxRange extends LitElement {
     return html`
       <div class="range-wrapper">
         <div class="label-row">
-          ${this.label ? html`<label class="label">${this.label}</label>` : null}
+          ${this.label
+            ? html`<label class="label" id=${this._labelId} for=${this._rangeId}
+                >${this.label}${this.required
+                  ? html`<span class="required-indicator">*</span>`
+                  : null}</label
+              >`
+            : null}
           ${this.showValue ? html`<span class="value-display">${this.formattedValue}</span>` : null}
         </div>
         <div class="slider-container">
           <div class="progress-bar" style="width: ${this.progressPercentage}%"></div>
           <input
+            id=${this._rangeId}
             type="range"
             .min=${this.min}
             .max=${this.max}
             .step=${this.step}
             .value=${this.value}
             ?disabled=${this.disabled}
+            .name=${this.name}
+            ?required=${this.required}
+            aria-describedby=${this.describedBy}
+            aria-invalid=${this.errorMessage ? 'true' : 'false'}
+            aria-required=${this.required ? 'true' : 'false'}
             @input=${this.handleInput}
             @change=${this.handleChange}
           />
@@ -298,6 +378,9 @@ export class ThxRange extends LitElement {
               </div>
             `
           : null}
+        ${this.errorMessage
+          ? html`<div class="range-status error" id=${this._errorId}>${this.errorMessage}</div>`
+          : html`<div class="range-status" id=${this._helpId}><slot name="help-text"></slot></div>`}
       </div>
     `;
   }

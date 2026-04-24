@@ -258,25 +258,30 @@ export class ThxInclude extends LitElement {
   }
 
   /**
-   * Gets sanitized content for safe HTML insertion.
+   * Removes obvious script execution hooks when script execution is disabled.
+   * This is not sanitization; html mode still treats fetched HTML as trusted content.
    * @returns {string}
    */
-  get sanitizedContent() {
-    if (this.mode === 'text' || this.mode === 'json') {
-      // Escape HTML entities
-      return this._content
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;');
+  get trustedHtmlContent() {
+    if (this.allowScripts) {
+      return this._content;
     }
 
-    if (!this.allowScripts) {
-      // Basic script tag removal (production code would need more robust sanitization)
-      return this._content.replace(/<script[^>]*>.*?<\/script>/gi, '');
-    }
+    const template = document.createElement('template');
+    template.innerHTML = this._content;
 
-    return this._content;
+    template.content.querySelectorAll('script').forEach(script => script.remove());
+    template.content.querySelectorAll('*').forEach(element => {
+      for (const attribute of Array.from(element.attributes)) {
+        const name = attribute.name.toLowerCase();
+        const value = attribute.value.trim().toLowerCase();
+        if (name.startsWith('on') || value.startsWith('javascript:')) {
+          element.removeAttribute(attribute.name);
+        }
+      }
+    });
+
+    return template.innerHTML;
   }
 
   /**
@@ -300,13 +305,11 @@ export class ThxInclude extends LitElement {
           : this._error
             ? html`<div class="include-error" part="error">${this._error}</div>`
             : html`
-                <div
-                  class="include-content"
-                  part="content"
-                  .innerHTML=${this.mode === 'text' || this.mode === 'json'
-                    ? html`<pre>${this.sanitizedContent}</pre>`
-                    : this.sanitizedContent}
-                ></div>
+                <div class="include-content" part="content">
+                  ${this.mode === 'text' || this.mode === 'json'
+                    ? html`<pre>${this._content}</pre>`
+                    : html`<div .innerHTML=${this.trustedHtmlContent}></div>`}
+                </div>
               `}
       </div>
     `;

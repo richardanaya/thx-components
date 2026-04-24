@@ -167,6 +167,13 @@ export class ThxTab extends LitElement {
     this.variant = 'default';
   }
 
+  focus() {
+    this.updateComplete.then(() => {
+      const button = /** @type {HTMLElement|null} */ (this.renderRoot.querySelector('button'));
+      button?.focus();
+    });
+  }
+
   /**
    * Handle tab click
    * @param {MouseEvent} e
@@ -236,11 +243,13 @@ export class ThxTab extends LitElement {
       .map(([k]) => k)
       .join(' ');
 
+    const tabIndex = this.getAttribute('tabindex') || (this.active && !this.disabled ? '0' : '-1');
+
     return html`
       <button
         class="${classString}"
         role="tab"
-        tabindex="${this.disabled ? '-1' : '0'}"
+        tabindex="${this.disabled ? '-1' : tabIndex}"
         aria-selected="${this.active ? 'true' : 'false'}"
         aria-controls="${this.panel}"
         @click="${this._handleClick}"

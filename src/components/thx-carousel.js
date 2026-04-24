@@ -274,6 +274,7 @@ export class ThxCarousel extends LitElement {
    */
   _startAutoplay() {
     if (!this.autoplay) return;
+    this._stopAutoplay();
     this._autoplayTimer = window.setInterval(() => {
       this.next();
     }, this.interval);
@@ -301,6 +302,21 @@ export class ThxCarousel extends LitElement {
     this._startAutoplay();
   }
 
+  /**
+   * @param {FocusEvent} event
+   * @returns {void}
+   * @private
+   */
+  _handleFocusOut(event) {
+    const relatedTarget = /** @type {Node|null} */ (event.relatedTarget);
+    if (
+      !relatedTarget ||
+      (!this.renderRoot.contains(relatedTarget) && !this.contains(relatedTarget))
+    ) {
+      this._startAutoplay();
+    }
+  }
+
   connectedCallback() {
     super.connectedCallback();
     if (this.autoplay) {
@@ -318,12 +334,8 @@ export class ThxCarousel extends LitElement {
    * @returns {void}
    */
   updated(changed) {
-    if (changed.has('autoplay')) {
-      if (this.autoplay) {
-        this._startAutoplay();
-      } else {
-        this._stopAutoplay();
-      }
+    if (changed.has('autoplay') || changed.has('interval')) {
+      this._resetAutoplay();
     }
   }
 
@@ -347,7 +359,15 @@ export class ThxCarousel extends LitElement {
     const canGoNext = this.loop || this.activeIndex < count - 1;
 
     return html`
-      <div class="${classString}" role="region" aria-roledescription="carousel">
+      <div
+        class="${classString}"
+        role="region"
+        aria-roledescription="carousel"
+        @mouseenter=${this._stopAutoplay}
+        @mouseleave=${this._startAutoplay}
+        @focusin=${this._stopAutoplay}
+        @focusout=${this._handleFocusOut}
+      >
         ${this.showArrows
           ? html`
               <button

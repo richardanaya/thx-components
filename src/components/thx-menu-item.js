@@ -140,6 +140,22 @@ export class ThxMenuItem extends LitElement {
     this.indicator = '';
   }
 
+  focus() {
+    this.updateComplete.then(() => {
+      const item = /** @type {HTMLElement|null} */ (
+        this.renderRoot.querySelector('[role="menuitem"]')
+      );
+      item?.focus();
+    });
+  }
+
+  activate() {
+    const item = /** @type {HTMLElement|null} */ (
+      this.renderRoot.querySelector('[role="menuitem"]')
+    );
+    item?.click();
+  }
+
   /**
    * Handle click events
    * @param {MouseEvent} e
@@ -200,7 +216,13 @@ export class ThxMenuItem extends LitElement {
 
     if (this.href && !this.disabled) {
       return html`
-        <a href="${this.href}" class="${classString}" role="menuitem" @click="${this._handleClick}">
+        <a
+          href="${this.href}"
+          class="${classString}"
+          role="menuitem"
+          tabindex="0"
+          @click="${this._handleClick}"
+        >
           ${content}
         </a>
       `;

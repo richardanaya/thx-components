@@ -281,6 +281,37 @@ export class ThxImageComparer extends LitElement {
   }
 
   /**
+   * @param {number} position
+   * @returns {void}
+   */
+  _setPosition(position) {
+    this.position = Math.max(0, Math.min(100, Math.round(position)));
+    this.dispatchEvent(
+      new CustomEvent('change', {
+        detail: { position: this.position },
+        bubbles: true,
+        composed: true,
+      })
+    );
+  }
+
+  /**
+   * @param {KeyboardEvent} e
+   * @returns {void}
+   */
+  _handleKeydown(e) {
+    const keys = ['ArrowLeft', 'ArrowRight', 'Home', 'End', 'PageUp', 'PageDown'];
+    if (!keys.includes(e.key)) return;
+
+    e.preventDefault();
+    const step = e.shiftKey || e.key === 'PageUp' || e.key === 'PageDown' ? 10 : 1;
+    if (e.key === 'Home') this._setPosition(0);
+    else if (e.key === 'End') this._setPosition(100);
+    else if (e.key === 'ArrowRight' || e.key === 'PageUp') this._setPosition(this.position + step);
+    else this._setPosition(this.position - step);
+  }
+
+  /**
    * Handles mouse/touch down on divider
    * @param {MouseEvent|TouchEvent} e - Event
    * @returns {void}
@@ -370,7 +401,9 @@ export class ThxImageComparer extends LitElement {
           aria-valuemin="0"
           aria-valuemax="100"
           aria-valuenow="${this.position}"
+          aria-valuetext="${this.position}%"
           tabindex="0"
+          @keydown=${this._handleKeydown}
         >
           <div class="divider-handle">
             <span class="divider-handle-icon">◀ ▶</span>

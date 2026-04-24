@@ -235,15 +235,7 @@ export class ThxButton extends LitElement {
   handleClick(event) {
     if (this.disabled || this.loading) {
       event.preventDefault();
-      return;
     }
-    this.dispatchEvent(
-      new CustomEvent('click', {
-        bubbles: true,
-        composed: true,
-        detail: { originalEvent: event },
-      })
-    );
   }
 
   /**

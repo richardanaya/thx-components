@@ -7,6 +7,8 @@
 
 import { LitElement, html, css } from '../../vendor/lit.js';
 
+let inputIdCounter = 0;
+
 /**
  * @typedef {Object} InputProps
  * @property {string} type - The input type
@@ -28,6 +30,8 @@ import { LitElement, html, css } from '../../vendor/lit.js';
  * @extends {LitElement}
  */
 export class ThxInput extends LitElement {
+  static formAssociated = true;
+
   static styles = css`
     :host {
       display: block;
@@ -187,10 +191,16 @@ export class ThxInput extends LitElement {
 
   constructor() {
     super();
+    this._internals = this.attachInternals?.();
+    this._inputId = `thx-input-${++inputIdCounter}`;
+    this._labelId = `${this._inputId}-label`;
+    this._helpId = `${this._inputId}-help`;
+    this._errorId = `${this._inputId}-error`;
     /** @type {string} */
     this.type = 'text';
     /** @type {string} */
     this.value = '';
+    this._defaultValue = this.value;
     /** @type {string} */
     this.placeholder = '';
     /** @type {string} */
@@ -217,6 +227,36 @@ export class ThxInput extends LitElement {
     this.passwordVisible = false;
     /** @type {boolean} Internal: tracks whether help-text slot has nodes */
     this._hasHelpText = false;
+  }
+
+  /** @param {Map<string, unknown>} changedProperties */
+  updated(changedProperties) {
+    if (changedProperties.has('value') || changedProperties.has('disabled')) {
+      this._updateFormValue();
+    }
+  }
+
+  /** @returns {void} */
+  firstUpdated() {
+    this._defaultValue = this.value;
+    this._updateFormValue();
+  }
+
+  /** @returns {void} */
+  _updateFormValue() {
+    this._internals?.setFormValue(this.disabled ? null : this.value);
+  }
+
+  /** @returns {void} */
+  formResetCallback() {
+    this.value = this._defaultValue;
+  }
+
+  /** @returns {string|undefined} */
+  get describedBy() {
+    if (this.errorMessage) return this._errorId;
+    if (this._hasHelpText) return this._helpId;
+    return undefined;
   }
 
   /**
@@ -258,6 +298,7 @@ export class ThxInput extends LitElement {
   handleInput(event) {
     const target = /** @type {HTMLInputElement} */ (event.target);
     this.value = target.value;
+    this._updateFormValue();
     this.dispatchEvent(
       new CustomEvent('input', {
         bubbles: true,
@@ -274,6 +315,7 @@ export class ThxInput extends LitElement {
   handleChange(event) {
     const target = /** @type {HTMLInputElement} */ (event.target);
     this.value = target.value;
+    this._updateFormValue();
     this.dispatchEvent(
       new CustomEvent('change', {
         bubbles: true,
@@ -310,7 +352,7 @@ export class ThxInput extends LitElement {
       <div class="input-wrapper">
         ${this.label
           ? html`
-              <label class="label">
+              <label class="label" id=${this._labelId} for=${this._inputId}>
                 ${this.label}${this.required
                   ? html`<span class="required-indicator">*</span>`
                   : null}
@@ -324,6 +366,7 @@ export class ThxInput extends LitElement {
         >
           <slot name="prefix"></slot>
           <input
+            id=${this._inputId}
             .type=${effectiveType}
             .value=${this.value}
             .placeholder=${this.placeholder}
@@ -335,6 +378,9 @@ export class ThxInput extends LitElement {
             minlength=${this.minlength >= 0 ? this.minlength : undefined}
             maxlength=${this.maxlength >= 0 ? this.maxlength : undefined}
             .pattern=${this.pattern || undefined}
+            aria-describedby=${this.describedBy}
+            aria-invalid=${this.errorMessage ? 'true' : 'false'}
+            aria-required=${this.required ? 'true' : 'false'}
             @input=${this.handleInput}
             @change=${this.handleChange}
           />
@@ -345,7 +391,7 @@ export class ThxInput extends LitElement {
                   class="password-toggle"
                   @click=${this.togglePasswordVisibility}
                   aria-label="${this.passwordVisible ? 'Hide password' : 'Show password'}"
-                  tabindex="-1"
+                  aria-pressed=${this.passwordVisible ? 'true' : 'false'}
                 >
                   ${this.passwordVisible ? '◉' : '◎'}
                 </button>
@@ -354,9 +400,9 @@ export class ThxInput extends LitElement {
           <slot name="suffix"></slot>
         </div>
         ${this.errorMessage
-          ? html`<div class="input-status error">${this.errorMessage}</div>`
+          ? html`<div class="input-status error" id=${this._errorId}>${this.errorMessage}</div>`
           : this._hasHelpText
-            ? html`<div class="input-status">
+            ? html`<div class="input-status" id=${this._helpId}>
                 <slot name="help-text" @slotchange=${this._onHelpSlotChange}></slot>
               </div>`
             : html`<slot name="help-text" hidden @slotchange=${this._onHelpSlotChange}></slot>`}

@@ -176,6 +176,45 @@ export class ThxDialog extends LitElement {
     this.noHeader = false;
     /** @type {boolean} */
     this.noFooter = false;
+    /** @type {Element|null} */
+    this._previousFocus = null;
+  }
+
+  /** @param {import('lit').PropertyValues} changedProperties */
+  updated(changedProperties) {
+    if (changedProperties.has('open')) {
+      if (this.open) {
+        this._previousFocus = document.activeElement;
+        this.updateComplete.then(() => this._focusDialog());
+      } else {
+        this._restoreFocus();
+      }
+    }
+  }
+
+  /** @returns {HTMLElement[]} */
+  _getFocusableElements() {
+    const selector =
+      'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+    return /** @type {HTMLElement[]} */ (
+      [...this.renderRoot.querySelectorAll(selector), ...this.querySelectorAll(selector)].filter(
+        el => !el.hasAttribute('disabled') && el.getAttribute('aria-hidden') !== 'true'
+      )
+    );
+  }
+
+  _focusDialog() {
+    const firstFocusable = /** @type {HTMLElement|undefined} */ (this._getFocusableElements()[0]);
+    const container = /** @type {HTMLElement|null} */ (
+      this.renderRoot.querySelector('.dialog-container')
+    );
+    (firstFocusable || container)?.focus();
+  }
+
+  _restoreFocus() {
+    const previousFocus = /** @type {HTMLElement|null} */ (this._previousFocus);
+    if (previousFocus?.isConnected) previousFocus.focus();
+    this._previousFocus = null;
   }
 
   /**
@@ -231,6 +270,26 @@ export class ThxDialog extends LitElement {
   _handleKeydown(e) {
     if (e.key === 'Escape' && this.open) {
       this.hide();
+      return;
+    }
+
+    if (e.key === 'Tab' && this.open) {
+      const focusable = this._getFocusableElements();
+      if (focusable.length === 0) {
+        e.preventDefault();
+        this._focusDialog();
+        return;
+      }
+
+      const first = /** @type {HTMLElement} */ (focusable[0]);
+      const last = /** @type {HTMLElement} */ (focusable[focusable.length - 1]);
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
     }
   }
 
@@ -243,12 +302,14 @@ export class ThxDialog extends LitElement {
         class="dialog-overlay ${this.open ? 'open' : ''}"
         @click=${this._handleOverlayClick}
         @keydown=${this._handleKeydown}
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="dialog-title"
-        tabindex="-1"
       >
-        <div class="dialog-container ${this.size}">
+        <div
+          class="dialog-container ${this.size}"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby=${this.noHeader ? undefined : 'dialog-title'}
+          tabindex="-1"
+        >
           ${!this.noHeader
             ? html`
                 <div class="dialog-header">

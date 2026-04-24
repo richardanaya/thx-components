@@ -74,6 +74,11 @@ export class ThxTabPanel extends LitElement {
     this.variant = 'default';
   }
 
+  connectedCallback() {
+    super.connectedCallback();
+    this.setAttribute('role', 'tabpanel');
+  }
+
   /**
    * @returns {import('lit').TemplateResult}
    */

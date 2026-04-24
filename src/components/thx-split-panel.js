@@ -353,6 +353,48 @@ export class ThxSplitPanel extends LitElement {
   };
 
   /**
+   * @param {number} position
+   * @returns {void}
+   */
+  _setPosition(position) {
+    this.position = Math.max(10, Math.min(90, position));
+    this.dispatchEvent(
+      new CustomEvent('change', {
+        detail: { position: this.position },
+        bubbles: true,
+        composed: true,
+      })
+    );
+  }
+
+  /**
+   * @param {KeyboardEvent} event
+   * @returns {void}
+   */
+  _handleKeydown(event) {
+    if (!this.resizable) return;
+    const keys = [
+      'ArrowLeft',
+      'ArrowRight',
+      'ArrowUp',
+      'ArrowDown',
+      'Home',
+      'End',
+      'PageUp',
+      'PageDown',
+    ];
+    if (!keys.includes(event.key)) return;
+
+    event.preventDefault();
+    const step = event.shiftKey || event.key === 'PageUp' || event.key === 'PageDown' ? 10 : 1;
+    if (event.key === 'Home') this._setPosition(10);
+    else if (event.key === 'End') this._setPosition(90);
+    else if (event.key === 'ArrowRight' || event.key === 'ArrowDown' || event.key === 'PageUp') {
+      this._setPosition(this.position + step);
+    } else this._setPosition(this.position - step);
+  }
+
+  /**
    * @returns {import('lit').TemplateResult}
    */
   render() {
@@ -384,7 +426,18 @@ export class ThxSplitPanel extends LitElement {
           </div>
         </div>
 
-        <div class="divider" part="divider" @pointerdown=${this._handleDragStart}>
+        <div
+          class="divider"
+          part="divider"
+          role="separator"
+          aria-orientation="${this.orientation === 'horizontal' ? 'vertical' : 'horizontal'}"
+          aria-valuemin="10"
+          aria-valuemax="90"
+          aria-valuenow="${Math.round(this.position)}"
+          tabindex="${this.resizable ? '0' : '-1'}"
+          @pointerdown=${this._handleDragStart}
+          @keydown=${this._handleKeydown}
+        >
           <div class="divider-handle" part="divider-handle"></div>
         </div>
 

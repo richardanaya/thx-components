@@ -212,6 +212,15 @@ export class ThxTreeItem extends LitElement {
     this.status = 'normal';
   }
 
+  focus() {
+    this.updateComplete.then(() => {
+      const item = /** @type {HTMLElement|null} */ (
+        this.renderRoot.querySelector('[role="treeitem"]')
+      );
+      item?.focus();
+    });
+  }
+
   /**
    * Lifecycle callback when element is added to DOM
    * Detects children and sets up proper nesting
@@ -368,6 +377,18 @@ export class ThxTreeItem extends LitElement {
   }
 
   /**
+   * @param {KeyboardEvent} e
+   * @returns {void}
+   */
+  _handleKeydown(e) {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      e.stopPropagation();
+      this.select();
+    }
+  }
+
+  /**
    * Get toggle icon. Always returns the same glyph — the CSS
    * rotates it 90deg when expanded, so we must NOT also swap the
    * character (otherwise the glyph rotates "back" on expand).
@@ -440,9 +461,11 @@ export class ThxTreeItem extends LitElement {
       <div
         class="${itemClassString}"
         role="treeitem"
-        aria-expanded="${hasChildren ? String(this.expanded) : 'false'}"
+        aria-expanded=${hasChildren ? String(this.expanded) : undefined}
         aria-selected="${this.selected}"
+        tabindex="${this.disabled ? '-1' : '0'}"
         @click="${this._handleClick}"
+        @keydown="${this._handleKeydown}"
       >
         ${hasChildren
           ? html`

@@ -1,10 +1,10 @@
 {
   "name": "thx-components",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "THX 1138 — A clinical, dystopian web component library built with Lit",
   "type": "module",
   "files": [
-    "src",
+    "src/components",
     "vendor",
     "webcomponents.js",
     "aesthetics.css",
@@ -27,16 +27,23 @@
   },
   "sideEffects": [
     "./webcomponents.js",
+    "./aesthetics.css",
     "./src/components/*.js"
   ],
   "scripts": {
+    "pretest": "playwright install chromium",
+    "test": "web-test-runner",
+    "check": "npm run typecheck && npm run format:check && npm test",
     "typecheck": "tsc --noEmit",
     "format": "prettier --write .",
     "format:check": "prettier --check ."
   },
   "devDependencies": {
+    "@web/test-runner": "^0.20.2",
+    "@web/test-runner-playwright": "^0.11.1",
     "lit": "^3.1.2",
     "open-props": "^1.7.23",
+    "playwright": "^1.56.1",
     "prettier": "^3.8.3",
     "typescript": "^5.4.0"
   },

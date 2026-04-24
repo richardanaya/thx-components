@@ -161,6 +161,81 @@ export class ThxTree extends LitElement {
     this.selection = 'none';
   }
 
+  /** @returns {ThxTreeItem[]} */
+  _getVisibleItems() {
+    const items = Array.from(this.querySelectorAll('thx-tree-item')).filter(
+      item => !(/** @type {ThxTreeItem} */ (/** @type {unknown} */ (item)).disabled)
+    );
+    return /** @type {ThxTreeItem[]} */ (
+      items.filter(item => {
+        let parent = item.parentElement?.closest('thx-tree-item');
+        while (parent) {
+          if (!(/** @type {ThxTreeItem} */ (/** @type {unknown} */ (parent)).expanded))
+            return false;
+          parent = parent.parentElement?.closest('thx-tree-item');
+        }
+        return true;
+      })
+    );
+  }
+
+  /**
+   * @param {KeyboardEvent} e
+   * @returns {void}
+   */
+  _handleKeydown(e) {
+    const keys = ['ArrowDown', 'ArrowUp', 'ArrowRight', 'ArrowLeft', 'Home', 'End', 'Enter', ' '];
+    if (!keys.includes(e.key)) return;
+
+    const items = this._getVisibleItems();
+    if (items.length === 0) return;
+    const currentIndex = Math.max(
+      0,
+      items.findIndex(item => item === document.activeElement || item.shadowRoot?.activeElement)
+    );
+    const current = items[currentIndex];
+    e.preventDefault();
+
+    if (e.key === 'Enter' || e.key === ' ') {
+      current.select();
+      return;
+    }
+
+    if (e.key === 'ArrowRight') {
+      if (current.hasChildren && !current.expanded) current.toggle();
+      else this._focusItem(items[Math.min(currentIndex + 1, items.length - 1)]);
+      return;
+    }
+
+    if (e.key === 'ArrowLeft') {
+      if (current.hasChildren && current.expanded) current.toggle();
+      else {
+        const parent = /** @type {ThxTreeItem|null} */ (
+          /** @type {unknown} */ (current.parentElement?.closest('thx-tree-item'))
+        );
+        this._focusItem(parent || current);
+      }
+      return;
+    }
+
+    let nextIndex = currentIndex;
+    if (e.key === 'Home') nextIndex = 0;
+    else if (e.key === 'End') nextIndex = items.length - 1;
+    else if (e.key === 'ArrowDown') {
+      nextIndex = Math.min(currentIndex + 1, items.length - 1);
+    } else nextIndex = Math.max(currentIndex - 1, 0);
+
+    this._focusItem(items[nextIndex]);
+  }
+
+  /**
+   * @param {ThxTreeItem|undefined|null} item
+   * @returns {void}
+   */
+  _focusItem(item) {
+    item?.focus();
+  }
+
   /**
    * Expand all tree items
    * @returns {void}
@@ -213,7 +288,7 @@ export class ThxTree extends LitElement {
             </div>
           `
         : ''}
-      <ul class="tree-list" role="tree">
+      <ul class="tree-list" role="tree" @keydown="${this._handleKeydown}">
         <slot></slot>
       </ul>
     `;
