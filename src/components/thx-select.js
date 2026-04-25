@@ -330,13 +330,7 @@ export class ThxSelect extends LitElement {
     this._updateActiveIndex();
     this._updateFormValue();
     this.open = false;
-    this.dispatchEvent(
-      new CustomEvent('change', {
-        bubbles: true,
-        composed: true,
-        detail: { value: this.value },
-      })
-    );
+    this.dispatchEvent(new Event('change', { bubbles: true, composed: true }));
   }
 
   /**

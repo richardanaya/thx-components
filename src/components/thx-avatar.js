@@ -252,23 +252,6 @@ export class ThxAvatar extends LitElement {
   }
 
   /**
-   * Handle click on interactive avatar.
-   * @returns {void}
-   * @private
-   */
-  _handleClick() {
-    if (this.interactive) {
-      this.dispatchEvent(
-        new CustomEvent('click', {
-          bubbles: true,
-          composed: true,
-          detail: { name: this.name },
-        })
-      );
-    }
-  }
-
-  /**
    * Render the avatar component.
    * @returns {import('lit').TemplateResult}
    */
@@ -289,12 +272,7 @@ export class ThxAvatar extends LitElement {
     const hasImage = this.image && this.image.trim();
 
     return html`
-      <div
-        class="${classString}"
-        role="img"
-        aria-label=${this.name || 'Avatar'}
-        @click=${this._handleClick}
-      >
+      <div class="${classString}" role="img" aria-label=${this.name || 'Avatar'}>
         ${hasImage
           ? html`
               <img

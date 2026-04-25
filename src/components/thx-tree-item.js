@@ -308,16 +308,7 @@ export class ThxTreeItem extends LitElement {
     if (hasChildren) {
       this.expanded = !this.expanded;
       this.requestUpdate();
-      this.dispatchEvent(
-        new CustomEvent('toggle', {
-          bubbles: true,
-          composed: true,
-          detail: {
-            value: this.value,
-            expanded: this.expanded,
-          },
-        })
-      );
+      this.dispatchEvent(new Event('toggle', { bubbles: true, composed: true }));
     }
   }
 

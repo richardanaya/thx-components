@@ -177,13 +177,7 @@ export class ThxCheckbox extends LitElement {
     this.checked = !this.checked;
     this.indeterminate = false;
     this._updateFormValue();
-    this.dispatchEvent(
-      new CustomEvent('change', {
-        bubbles: true,
-        composed: true,
-        detail: { checked: this.checked, value: this.value },
-      })
-    );
+    this.dispatchEvent(new Event('change', { bubbles: true, composed: true }));
   }
 
   /**
@@ -230,16 +224,11 @@ export class ThxCheckbox extends LitElement {
           tabindex="-1"
           @click=${(/** @type {MouseEvent} */ e) => e.stopPropagation()}
           @change=${(/** @type {Event} */ e) => {
+            e.stopPropagation();
             const target = /** @type {HTMLInputElement} */ (e.target);
             this.checked = target.checked;
             this._updateFormValue();
-            this.dispatchEvent(
-              new CustomEvent('change', {
-                bubbles: true,
-                composed: true,
-                detail: { checked: this.checked, value: this.value },
-              })
-            );
+            this.dispatchEvent(new Event('change', { bubbles: true, composed: true }));
           }}
         />
         <span class="check-icon">

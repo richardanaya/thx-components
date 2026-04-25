@@ -308,9 +308,7 @@ export class ThxDrawer extends LitElement {
    */
   show() {
     this.open = true;
-    this.dispatchEvent(
-      new CustomEvent('toggle', { bubbles: true, composed: true, detail: { open: true } })
-    );
+    this.dispatchEvent(new Event('toggle', { bubbles: true, composed: true }));
   }
 
   /**
@@ -319,9 +317,7 @@ export class ThxDrawer extends LitElement {
    */
   hide() {
     this.open = false;
-    this.dispatchEvent(
-      new CustomEvent('toggle', { bubbles: true, composed: true, detail: { open: false } })
-    );
+    this.dispatchEvent(new Event('toggle', { bubbles: true, composed: true }));
   }
 
   /**

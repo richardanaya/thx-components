@@ -247,13 +247,7 @@ export class ThxRadioGroup extends LitElement {
     if (this.disabled) return;
     this.value = value;
     this.syncRadios();
-    this.dispatchEvent(
-      new CustomEvent('change', {
-        bubbles: true,
-        composed: true,
-        detail: { value: this.value, name: this.name },
-      })
-    );
+    this.dispatchEvent(new Event('change', { bubbles: true, composed: true }));
   }
 
   /**

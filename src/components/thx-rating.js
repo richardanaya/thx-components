@@ -177,13 +177,7 @@ export class ThxRating extends LitElement {
 
     this.value = newValue;
     this._updateFormValue();
-    this.dispatchEvent(
-      new CustomEvent('change', {
-        bubbles: true,
-        composed: true,
-        detail: { value: this.value, originalEvent },
-      })
-    );
+    this.dispatchEvent(new Event('change', { bubbles: true, composed: true }));
   }
 
   /**

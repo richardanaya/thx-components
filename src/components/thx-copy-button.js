@@ -170,13 +170,7 @@ export class ThxCopyButton extends LitElement {
       this._showSuccess = true;
       this.requestUpdate();
 
-      this.dispatchEvent(
-        new CustomEvent('copy', {
-          bubbles: true,
-          composed: true,
-          detail: { value: this.value, success: true },
-        })
-      );
+      this.dispatchEvent(new Event('copy', { bubbles: true, composed: true }));
 
       if (this._timeoutId) {
         clearTimeout(this._timeoutId);
@@ -187,13 +181,7 @@ export class ThxCopyButton extends LitElement {
         this.requestUpdate();
       }, this.feedbackDuration);
     } catch (err) {
-      this.dispatchEvent(
-        new CustomEvent('error', {
-          bubbles: true,
-          composed: true,
-          detail: { value: this.value, error: err },
-        })
-      );
+      this.dispatchEvent(new Event('error', { bubbles: true, composed: true }));
     }
   }
 

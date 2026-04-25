@@ -263,36 +263,13 @@ export class ThxAnimatedImage extends LitElement {
   }
 
   /**
-   * Handle image click.
-   * @returns {void}
-   * @private
-   */
-  _handleClick() {
-    if (this.interactive) {
-      this.dispatchEvent(
-        new CustomEvent('click', {
-          bubbles: true,
-          composed: true,
-          detail: { src: this.src, alt: this.alt },
-        })
-      );
-    }
-  }
-
-  /**
    * Handle image load.
    * @returns {void}
    * @private
    */
   _handleLoad() {
     this.loading = false;
-    this.dispatchEvent(
-      new CustomEvent('load', {
-        bubbles: true,
-        composed: true,
-        detail: { src: this.src },
-      })
-    );
+    this.dispatchEvent(new Event('load', { bubbles: true, composed: true }));
   }
 
   /**
@@ -302,13 +279,7 @@ export class ThxAnimatedImage extends LitElement {
    */
   _handleError() {
     this.loading = false;
-    this.dispatchEvent(
-      new CustomEvent('error', {
-        bubbles: true,
-        composed: true,
-        detail: { src: this.src },
-      })
-    );
+    this.dispatchEvent(new Event('error', { bubbles: true, composed: true }));
   }
 
   /**
@@ -338,7 +309,6 @@ export class ThxAnimatedImage extends LitElement {
     return html`
       <div
         class="${classString}"
-        @click=${this._handleClick}
         role=${this.interactive ? 'button' : 'img'}
         aria-label=${this.alt || 'Image'}
         tabindex=${this.interactive ? '0' : '-1'}

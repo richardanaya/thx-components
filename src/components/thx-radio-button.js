@@ -104,13 +104,7 @@ export class ThxRadioButton extends LitElement {
   select() {
     if (this.disabled) return;
     this.checked = true;
-    this.dispatchEvent(
-      new CustomEvent('change', {
-        bubbles: true,
-        composed: true,
-        detail: { checked: true, value: this.value },
-      })
-    );
+    this.dispatchEvent(new Event('change', { bubbles: true, composed: true }));
   }
 
   /**

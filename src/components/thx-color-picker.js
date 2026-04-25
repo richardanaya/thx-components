@@ -180,13 +180,7 @@ export class ThxColorPicker extends LitElement {
   setColor(color) {
     if (this.disabled) return;
     this.value = color;
-    this.dispatchEvent(
-      new CustomEvent('change', {
-        bubbles: true,
-        composed: true,
-        detail: { value: this.value },
-      })
-    );
+    this.dispatchEvent(new Event('change', { bubbles: true, composed: true }));
   }
 
   /**

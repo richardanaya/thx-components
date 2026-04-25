@@ -265,9 +265,7 @@ export class ThxTooltip extends LitElement {
     this._showTimeout = window.setTimeout(() => {
       this._visible = true;
       this.requestUpdate();
-      this.dispatchEvent(
-        new CustomEvent('toggle', { bubbles: true, composed: true, detail: { open: true } })
-      );
+      this.dispatchEvent(new Event('toggle', { bubbles: true, composed: true }));
     }, this.delay);
   }
 
@@ -280,9 +278,7 @@ export class ThxTooltip extends LitElement {
     this._hideTimeout = window.setTimeout(() => {
       this._visible = false;
       this.requestUpdate();
-      this.dispatchEvent(
-        new CustomEvent('toggle', { bubbles: true, composed: true, detail: { open: false } })
-      );
+      this.dispatchEvent(new Event('toggle', { bubbles: true, composed: true }));
     }, 50);
   }
 

@@ -1,429 +1,523 @@
-# THX 1138 Terminal Interface — DESIGN.md
-
-A sterile, dystopian 1971 sci-fi aesthetic inspired by George Lucas's THX 1138. This design system captures the clinical, surveillance-state visual language of the film's underground society — CRT monitors, monochrome displays, and oppressive minimalism.
-
+---
+version: alpha
+name: THX Components
+description: Clinical, dystopian, classless web component design system with sterile surfaces, industrial geometry, and phosphor CRT accents.
+colors:
+  primary: '#A6C8E1'
+  on-primary: '#333333'
+  secondary: '#707E91'
+  on-secondary: '#111111'
+  tertiary: '#DEFFFF'
+  neutral-100: '#FAFAFA'
+  neutral-200: '#E0E0E0'
+  neutral-600: '#666666'
+  neutral-800: '#333333'
+  background: '#E0E0E0'
+  surface: '#FAFAFA'
+  on-surface: '#333333'
+  on-surface-variant: '#666666'
+  outline: '#CCCCCC'
+  outline-variant: '#BBBBBB'
+  crt-bg: '#111111'
+  crt-bg-dark: '#0A0A0A'
+  crt-border: '#2A2A2A'
+  crt-grid: '#333333'
+  warning: '#D4AA00'
+  on-warning: '#333333'
+  error: '#D44000'
+  on-error: '#FFFFFF'
+typography:
+  display-xl:
+    fontFamily: 'Helvetica Neue, Helvetica, Arial, sans-serif'
+    fontSize: 60px
+    fontWeight: 300
+    lineHeight: 0.95
+    letterSpacing: 0.16em
+  display-lg:
+    fontFamily: 'Helvetica Neue, Helvetica, Arial, sans-serif'
+    fontSize: 48px
+    fontWeight: 300
+    lineHeight: 1
+    letterSpacing: 0.12em
+  headline-md:
+    fontFamily: 'Helvetica Neue, Helvetica, Arial, sans-serif'
+    fontSize: 24px
+    fontWeight: 400
+    lineHeight: 1.15
+    letterSpacing: 0.1em
+  heading-sm:
+    fontFamily: 'Helvetica Neue, Helvetica, Arial, sans-serif'
+    fontSize: 16px
+    fontWeight: 600
+    lineHeight: 1.3
+    letterSpacing: 0.08em
+  body-md:
+    fontFamily: 'Helvetica Neue, Helvetica, Arial, sans-serif'
+    fontSize: 16px
+    fontWeight: 400
+    lineHeight: 1.6
+  body-sm:
+    fontFamily: 'Helvetica Neue, Helvetica, Arial, sans-serif'
+    fontSize: 14px
+    fontWeight: 400
+    lineHeight: 1.45
+  label-md:
+    fontFamily: 'Courier New, Courier, monospace'
+    fontSize: 13px
+    fontWeight: 600
+    lineHeight: 1
+    letterSpacing: 0.14em
+  label-sm:
+    fontFamily: 'Courier New, Courier, monospace'
+    fontSize: 12px
+    fontWeight: 600
+    lineHeight: 1
+    letterSpacing: 0.12em
+  mono-data:
+    fontFamily: 'Courier New, Courier, monospace'
+    fontSize: 16px
+    fontWeight: 400
+    lineHeight: 1.6
+    letterSpacing: 0.08em
+  mono-tiny:
+    fontFamily: 'Courier New, Courier, monospace'
+    fontSize: 11px
+    fontWeight: 600
+    lineHeight: 1
+    letterSpacing: 0.16em
+rounded:
+  none: 0px
+  micro: 2px
+  sm: 4px
+  md: 8px
+  full: 9999px
+spacing:
+  unit: 4px
+  xs: 4px
+  sm: 8px
+  md: 12px
+  lg: 16px
+  xl: 24px
+  2xl: 32px
+  3xl: 48px
+  container: 900px
+  dashboard: 1280px
+  wide: 1560px
+components:
+  page-canvas:
+    backgroundColor: '{colors.background}'
+    textColor: '{colors.neutral-800}'
+  body-background:
+    backgroundColor: '{colors.neutral-200}'
+    textColor: '{colors.neutral-800}'
+  section-surface:
+    backgroundColor: '{colors.neutral-100}'
+    textColor: '{colors.neutral-800}'
+  metadata-text:
+    textColor: '{colors.on-surface-variant}'
+    typography: '{typography.label-sm}'
+  muted-label:
+    textColor: '{colors.neutral-600}'
+    typography: '{typography.label-sm}'
+  divider-default:
+    backgroundColor: '{colors.outline}'
+    height: 1px
+  divider-subtle:
+    backgroundColor: '{colors.outline-variant}'
+    height: 1px
+  button-primary:
+    backgroundColor: '{colors.primary}'
+    textColor: '{colors.on-primary}'
+    typography: '{typography.label-md}'
+    rounded: '{rounded.none}'
+    height: 40px
+    padding: 8px 16px
+  button-primary-hover:
+    backgroundColor: '{colors.tertiary}'
+    textColor: '{colors.on-primary}'
+  button-secondary:
+    backgroundColor: '{colors.secondary}'
+    textColor: '{colors.on-secondary}'
+    typography: '{typography.label-md}'
+    rounded: '{rounded.none}'
+    height: 40px
+    padding: 8px 16px
+  button-warning:
+    backgroundColor: '{colors.warning}'
+    textColor: '{colors.on-warning}'
+    typography: '{typography.label-md}'
+    rounded: '{rounded.none}'
+    height: 40px
+    padding: 8px 16px
+  button-error:
+    backgroundColor: '{colors.error}'
+    textColor: '{colors.on-error}'
+    typography: '{typography.label-md}'
+    rounded: '{rounded.none}'
+    height: 40px
+    padding: 8px 16px
+  card-surface:
+    backgroundColor: '{colors.surface}'
+    textColor: '{colors.on-surface}'
+    rounded: '{rounded.none}'
+    padding: 32px
+  card-crt:
+    backgroundColor: '{colors.crt-bg}'
+    textColor: '{colors.primary}'
+    rounded: '{rounded.sm}'
+    padding: 16px
+  scope-display:
+    backgroundColor: '{colors.crt-bg-dark}'
+    textColor: '{colors.primary}'
+    rounded: '{rounded.sm}'
+    padding: 24px
+  crt-frame:
+    backgroundColor: '{colors.crt-border}'
+    textColor: '{colors.primary}'
+    rounded: '{rounded.sm}'
+    padding: 8px
+  crt-grid-line:
+    backgroundColor: '{colors.crt-grid}'
+    height: 1px
+  input-field:
+    backgroundColor: '#FFFFFF'
+    textColor: '{colors.on-surface}'
+    typography: '{typography.mono-data}'
+    rounded: '{rounded.none}'
+    height: 40px
+    padding: 0 12px
+  alert-info:
+    backgroundColor: '{colors.surface}'
+    textColor: '{colors.on-surface}'
+    typography: '{typography.label-sm}'
+    rounded: '{rounded.none}'
+    padding: 16px
+  badge-primary:
+    backgroundColor: '{colors.primary}'
+    textColor: '{colors.on-primary}'
+    typography: '{typography.label-sm}'
+    rounded: '{rounded.none}'
+    padding: 4px 8px
+  badge-pill:
+    backgroundColor: '{colors.primary}'
+    textColor: '{colors.on-primary}'
+    typography: '{typography.label-sm}'
+    rounded: '{rounded.full}'
+    padding: 4px 8px
+  dialog-panel:
+    backgroundColor: '{colors.surface}'
+    textColor: '{colors.on-surface}'
+    rounded: '{rounded.sm}'
+    padding: 24px
 ---
 
-## 1. Visual Theme & Atmosphere
+# Design System: THX Components
 
-### Design Philosophy
+## Overview
 
-- **Clinical Minimalism**: Stark whites, greys, and blacks. No decorative elements.
-- **Surveillance State**: Interfaces feel like monitoring stations — cold, functional, authoritarian.
-- **1970s Retro-Futurism**: CRT phosphor glow, analog oscilloscope displays, scanline effects.
-- **Oppressive Order**: Everything is numbered, labeled, and tracked. No organic warmth.
+This design system embodies clinical dystopian instrumentation: blank institutional surfaces, strict alphanumeric labeling, square industrial controls, and rare phosphor glow used only when the interface behaves like a monitor.
 
-### Mood & Density
+The visual source is the sterile world of THX-1138: white and gray voids, industrial corridors, impersonal identifiers, uniform costume logic, and cold machine interfaces. In UI terms, that becomes a system where decoration is removed, hierarchy comes from containment and typography, and color appears only as operational signal.
 
-- **Mood**: Cold, sterile, controlled, dystopian
-- **Density**: Medium — structured layouts with plenty of whitespace but purposeful
-- **Visual Weight**: Heavy borders, blocky forms, geometric precision
+The design must feel authored by a control room, not a marketing site. It should be legible, austere, and slightly oppressive without becoming unusable. The classless CSS layer makes bare semantic HTML look designed; custom elements extend that same language without utility-class noise.
 
----
+Key characteristics:
 
-## 2. Color Palette & Roles
+- Neutral gray page canvas with off-white panel slabs.
+- Helvetica-derived display/body text paired with Courier-style uppercase control text.
+- High letter spacing, all-caps labels, and alphanumeric interface phrasing.
+- Square or near-square geometry; rounded corners are exceptions, not defaults.
+- Phosphor blue is the primary operational accent, not a decorative brand wash.
+- Amber and orange-red are reserved for warning and critical states.
+- CRT and oscilloscope surfaces form a dark sub-system with scanlines, grid overlays, inset shadows, and soft glow.
+- Components should be usable through semantic HTML and custom elements with minimal class authorship.
 
-### Neutral Colors (Foundation)
+## Colors
 
-| Token           | Value     | Role                         |
-| --------------- | --------- | ---------------------------- |
-| `--neutral-100` | `#fafafa` | Primary background, cards    |
-| `--neutral-200` | `#e0e0e0` | Page background, surfaces    |
-| `--neutral-600` | `#666`    | Secondary text, muted labels |
-| `--neutral-800` | `#333`    | Primary text, headings       |
+The palette is intentionally narrow. The default world is gray-on-gray institutional minimalism; the dark CRT world is black with blue phosphor. Chromatic colors communicate state.
 
-### Atmospheric Colors (CRT Phosphor)
+### Surface Roles
 
-| Token               | Value     | Role                               |
-| ------------------- | --------- | ---------------------------------- |
-| `--atmos-primary`   | `#a6c8e1` | CRT phosphor glow, active elements |
-| `--atmos-secondary` | `#707e91` | Dimmed phosphor, grid lines        |
-| `--atmos-tertiary`  | `#deffff` | Highlight, brightest glow          |
+- **Background (`#E0E0E0`)**: The page canvas. It should feel like painted institutional concrete, not a pure white website background.
+- **Surface (`#FAFAFA`)**: Panels, cards, sections, controls, and content slabs. This is the dominant reading surface.
+- **White (`#FFFFFF`)**: Inputs and code fields when a brighter affordance is needed.
+- **Dark CRT (`#111111`)**: Monitor panels, terminal surfaces, dialog headers, charts, and scope displays.
+- **Deep CRT (`#0A0A0A`)**: Oscilloscope and denser terminal interiors.
+- **CRT Border (`#2A2A2A`)**: Thick monitor frames and modal machine housings.
 
-### Accent Colors (Status)
+### Text Roles
 
-| Token              | Value     | Role                           |
-| ------------------ | --------- | ------------------------------ |
-| `--accent-warning` | `#d4aa00` | Amber warning LED, alerts      |
-| `--accent-error`   | `#d44000` | Critical errors, non-compliant |
+- **Primary Text (`#333333`)**: Headings, KPI values, button text on light accents, and main content.
+- **Secondary Text (`#666666`)**: Labels, metadata, body text, timestamps, placeholders, and quiet utility copy.
+- **Inverse Text (`#FAFAFA` / `#FFFFFF`)**: Text on error and dark fills. Use true white for critical orange when strict AA contrast is required.
+- **Phosphor Text (`#A6C8E1`)**: Active CRT text, selected navigation states, live metrics, and focus emphasis.
 
-### CRT Display Colors (Dark Theme)
+### Accent Roles
 
-| Token           | Value     | Role                                  |
-| --------------- | --------- | ------------------------------------- |
-| `--crt-bg`      | `#111`    | Primary CRT monitor background        |
-| `--crt-bg-dark` | `#0a0a0a` | Darker variant (scope displays)       |
-| `--crt-border`  | `#2a2a2a` | CRT monitor bezel/frame               |
-| `--crt-grid`    | `#333`    | Monitor bank grid, secondary surfaces |
+- **Phosphor Blue (`#A6C8E1`)**: Primary action fill, active tab line, focus glow, success/normal operational status, and CRT text.
+- **Muted Phosphor (`#707E91`)**: Secondary action fill, inactive CRT labels, quiet status states. Use near-black text on this fill for strict AA contrast.
+- **Hot Phosphor (`#DEFFFF`)**: Hover and high-energy CRT emphasis. Use sparingly.
+- **Warning Amber (`#D4AA00`)**: Warning badges, heat-map cells, and caution states.
+- **Critical Orange (`#D44000`)**: Error states, destructive actions, critical metrics, and fault indicators.
 
-### Usage Patterns
+### Borders And Dividers
 
-- **Surfaces**: White backgrounds (`--neutral-100`) with subtle borders
-- **CRT Displays**: Black backgrounds (`#0a0a0a`, `#111`) with phosphor glow
-- **Text**: Primary dark (`--neutral-800`) on light surfaces
-- **Interactive**: Blue phosphor (`--atmos-primary`) for active states
-- **Alerts**: Amber (`--accent-warning`) for warnings, red (`--accent-error`) for critical
+- Use black alpha borders on light surfaces: `rgba(0, 0, 0, 0.06)` for subtle dividers, `rgba(0, 0, 0, 0.1)` for structural boundaries, and `#CCCCCC` for form control underlines.
+- Use phosphor alpha borders on CRT surfaces: `rgba(166, 200, 225, 0.08)` for quiet grid lines and `rgba(166, 200, 225, 0.16)` for panel frames.
+- Avoid decorative colored borders. Borders should communicate panel seams, selected state, focus, or status.
 
----
+## Typography
 
-## 3. Typography Rules
+Typography is the primary visual identity. Display and prose use a stark neo-grotesque stack; operational text uses monospaced uppercase labels.
 
 ### Font Families
 
-| Token            | Value                                            | Usage                       |
-| ---------------- | ------------------------------------------------ | --------------------------- |
-| `--font-display` | `'Helvetica Neue', Helvetica, Arial, sans-serif` | Headings, display text      |
-| `--font-body`    | `'Helvetica Neue', Helvetica, Arial, sans-serif` | Body text, paragraphs       |
-| `--font-mono`    | `'Courier New', Courier, monospace`              | Data, labels, terminal text |
+- **Display and Body**: `Helvetica Neue, Helvetica, Arial, sans-serif`.
+- **Operational Mono**: `Courier New, Courier, monospace`.
+- **OpenType Features**: No custom feature set is required. The identity comes from uppercase transformation, letter spacing, and weight restraint.
 
-### Type Scale
+### Hierarchy
 
-| Element    | Size      | Weight | Letter-Spacing | Case      |
-| ---------- | --------- | ------ | -------------- | --------- |
-| H1         | 1.75rem   | 300    | 0.1em          | uppercase |
-| H2         | 1.25rem   | 400    | 0.08em         | uppercase |
-| H3         | 1rem      | 600    | 0.06em         | uppercase |
-| H4         | 0.875rem  | 600    | 0.05em         | uppercase |
-| H5         | 0.8125rem | 500    | 0.04em         | uppercase |
-| H6         | 0.75rem   | 500    | 0.03em         | uppercase |
-| Body       | 0.875rem  | 400    | normal         | normal    |
-| Mono Label | 0.6875rem | 500    | 0.1em          | uppercase |
-| Data       | 0.8125rem | 400    | 0.05em         | uppercase |
+| Role        | Font            | Size | Weight | Line Height | Letter Spacing | Use                                          |
+| ----------- | --------------- | ---: | -----: | ----------: | -------------: | -------------------------------------------- |
+| Display XL  | Helvetica stack | 60px |    300 |        0.95 |         0.16em | Large terminal identity, hero titles         |
+| Display LG  | Helvetica stack | 48px |    300 |           1 |         0.12em | Page titles, major KPI values                |
+| Headline MD | Helvetica stack | 24px |    400 |        1.15 |          0.1em | Section headings                             |
+| Heading SM  | Helvetica stack | 16px |    600 |         1.3 |         0.08em | Small headings and dense group labels        |
+| Body MD     | Helvetica stack | 16px |    400 |         1.6 |         normal | Main prose and component content             |
+| Body SM     | Helvetica stack | 14px |    400 |        1.45 |         normal | Dense dashboard content                      |
+| Label MD    | Courier stack   | 13px |    600 |           1 |         0.14em | Buttons, tabs, labels, badges                |
+| Label SM    | Courier stack   | 12px |    600 |           1 |         0.12em | Metadata, timestamps, captions               |
+| Mono Data   | Courier stack   | 16px |    400 |         1.6 |         0.08em | Terminal rows, input values, diagnostic data |
+| Mono Tiny   | Courier stack   | 11px |    600 |           1 |         0.16em | Watermarks, panel codes, micro labels        |
 
-### Typography Patterns
+### Principles
 
-- **Headings**: All uppercase, wide letter-spacing, lightweight
-- **Labels**: Monospace, uppercase, tracking 0.1em
-- **Data**: Monospace, uppercase, slight tracking
-- **Body**: Normal case, system font
+- Use uppercase for headings, labels, buttons, tabs, badges, control copy, and machine identifiers.
+- Use body case for human-readable paragraphs, alert messages, and long descriptions unless the surface is explicitly terminal-like.
+- Use low display weights (`300` to `400`) for large text. Heavy display type breaks the sterile filmic tone.
+- Use `600` for mono labels and small controls so expanded letter spacing remains legible.
+- Letter spacing should increase as text becomes more operational. Labels may be wide; body copy should not be tracked out.
+- Alphanumeric identifiers should feel systematic: short prefixes, numeric suffixes, slashes, double colons, and panel codes are appropriate when content needs machine flavor.
 
----
+## Layout
 
-## 4. Component Stylings
+The layout is slab-based and grid-driven. Screens should feel assembled from panels on an industrial backplane.
+
+### Spacing System
+
+- Base unit: `4px`.
+- Common rhythm: `4px`, `8px`, `12px`, `16px`, `24px`, `32px`, `48px`.
+- Use `4px` for seams between dense dashboard panels.
+- Use `16px` to `24px` for standard component interiors.
+- Use `32px` for section slabs and large cards.
+- Avoid ornamental whitespace. Empty space should feel like institutional void, not lifestyle minimalism.
+
+### Containers And Grids
+
+- Default documentation/content width: `900px` centered.
+- Standard dashboard width: up to `1280px`.
+- Wide monitoring dashboard width: up to `1560px`.
+- Use CSS grid for dashboards, with narrow seams and white/off-white panel children.
+- Use two-column and four-column layouts when data density matters; collapse to one column on mobile.
+- Panel grids may use a faint grid backplane, but the grid must be low contrast and mechanical.
+
+### Responsive Behavior
+
+- At widths below `1180px`, complex hero, media, terminal, and form grids collapse to one column.
+- At widths below `760px`, KPI and sensor grids collapse from two columns to one column.
+- Command strips and headers should wrap rather than shrink controls below usable touch targets.
+- Keep touch targets at least `32px` high for small controls and `40px` high for primary controls.
+
+## Elevation & Depth
+
+Depth is conveyed through inset shadows, hairline seams, panel contrast, and CRT glow. Avoid floating card shadows in the default light system.
+
+| Level        | Treatment                                                      | Use                                   |
+| ------------ | -------------------------------------------------------------- | ------------------------------------- |
+| Canvas       | `#E0E0E0` with no shadow                                       | Page background                       |
+| Slab         | `#FAFAFA` with subtle inner shadow                             | Sections, panels, cards               |
+| Divided Slab | Slab plus `rgba(0,0,0,0.06)` dividers                          | Dense lists and dashboards            |
+| Active Light | Phosphor border or underline plus `rgba(166,200,225,0.3)` glow | Focus, selected tabs, active controls |
+| CRT Recess   | `#111111`, thick `#2A2A2A` frame, inset shadow                 | Monitor panels and dark displays      |
+| Dialog       | Dark overlay plus framed light panel with CRT header           | Modal interruptions                   |
+
+Shadow philosophy:
+
+- Light surfaces should look pressed into a controlled environment, not floating above it.
+- Dark monitor surfaces should look recessed behind glass.
+- Glow belongs to active phosphor states only. If everything glows, the system stops feeling operational.
+- Use scanlines, vignette, and grid overlays only on explicit display surfaces.
+
+## Shapes
+
+The shape language is hard-edged, industrial, and mostly orthogonal.
+
+- **Square (`0px`)**: Default for buttons, inputs, panels, badges, tabs, lists, range sliders, and checkboxes.
+- **Micro (`2px`)**: Rare optical correction for tiny framed details.
+- **Small (`4px`)**: CRT monitor frames, dialogs, and dark display housings.
+- **Medium (`8px`)**: Use only when a third-party embedded surface or media preview needs mild softening.
+- **Full (`9999px`)**: Only for explicit pill badges or circular status/avatar elements.
+
+Do not mix rounded and square controls casually. Rounded elements should have semantic purpose: status pills, avatars, radio controls, or CRT housings.
+
+## Components
 
 ### Buttons
 
-**Primary Button**
+Buttons are uppercase mono controls with no radius. Primary buttons use phosphor blue fill and dark text; secondary buttons use muted phosphor fill with near-black text when strict contrast is required.
 
-```
-background: var(--atmos-primary);
-color: var(--neutral-800);
-border: none;
-padding: 10px 20px;
-font-family: var(--font-mono);
-font-size: 0.6875rem;
-text-transform: uppercase;
-letter-spacing: 0.12em;
-```
+- Default height: `40px`.
+- Small height: `24px`; large height: `48px`.
+- Padding: `8px 16px` for default, `12px 24px` for large.
+- Active state: translate down by `1px`.
+- Disabled state: opacity `0.4` to `0.5`; preserve layout.
+- Primary hover: hot phosphor background and soft blue glow.
+- Warning/error hover: keep fill stable and add status-colored glow.
+- Ghost controls should be transparent with quiet gray text until hover.
 
-**Secondary Button**
+### Cards And Panels
 
-```
-background: var(--atmos-secondary);
-color: var(--neutral-100);
-border: none;
-```
+Default cards are off-white slabs with inner shadow, optional header divider, and mono uppercase labels. They should not use rounded corners or floating shadows.
 
-**Outline Button**
+- Standard padding: `32px` for content cards, `16px` to `24px` for dense dashboard panels.
+- Header labels: mono, uppercase, `12px` to `13px`, wide letter spacing.
+- Hoverable cards may add a subtle inner shadow plus phosphor glow, never a large drop shadow.
+- Inner border decorations should be faint, usually `rgba(0,0,0,0.04)` on light surfaces.
 
-```
-background: transparent;
-border: 1px solid var(--atmos-primary);
-color: var(--atmos-primary);
-```
+### CRT And Scope Displays
 
-**Ghost Button**
+CRT displays are a separate dark-mode subsystem, not a global theme.
 
-```
-background: transparent;
-border: 1px solid transparent;
-color: var(--neutral-600);
-```
+- Background: `#111111` or `#0A0A0A`.
+- Frame: thick `#2A2A2A`, usually `8px` to `12px`.
+- Text: phosphor blue, mono, uppercase.
+- Effects: repeating horizontal scanlines, radial vignette, inset shadow.
+- Scope variant: blue grid overlay at `16px` intervals.
+- Always respect `prefers-reduced-motion` by disabling scanline animation.
 
-### Badges
+### Inputs And Forms
 
-```
-padding: 4px 10px;
-font-family: var(--font-mono);
-font-size: 0.625rem;
-text-transform: uppercase;
-letter-spacing: 0.1em;
-border: 1px solid transparent;
-```
+Inputs are terminal fields embedded in light slabs.
 
-**Badge Variants**
+- Background: white.
+- Border: no full box; use `2px` bottom border.
+- Focus: phosphor border plus `0 0 0 2px rgba(166, 200, 225, 0.3)`.
+- Text: mono, uppercase by default for short control fields.
+- Textareas may use normal casing for observational notes or long prose.
+- Labels are mono uppercase with wide tracking and secondary gray color.
 
-- Primary: Blue phosphor fill
-- Secondary: Darker blue fill
-- Warning: Amber fill
-- Error: Red fill
-- Inactive: Outline only
-- Pulse: Animated pulsing (LIVE indicator)
+### Alerts And Status
 
-### Cards / Sections
+Alerts use a light slab, mono uppercase label, and a thick left status rail.
 
-```
-background: var(--neutral-100);
-padding: 32px;
-border: none;
-box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.06);
-position: relative;
-```
+- Info rail: phosphor blue.
+- Warning rail: amber.
+- Error rail: orange-red.
+- Success/confirmed rail: muted phosphor.
+- Message text may relax to normal casing for readability.
+- Icons should be geometric primitives: diamond, triangle, square, circle.
 
-**Section Title**
+### Badges, Tags, And Pills
 
-```
-font-family: var(--font-mono);
-font-size: 0.75rem;
-text-transform: uppercase;
-letter-spacing: 0.15em;
-color: var(--neutral-600);
-border-bottom: 1px solid rgba(0, 0, 0, 0.08);
-```
+Badges are compact mono labels. Default badges are square; pill badges must be explicitly requested.
 
-### CRT Displays
+- Padding: `4px 8px`.
+- Font: mono `12px` or `13px`, weight `600`, uppercase.
+- Primary: phosphor blue fill.
+- Secondary: muted phosphor fill.
+- Inactive: transparent fill with gray border.
+- Pulse is allowed only for live state indicators, and should use low-intensity opacity animation.
 
-**Container**
+### Navigation
 
-```
-background: #111;
-border: 12px solid #2a2a2a;
-border-radius: 4px;
-position: relative;
-overflow: hidden;
-box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.5);
-```
+Tabs and navigation items are mono uppercase controls. Active state is a phosphor underline with a small glow.
 
-**Scanlines Effect**
+- Hover: blue text and `rgba(166, 200, 225, 0.05)` background.
+- Active: blue text, blue bottom border, subtle glow.
+- CRT variant: muted blue inactive text and hot phosphor active text with text shadow.
+- Avoid decorative navigation icons unless they are operational primitives.
 
-```
-background: repeating-linear-gradient(
-  0deg,
-  transparent,
-  transparent 2px,
-  rgba(166, 200, 225, 0.04) 2px,
-  rgba(166, 200, 225, 0.04) 4px
-);
-```
+### Dialogs And Drawers
 
-**Vignette**
+Dialogs are interruptions from the machine.
 
-```
-background: radial-gradient(ellipse at center, transparent 50%, rgba(0, 0, 0, 0.4) 100%);
-```
+- Overlay: `rgba(10, 10, 10, 0.85)` plus a subtle blur.
+- Panel: off-white slab inside a thick dark CRT frame.
+- Header: dark CRT strip with phosphor mono label.
+- Motion: scale from `0.95` to `1`; keep transitions short and mechanical.
+- Widths: approximately `400px`, `600px`, and `800px` with `90vw` maximum.
 
-### Form Inputs
+### Charts And Data Displays
 
-```
-height: 40px;
-padding: 0 12px;
-border: none;
-border-bottom: 2px solid #ccc;
-font-family: var(--font-mono);
-font-size: 0.875rem;
-text-transform: uppercase;
-letter-spacing: 0.05em;
-background: white;
-```
+Charts should look like instruments, not business analytics decoration.
 
-**Focus State**
+- Use phosphor blue for normal traces.
+- Use amber for caution traces and orange-red for critical traces.
+- Use thin grid lines with low opacity.
+- Prefer monospace labels, tick marks, and compact legends.
+- Keep chart chrome square and restrained.
 
-```
-border-color: var(--neutral-800);
-outline: none;
-```
+## Do's and Don'ts
 
-### Radio & Checkbox
+### Do
 
-```
-appearance: none;
-width: 18px;
-height: 18px;
-border: 2px solid #999;
-background: white;
-cursor: pointer;
+- Do start from semantic HTML and component tags before adding custom classes.
+- Do use off-white panels on a gray institutional canvas.
+- Do use monospaced uppercase labels for controls, metadata, tabs, badges, and machine identifiers.
+- Do reserve phosphor blue for active, primary, focus, live, and CRT states.
+- Do use amber and orange-red only for warning, critical, destructive, or fault states.
+- Do keep edges square unless a component has a clear status or display-housing reason to be rounded.
+- Do make dense dashboards with grid seams and panel slabs instead of ornamental cards.
+- Do disable CRT motion effects for reduced-motion users.
+
+### Don't
+
+- Don't use saturated color decoratively across backgrounds, illustrations, or large panels.
+- Don't use soft lifestyle gradients in the default light system.
+- Don't apply rounded corners to every component by default.
+- Don't use heavy drop shadows on light cards.
+- Don't set long paragraphs in uppercase or tracked mono; reserve that treatment for operational copy.
+- Don't make CRT scanlines a global page effect. They belong only to monitor-like surfaces.
+- Don't introduce playful iconography, emoji, or hand-drawn elements.
+- Don't make the interface warmer than the content demands; warmth should come from clarity and usefulness, not color softness.
+
+## Agent Prompt Guide
+
+Quick reference:
+
+- Background: `#E0E0E0`.
+- Surface: `#FAFAFA`.
+- Primary text: `#333333`.
+- Secondary text: `#666666`.
+- Primary CTA and active state: `#A6C8E1`.
+- Hover/high-energy phosphor: `#DEFFFF`.
+- Warning: `#D4AA00`.
+- Error: `#D44000`.
+- CRT background: `#111111`.
+
+Example hero prompt:
+
+```text
+Create a sterile control-room hero on a #E0E0E0 canvas with a #FAFAFA slab. Use a 48px Helvetica Neue headline, weight 300, uppercase, letter-spacing 0.12em, color #333333. Add a Courier New eyebrow at 12px, weight 600, letter-spacing 0.16em, color #666666. Use square phosphor-blue primary controls and no decorative gradients.
 ```
 
-**Radio Checked**
+Example component prompt:
 
-```
-border-color: #444;
-border-radius: 50%;
-```
-
-**Checkbox Checked**
-
-```
-border-color: #444;
-background: #444;
+```text
+Design a square status card with #FAFAFA background, subtle inner shadow, 32px padding, and a mono uppercase label at 12px with 0.14em tracking. Use #333333 for the main value, #666666 for metadata, and #A6C8E1 only for active or live state emphasis.
 ```
 
----
+Example CRT prompt:
 
-## 5. Layout Principles
-
-### Spacing Scale
-
-| Token     | Value | Usage                    |
-| --------- | ----- | ------------------------ |
-| Space XS  | 4px   | Tight gaps, icon padding |
-| Space SM  | 8px   | Between related elements |
-| Space MD  | 12px  | Form element gaps        |
-| Space LG  | 16px  | Section internal spacing |
-| Space XL  | 24px  | Between sections         |
-| Space 2XL | 32px  | Card padding             |
-| Space 3XL | 40px  | Page padding             |
-
-### Grid System
-
-- **Container**: max-width 900px, centered
-- **Sections**: Full width, vertical stack with 1px gap
-- **Form Grid**: 2-column layout for inputs
-- **Monitor Bank**: 4-column grid for CRT displays
-
-### Layout Patterns
-
-- **Section Stack**: Vertical sections with subtle borders
-- **Card Within Section**: White cards on grey background
-- **CRT Overlay**: Dark displays with phosphor content
-- **Input Row**: Flex row with gap 12px
-
----
-
-## 6. Depth & Elevation
-
-### Shadow System
-
-| Level        | Value                              | Usage            |
-| ------------ | ---------------------------------- | ---------------- |
-| Inset Border | `inset 0 0 0 1px rgba(0,0,0,0.06)` | Cards, sections  |
-| CRT Inner    | `inset 0 0 20px rgba(0,0,0,0.5)`   | Monitor displays |
-| Glow Blue    | `0 0 15px rgba(166,200,225,0.5)`   | Hover states     |
-| Glow Amber   | `0 0 15px rgba(212,170,0,0.5)`     | Warning hover    |
-
-### Elevation Philosophy
-
-- **Flat Design**: Minimal shadows, mostly inset
-- **CRT Glow**: Phosphor elements have subtle glow
-- **No Float**: Elements don't "float" — they stack or border
-
----
-
-## 7. Do's and Don'ts
-
-### ✅ Do
-
-- Use uppercase text for all labels and headings
-- Use monospace fonts for data and technical content
-- Include wide letter-spacing on headers
-- Use the blue phosphor color for active/interactive states
-- Add scanline effects to CRT-style displays
-- Keep corners sharp (no border-radius on most elements)
-- Use section titles with "// PREFIX //" format
-- Include terminal-style labels ("LDS-1138", "ANALOG-03")
-
-### ❌ Don't
-
-- Use rounded corners on buttons or cards
-- Use bright colors outside the phosphor palette
-- Use lowercase for headings or labels
-- Add decorative gradients or shadows
-- Use organic shapes or curves
-- Mix in warm colors (oranges, warm greens)
-- Use playful or friendly typography
-- Add illustrations or decorative graphics
-
----
-
-## 8. Responsive Behavior
-
-### Breakpoints
-
-| Breakpoint | Value     | Behavior                         |
-| ---------- | --------- | -------------------------------- |
-| Mobile     | < 600px   | Single column, stacked layout    |
-| Tablet     | 600-900px | 2-column where applicable        |
-| Desktop    | > 900px   | Full layout, max-width container |
-
-### Responsive Patterns
-
-- **Form Grid**: Collapses to single column on mobile
-- **Monitor Bank**: 4-col → 2-col → 1-col
-- **Typography**: Scales down slightly on mobile
-- **Spacing**: Reduces by ~20% on mobile
-
-### Touch Targets
-
-- Minimum 44px height for buttons
-- Minimum 40px height for inputs
-- 8px minimum spacing between touch elements
-
----
-
-## 9. Agent Prompt Guide
-
-### Quick Color Reference
-
-```
-Background: #fafafa
-Page: #e0e0e0
-CRT Black: #0a0a0a, #111
-CRT Phosphor: #a6c8e1
-CRT Dim: #707e91
-Warning: #d4aa00
-Error: #d44000
-Text: #333
-Muted: #666
+```text
+Create a CRT display panel with #111111 background, 8px #2A2A2A frame, 4px radius, inset black shadow, Courier New phosphor-blue text, low-opacity horizontal scanlines, radial vignette, and reduced-motion support that disables scanline animation.
 ```
 
-### Ready-to-Use Prompts
+Iteration guide:
 
-**Generate a CRT Display**
-
-> "Create a CRT monitor display with black background (#0a0a0a), 12px dark grey border, blue phosphor text (#a6c8e1), scanline overlay effect, and vignette shadow. Include a header label like 'TERMINAL-01' in monospace uppercase."
-
-**Generate a Form Section**
-
-> "Create a form section with white background, inset border shadow, monospace uppercase labels, bottom-border-only inputs (2px #ccc), and primary blue phosphor buttons. Use 12px gap between rows."
-
-**Generate a Monitor Bank**
-
-> "Create a 4-column grid of small CRT monitors (4:3 aspect ratio) with black backgrounds, blue phosphor content (#a6c8e1), scanline effects, and small progress bars at the bottom. Label each 'CAM-01', 'CAM-02', etc."
-
-**Generate Status Badges**
-
-> "Create status badges in THX 1138 style: monospace uppercase, letter-spacing 0.1em. Variants: blue (normal), amber (warning), red (critical), outline (inactive). Small 4px padding, 10px horizontal."
-
----
-
-## Design Token Quick Reference
-
-### CSS Variables
-
-```css
-:root {
-  /* Neutrals */
-  --neutral-100: #fafafa;
-  --neutral-200: #e0e0e0;
-  --neutral-600: #666;
-  --neutral-800: #333;
-
-  /* Atmospheric */
-  --atmos-primary: #a6c8e1;
-  --atmos-secondary: #707e91;
-  --atmos-tertiary: #deffff;
-
-  /* Accents */
-  --accent-warning: #d4aa00;
-  --accent-error: #d44000;
-
-  /* Typography */
-  --font-display: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-  --font-body: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-  --font-mono: 'Courier New', Courier, monospace;
-}
-```
-
----
-
-_THX 1138 (1971) — A film by George Lucas. Production Design by Michael D. Haller._
+1. Start with the neutral slab system before adding CRT effects.
+2. Use mono uppercase only where the UI is acting like a machine control.
+3. Keep color semantic: blue is operational, amber is warning, orange-red is critical.
+4. Prefer seams, underlines, and inset shadows over floating elevation.
+5. Remove any styling that makes the system feel friendly, playful, glossy, or generic SaaS.

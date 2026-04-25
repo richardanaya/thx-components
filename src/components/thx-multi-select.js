@@ -405,13 +405,7 @@ export class ThxMultiSelect extends LitElement {
     }
     this._updateActiveIndex();
     this._updateFormValue();
-    this.dispatchEvent(
-      new CustomEvent('change', {
-        bubbles: true,
-        composed: true,
-        detail: { value: this.value },
-      })
-    );
+    this.dispatchEvent(new Event('change', { bubbles: true, composed: true }));
   }
 
   /**

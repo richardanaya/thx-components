@@ -307,16 +307,11 @@ export class ThxRange extends LitElement {
    * @returns {void}
    */
   handleInput(event) {
+    event.stopPropagation();
     const target = /** @type {HTMLInputElement} */ (event.target);
     this.value = Number(target.value);
     this._updateFormValue();
-    this.dispatchEvent(
-      new CustomEvent('input', {
-        bubbles: true,
-        composed: true,
-        detail: { value: this.value, originalEvent: event },
-      })
-    );
+    this.dispatchEvent(new Event('input', { bubbles: true, composed: true }));
   }
 
   /**
@@ -324,16 +319,11 @@ export class ThxRange extends LitElement {
    * @returns {void}
    */
   handleChange(event) {
+    event.stopPropagation();
     const target = /** @type {HTMLInputElement} */ (event.target);
     this.value = Number(target.value);
     this._updateFormValue();
-    this.dispatchEvent(
-      new CustomEvent('change', {
-        bubbles: true,
-        composed: true,
-        detail: { value: this.value, originalEvent: event },
-      })
-    );
+    this.dispatchEvent(new Event('change', { bubbles: true, composed: true }));
   }
 
   /**

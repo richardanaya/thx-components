@@ -271,13 +271,7 @@ export class ThxImageComparer extends LitElement {
     const x = clientX - rect.left;
     const percentage = Math.max(0, Math.min(100, (x / rect.width) * 100));
     this.position = Math.round(percentage);
-    this.dispatchEvent(
-      new CustomEvent('change', {
-        detail: { position: this.position },
-        bubbles: true,
-        composed: true,
-      })
-    );
+    this.dispatchEvent(new Event('change', { bubbles: true, composed: true }));
   }
 
   /**
@@ -286,13 +280,7 @@ export class ThxImageComparer extends LitElement {
    */
   _setPosition(position) {
     this.position = Math.max(0, Math.min(100, Math.round(position)));
-    this.dispatchEvent(
-      new CustomEvent('change', {
-        detail: { position: this.position },
-        bubbles: true,
-        composed: true,
-      })
-    );
+    this.dispatchEvent(new Event('change', { bubbles: true, composed: true }));
   }
 
   /**

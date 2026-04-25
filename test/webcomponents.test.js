@@ -190,6 +190,77 @@ describe('component behavior', () => {
     }
   });
 
+  it('does not duplicate thx-icon-button click events', async () => {
+    const button = document.createElement('thx-icon-button');
+    document.body.append(button);
+    await waitForUpdates();
+
+    let clicks = 0;
+    button.addEventListener('click', () => clicks++);
+    button.shadowRoot.querySelector('button').click();
+
+    if (clicks !== 1) {
+      throw new Error(`Expected one click event, got ${clicks}`);
+    }
+  });
+
+  it('does not synthesize duplicate click events for interactive display components', async () => {
+    const avatar = document.createElement('thx-avatar');
+    avatar.interactive = true;
+    const image = document.createElement('thx-animated-image');
+    image.interactive = true;
+    document.body.append(avatar, image);
+    await waitForUpdates();
+
+    let avatarClicks = 0;
+    let imageClicks = 0;
+    avatar.addEventListener('click', () => avatarClicks++);
+    image.addEventListener('click', () => imageClicks++);
+    avatar.shadowRoot.querySelector('.avatar').click();
+    image.shadowRoot.querySelector('div').click();
+
+    if (avatarClicks !== 1) {
+      throw new Error(`Expected one avatar click event, got ${avatarClicks}`);
+    }
+
+    if (imageClicks !== 1) {
+      throw new Error(`Expected one animated image click event, got ${imageClicks}`);
+    }
+  });
+
+  it('emits native-shaped input and change events from form controls', async () => {
+    const input = document.createElement('thx-input');
+    document.body.append(input);
+    await waitForUpdates();
+
+    const events = [];
+    input.addEventListener('input', event => events.push(event));
+    input.addEventListener('change', event => events.push(event));
+
+    const nativeInput = input.shadowRoot.querySelector('input');
+    nativeInput.value = 'alpha';
+    nativeInput.dispatchEvent(new InputEvent('input', { bubbles: true, composed: true }));
+    nativeInput.dispatchEvent(new Event('change', { bubbles: true, composed: true }));
+
+    if (events.length !== 2) {
+      throw new Error(`Expected input and change events, got ${events.length}`);
+    }
+
+    for (const event of events) {
+      if (event instanceof CustomEvent) {
+        throw new Error(`Expected ${event.type} to be a native Event, got CustomEvent`);
+      }
+
+      if (event.target !== input) {
+        throw new Error(`Expected ${event.type} target to be the thx-input host`);
+      }
+
+      if (event.target.value !== 'alpha') {
+        throw new Error(`Expected ${event.type} target value to be alpha`);
+      }
+    }
+  });
+
   it('discovers select options on initial render and supports keyboard selection', async () => {
     const select = document.createElement('thx-select');
     select.innerHTML = `

@@ -379,13 +379,7 @@ export class ThxAnimation extends LitElement {
    */
   _handleAnimationEnd() {
     this.animating = false;
-    this.dispatchEvent(
-      new CustomEvent('animationend', {
-        bubbles: true,
-        composed: true,
-        detail: { name: this.name, direction: this.direction },
-      })
-    );
+    this.dispatchEvent(new Event('animationend', { bubbles: true, composed: true }));
   }
 
   /**

@@ -1,6 +1,6 @@
 {
   "name": "thx-components",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "THX 1138 — A clinical, dystopian web component library built with Lit",
   "type": "module",
   "files": [

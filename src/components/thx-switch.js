@@ -199,13 +199,7 @@ export class ThxSwitch extends LitElement {
     if (this.disabled) return;
     this.checked = !this.checked;
     this._updateFormValue();
-    this.dispatchEvent(
-      new CustomEvent('change', {
-        bubbles: true,
-        composed: true,
-        detail: { checked: this.checked, value: this.checked ? this.value : null },
-      })
-    );
+    this.dispatchEvent(new Event('change', { bubbles: true, composed: true }));
   }
 
   /**
@@ -251,7 +245,10 @@ export class ThxSwitch extends LitElement {
             ?disabled=${this.disabled}
             .value=${this.value}
             .name=${this.name}
-            @change=${() => this.toggle()}
+            @change=${(/** @type {Event} */ e) => {
+              e.stopPropagation();
+              this.toggle();
+            }}
           />
           <span class="switch-thumb"></span>
         </div>

@@ -282,9 +282,7 @@ export class ThxDropdown extends LitElement {
   show() {
     if (!this.disabled) {
       this.open = true;
-      this.dispatchEvent(
-        new CustomEvent('toggle', { bubbles: true, composed: true, detail: { open: true } })
-      );
+      this.dispatchEvent(new Event('toggle', { bubbles: true, composed: true }));
     }
   }
 
@@ -294,9 +292,7 @@ export class ThxDropdown extends LitElement {
    */
   hide() {
     this.open = false;
-    this.dispatchEvent(
-      new CustomEvent('toggle', { bubbles: true, composed: true, detail: { open: false } })
-    );
+    this.dispatchEvent(new Event('toggle', { bubbles: true, composed: true }));
   }
 
   /**

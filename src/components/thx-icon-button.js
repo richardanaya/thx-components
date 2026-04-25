@@ -244,14 +244,8 @@ export class ThxIconButton extends LitElement {
    * @returns {void}
    */
   _handleClick(e) {
-    if (!this.disabled && !this.loading) {
-      this.dispatchEvent(
-        new CustomEvent('click', {
-          detail: { originalEvent: e },
-          bubbles: true,
-          composed: true,
-        })
-      );
+    if (this.disabled || this.loading) {
+      e.preventDefault();
     }
   }
 

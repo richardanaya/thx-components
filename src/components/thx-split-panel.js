@@ -342,14 +342,7 @@ export class ThxSplitPanel extends LitElement {
     this.removeEventListener('pointerup', this._handleDragEnd);
     this.removeEventListener('pointercancel', this._handleDragEnd);
 
-    // Dispatch change event
-    this.dispatchEvent(
-      new CustomEvent('change', {
-        detail: { position: this.position },
-        bubbles: true,
-        composed: true,
-      })
-    );
+    this.dispatchEvent(new Event('change', { bubbles: true, composed: true }));
   };
 
   /**
@@ -358,13 +351,7 @@ export class ThxSplitPanel extends LitElement {
    */
   _setPosition(position) {
     this.position = Math.max(10, Math.min(90, position));
-    this.dispatchEvent(
-      new CustomEvent('change', {
-        detail: { position: this.position },
-        bubbles: true,
-        composed: true,
-      })
-    );
+    this.dispatchEvent(new Event('change', { bubbles: true, composed: true }));
   }
 
   /**

@@ -113,13 +113,7 @@ export class ThxRadio extends LitElement {
   select() {
     if (this.disabled || this.checked) return;
     this.checked = true;
-    this.dispatchEvent(
-      new CustomEvent('change', {
-        bubbles: true,
-        composed: true,
-        detail: { checked: true, value: this.value, name: this.name },
-      })
-    );
+    this.dispatchEvent(new Event('change', { bubbles: true, composed: true }));
   }
 
   /**
@@ -146,6 +140,7 @@ export class ThxRadio extends LitElement {
    * @returns {void}
    */
   handleChange(event) {
+    event.stopPropagation();
     const target = /** @type {HTMLInputElement} */ (event.target);
     if (target.checked) {
       this.select();

@@ -224,12 +224,7 @@ export class ThxAlert extends LitElement {
    */
   _handleClose() {
     this.hidden = true;
-    this.dispatchEvent(
-      new CustomEvent('close', {
-        bubbles: true,
-        composed: true,
-      })
-    );
+    this.dispatchEvent(new Event('close', { bubbles: true, composed: true }));
   }
 
   /**
