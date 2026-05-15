@@ -7,6 +7,7 @@
  */
 
 import { LitElement, html, css } from '../../vendor/lit.js';
+import { crtStaticScanlineOverlay, crtStaticVignetteOverlay } from '../styles/crt-effects.js';
 
 /**
  * @typedef {Object} ImageComparerState
@@ -33,31 +34,9 @@ export class ThxImageComparer extends LitElement {
       box-shadow: inset 0 0 var(--size-4) rgba(0, 0, 0, 0.5);
     }
 
-    /* CRT scanline effect */
-    .comparer-container::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: repeating-linear-gradient(
-        0deg,
-        transparent,
-        transparent 2px,
-        rgba(166, 200, 225, 0.04) 2px,
-        rgba(166, 200, 225, 0.04) var(--size-1)
-      );
-      pointer-events: none;
-      z-index: 20;
-    }
-
-    /* Vignette effect */
-    .comparer-container::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(ellipse at center, transparent 50%, rgba(0, 0, 0, 0.4) 100%);
-      pointer-events: none;
-      z-index: 21;
-    }
+    /* CRT scanline + vignette (shared, numeric z for layering) */
+    ${crtStaticScanlineOverlay('.comparer-container', { opacity: 0.04, z: 20 })}
+    ${crtStaticVignetteOverlay('.comparer-container', { opacity: 0.4, z: 21 })}
 
     .image-base {
       display: block;

@@ -6,6 +6,7 @@
  */
 
 import { LitElement, html, css } from '../../vendor/lit.js';
+import { focusVisibleStyles } from '../mixins/focus-visible.js';
 
 // Forward declaration for type checking
 /** @typedef {import('./thx-tree.js').ThxTree} ThxTree */
@@ -123,6 +124,16 @@ export class ThxTreeItem extends LitElement {
       pointer-events: none;
     }
 
+    /* Keyboard focus ring (phosphor glow) for tree items */
+    .tree-item:focus-visible,
+    [role="treeitem"]:focus-visible {
+      outline: none;
+      box-shadow:
+        0 0 0 2px color-mix(in srgb, var(--atmos-primary, #a6c8e1) 35%, transparent),
+        0 0 var(--size-2, 8px) rgba(166, 200, 225, 0.45);
+      transition: box-shadow var(--duration-quick-2, 0.1s);
+    }
+
     /* CRT variant */
     :host([variant='crt']) .tree-item {
       color: var(--atmos-secondary, #707e91);
@@ -173,6 +184,8 @@ export class ThxTreeItem extends LitElement {
       background: var(--accent-error, #d44000);
       box-shadow: 0 0 var(--size-1) rgba(212, 64, 0, 0.8);
     }
+
+    ${focusVisibleStyles}
   `;
 
   /**
@@ -218,6 +231,15 @@ export class ThxTreeItem extends LitElement {
         this.renderRoot.querySelector('[role="treeitem"]')
       );
       item?.focus();
+    });
+  }
+
+  blur() {
+    this.updateComplete.then(() => {
+      const item = /** @type {HTMLElement|null} */ (
+        this.renderRoot.querySelector('[role="treeitem"]')
+      );
+      item?.blur();
     });
   }
 
@@ -454,7 +476,7 @@ export class ThxTreeItem extends LitElement {
         role="treeitem"
         aria-expanded=${hasChildren ? String(this.expanded) : undefined}
         aria-selected="${this.selected}"
-        tabindex="${this.disabled ? '-1' : '0'}"
+        tabindex="${this.disabled ? '-1' : (this.getAttribute('tabindex') || '0')}"
         @click="${this._handleClick}"
         @keydown="${this._handleKeydown}"
       >

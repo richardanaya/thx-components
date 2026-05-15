@@ -6,6 +6,7 @@
  */
 
 import { LitElement, html, css } from '../../vendor/lit.js';
+import { focusVisibleStyles } from '../mixins/focus-visible.js';
 
 /**
  * Individual menu item with hover/active states
@@ -66,6 +67,16 @@ export class ThxMenuItem extends LitElement {
       pointer-events: none;
     }
 
+    /* Keyboard focus ring (phosphor glow) for menu items */
+    .menu-item:focus-visible,
+    [role="menuitem"]:focus-visible {
+      outline: none;
+      box-shadow:
+        0 0 0 2px color-mix(in srgb, var(--atmos-primary, #a6c8e1) 35%, transparent),
+        0 0 var(--size-2, 8px) rgba(166, 200, 225, 0.45);
+      transition: box-shadow var(--duration-quick-2, 0.1s);
+    }
+
     /* CRT variant styling */
     :host([variant='crt']) .menu-item {
       color: var(--atmos-secondary, #707e91);
@@ -113,6 +124,8 @@ export class ThxMenuItem extends LitElement {
       align-items: center;
       justify-content: center;
     }
+
+    ${focusVisibleStyles}
   `;
 
   /**
@@ -146,6 +159,15 @@ export class ThxMenuItem extends LitElement {
         this.renderRoot.querySelector('[role="menuitem"]')
       );
       item?.focus();
+    });
+  }
+
+  blur() {
+    this.updateComplete.then(() => {
+      const item = /** @type {HTMLElement|null} */ (
+        this.renderRoot.querySelector('[role="menuitem"]')
+      );
+      item?.blur();
     });
   }
 
@@ -220,7 +242,7 @@ export class ThxMenuItem extends LitElement {
           href="${this.href}"
           class="${classString}"
           role="menuitem"
-          tabindex="0"
+          tabindex="${this.disabled ? '-1' : (this.getAttribute('tabindex') || '0')}"
           @click="${this._handleClick}"
         >
           ${content}
@@ -232,7 +254,7 @@ export class ThxMenuItem extends LitElement {
       <div
         class="${classString}"
         role="menuitem"
-        tabindex="${this.disabled ? '-1' : '0'}"
+        tabindex="${this.disabled ? '-1' : (this.getAttribute('tabindex') || '0')}"
         @click="${this._handleClick}"
       >
         ${content}

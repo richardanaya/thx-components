@@ -6,6 +6,8 @@
  */
 
 import { LitElement, html, css } from '../../vendor/lit.js';
+import { FormAssociatedMixin } from '../mixins/form-associated-mixin.js';
+import { focusVisibleStyles } from '../mixins/focus-visible.js';
 
 /**
  * @typedef {Object} ColorPickerProps
@@ -18,7 +20,7 @@ import { LitElement, html, css } from '../../vendor/lit.js';
  * THX 1138 styled color picker component
  * @extends {LitElement}
  */
-export class ThxColorPicker extends LitElement {
+export class ThxColorPicker extends FormAssociatedMixin(LitElement) {
   static styles = css`
     :host {
       display: inline-block;
@@ -47,8 +49,8 @@ export class ThxColorPicker extends LitElement {
     .color-swatch {
       width: calc(var(--size-7) + var(--size-2));
       height: calc(var(--size-7) + var(--size-2));
-      border: var(--border-size-2) solid #999;
-      background: white;
+      border: var(--border-size-2) solid var(--neutral-600, #666);
+      background: var(--neutral-100, #fafafa);
       cursor: pointer;
       position: relative;
       overflow: hidden;
@@ -56,7 +58,7 @@ export class ThxColorPicker extends LitElement {
     }
 
     .color-swatch:hover {
-      border-color: #666;
+      border-color: var(--neutral-600, #666);
     }
 
     .color-swatch:focus-within {
@@ -90,8 +92,8 @@ export class ThxColorPicker extends LitElement {
       height: calc(var(--size-7) + var(--size-2));
       display: flex;
       align-items: center;
-      border-bottom: var(--border-size-2) solid #ccc;
-      background: white;
+      border-bottom: var(--border-size-2) solid var(--neutral-200, #e0e0e0);
+      background: var(--neutral-100, #fafafa);
       min-width: var(--size-10);
       flex: 1;
     }
@@ -116,36 +118,62 @@ export class ThxColorPicker extends LitElement {
     .preset-swatch {
       width: var(--size-5);
       height: var(--size-5);
-      border: var(--border-size-1) solid #999;
+      border: var(--border-size-1) solid var(--neutral-600, #666);
       cursor: pointer;
       transition: all var(--duration-quick-2);
     }
 
     .preset-swatch:hover {
-      border-color: #444;
-      transform: scale(1.1);
+      border-color: var(--neutral-800, #333);
     }
 
     .preset-swatch.active {
       border-color: var(--atmos-primary, #a6c8e1);
       box-shadow: 0 0 0 1px var(--atmos-primary, #a6c8e1);
     }
+
+    .preset-swatch:focus-visible {
+      outline: none;
+      box-shadow: var(--focus-ring-glow, 0 0 0 2px rgba(166, 200, 225, 0.45));
+    }
+
+    ${focusVisibleStyles}
   `;
 
   static properties = {
     value: { type: String },
     disabled: { type: Boolean, reflect: true },
     label: { type: String },
+    name: { type: String },
+    required: { type: Boolean },
   };
 
   constructor() {
     super();
     /** @type {string} */
     this.value = '#a6c8e1';
+    this._defaultValue = this.value;
     /** @type {boolean} */
     this.disabled = false;
     /** @type {string} */
     this.label = 'COLOR';
+    /** @type {string} */
+    this.name = '';
+    /** @type {boolean} */
+    this.required = false;
+  }
+
+  firstUpdated() {
+    this._defaultValue = this.value;
+    this._updateFormValue?.();
+  }
+
+  _updateFormValue() {
+    this._internals?.setFormValue(this.disabled ? null : this.value);
+  }
+
+  formResetCallback() {
+    this.value = this._defaultValue;
   }
 
   /**

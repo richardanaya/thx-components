@@ -6,6 +6,7 @@
  */
 
 import { LitElement, html, css } from '../../vendor/lit.js';
+import { focusVisibleStyles } from '../mixins/focus-visible.js';
 
 /**
  * Breadcrumb container component for navigation path display
@@ -48,6 +49,8 @@ export class ThxBreadcrumb extends LitElement {
     .breadcrumb-prefix::after {
       content: ' //';
     }
+
+    ${focusVisibleStyles}
   `;
 
   /**
@@ -61,6 +64,26 @@ export class ThxBreadcrumb extends LitElement {
     super();
     /** @type {string} Label prefix for the breadcrumb path */
     this.label = '';
+  }
+
+  /**
+   * Focus the first breadcrumb item (link) for keyboard navigation.
+   * @returns {void}
+   */
+  focus() {
+    const first = this.querySelector('thx-breadcrumb-item');
+    first?.focus?.();
+  }
+
+  /**
+   * Blur any focused descendant item.
+   * @returns {void}
+   */
+  blur() {
+    const activeEl = document.activeElement;
+    if (activeEl && (this.contains(activeEl) || this.shadowRoot?.contains(activeEl))) {
+      activeEl.blur();
+    }
   }
 
   /**

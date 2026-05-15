@@ -6,6 +6,7 @@
  */
 
 import { LitElement, html, css } from '../../vendor/lit.js';
+import { crtStaticScanlineOverlay } from '../styles/crt-effects.js';
 
 /**
  * @typedef {Object} ProgressRingConfig
@@ -19,7 +20,7 @@ import { LitElement, html, css } from '../../vendor/lit.js';
 
 /**
  * Circular progress ring component.
- * Styled with THX 1138 CRT/phosphor aesthetic.
+ * Styled with THX 1138 CRT/phosphor aesthetic (crt variant uses crt-effects scanlines).
  *
  * @extends {LitElement}
  */
@@ -101,19 +102,9 @@ export class ThxProgressRing extends LitElement {
       text-shadow: 0 0 var(--size-1) rgba(166, 200, 225, 0.5);
     }
 
-    /* Scanline effect for CRT */
-    .ring--crt::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: repeating-linear-gradient(
-        0deg,
-        transparent,
-        transparent 2px,
-        rgba(166, 200, 225, 0.05) 2px,
-        rgba(166, 200, 225, 0.05) var(--size-1)
-      );
-      pointer-events: none;
+    /* Scanline effect for CRT (shared; uses ::before, component adds circular clip) */
+    ${crtStaticScanlineOverlay('.ring--crt', { opacity: 0.05 })}
+    .ring--crt::before {
       border-radius: var(--radius-round);
     }
   `;

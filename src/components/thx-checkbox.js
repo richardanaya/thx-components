@@ -6,6 +6,8 @@
  */
 
 import { LitElement, html, css } from '../../vendor/lit.js';
+import { FormAssociatedMixin } from '../mixins/form-associated-mixin.js';
+import { focusVisibleStyles } from '../mixins/focus-visible.js';
 
 /**
  * @typedef {Object} CheckboxProps
@@ -20,8 +22,7 @@ import { LitElement, html, css } from '../../vendor/lit.js';
  * THX 1138 styled checkbox component
  * @extends {LitElement}
  */
-export class ThxCheckbox extends LitElement {
-  static formAssociated = true;
+export class ThxCheckbox extends FormAssociatedMixin(LitElement) {
 
   static styles = css`
     :host {
@@ -46,7 +47,7 @@ export class ThxCheckbox extends LitElement {
       width: var(--size-3);
       height: var(--size-3);
       border: var(--border-size-2) solid var(--neutral-600, #666);
-      background: white;
+      background: var(--neutral-100, #fafafa);
       cursor: pointer;
       transition: all var(--duration-quick-2);
       display: flex;
@@ -100,9 +101,9 @@ export class ThxCheckbox extends LitElement {
       stroke-linecap: square;
     }
 
-    .checkbox:focus {
+    .checkbox:focus-visible {
       outline: none;
-      box-shadow: 0 0 0 2px rgba(166, 200, 225, 0.5);
+      box-shadow: var(--focus-ring-glow, 0 0 0 2px rgba(166, 200, 225, 0.5));
     }
 
     .label {
@@ -115,6 +116,8 @@ export class ThxCheckbox extends LitElement {
     :host([disabled]) .label {
       color: var(--neutral-600, #666);
     }
+
+    ${focusVisibleStyles}
   `;
 
   static properties = {
@@ -127,7 +130,6 @@ export class ThxCheckbox extends LitElement {
 
   constructor() {
     super();
-    this._internals = this.attachInternals?.();
     /** @type {boolean} */
     this.checked = false;
     this._defaultChecked = this.checked;

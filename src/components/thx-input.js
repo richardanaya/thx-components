@@ -6,6 +6,8 @@
  */
 
 import { LitElement, html, css } from '../../vendor/lit.js';
+import { FormAssociatedMixin } from '../mixins/form-associated-mixin.js';
+import { focusVisibleStyles } from '../mixins/focus-visible.js';
 
 let inputIdCounter = 0;
 
@@ -29,8 +31,7 @@ let inputIdCounter = 0;
  * THX 1138 styled input component
  * @extends {LitElement}
  */
-export class ThxInput extends LitElement {
-  static formAssociated = true;
+export class ThxInput extends FormAssociatedMixin(LitElement) {
 
   static styles = css`
     :host {
@@ -65,7 +66,7 @@ export class ThxInput extends LitElement {
       font-size: var(--font-size-1);
       text-transform: uppercase;
       letter-spacing: var(--font-letterspacing-2);
-      background: white;
+      background: var(--neutral-100, #fafafa);
       color: var(--neutral-800, #333);
       transition:
         border-color var(--duration-moderate-1),
@@ -78,10 +79,10 @@ export class ThxInput extends LitElement {
       color: var(--neutral-600, #666);
     }
 
-    input:focus {
+    input:focus-visible {
       outline: none;
       border-color: var(--atmos-primary, #a6c8e1);
-      box-shadow: 0 0 0 2px rgba(166, 200, 225, 0.3);
+      box-shadow: var(--focus-ring-glow, 0 0 0 2px rgba(166, 200, 225, 0.3));
     }
 
     input:disabled {
@@ -167,6 +168,12 @@ export class ThxInput extends LitElement {
       outline: none;
       color: var(--atmos-primary, #a6c8e1);
     }
+
+    .password-toggle:focus-visible {
+      box-shadow: var(--focus-ring-glow, 0 0 0 2px rgba(166, 200, 225, 0.3));
+    }
+
+    ${focusVisibleStyles}
   `;
 
   static properties = {
@@ -191,7 +198,6 @@ export class ThxInput extends LitElement {
 
   constructor() {
     super();
-    this._internals = this.attachInternals?.();
     this._inputId = `thx-input-${++inputIdCounter}`;
     this._labelId = `${this._inputId}-label`;
     this._helpId = `${this._inputId}-help`;

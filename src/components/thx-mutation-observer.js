@@ -6,6 +6,7 @@
  */
 
 import { LitElement, html, css } from '../../vendor/lit.js';
+import { crtStaticScanlineOverlay, crtStaticVignetteOverlay } from '../styles/crt-effects.js';
 
 /**
  * @typedef {Object} MutationRecordInfo
@@ -43,29 +44,9 @@ export class ThxMutationObserver extends LitElement {
       box-shadow: inset 0 0 var(--size-4) rgba(0, 0, 0, 0.5);
     }
 
-    .observer-log::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: repeating-linear-gradient(
-        0deg,
-        transparent,
-        transparent 2px,
-        rgba(166, 200, 225, 0.04) 2px,
-        rgba(166, 200, 225, 0.04) var(--size-1)
-      );
-      pointer-events: none;
-      z-index: var(--layer-2);
-    }
-
-    .observer-log::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(ellipse at center, transparent 50%, rgba(0, 0, 0, 0.4) 100%);
-      pointer-events: none;
-      z-index: calc(var(--layer-2) + 1);
-    }
+    /* Shared decorative CRT scanline + vignette for mutation log display */
+    ${crtStaticScanlineOverlay('.observer-log')}
+    ${crtStaticVignetteOverlay('.observer-log')}
 
     .log-label {
       position: absolute;

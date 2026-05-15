@@ -1,0 +1,845 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>THX 1138 // INSTRUMENTATION FORMS — CONTROL CONSOLE LDS-F1138</title>
+  <link rel="stylesheet" href="../../aesthetics.css" />
+  <script type="module" src="../../webcomponents.js"></script>
+  <style>
+    :root {
+      --terminal-bg: #0f0f0f;
+      --terminal-surface: #1a1a1a;
+      --phosphor: #a6c8e1;
+      --amber: #d4aa00;
+      --critical: #d44000;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background: var(--neutral-200);
+      font-family: var(--font-body);
+      color: var(--neutral-800);
+      line-height: 1.5;
+    }
+
+    .terminal-frame {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: var(--size-5);
+      background: #e8e8e8;
+    }
+
+    /* Terminal header bar */
+    .sys-header {
+      background: #111111;
+      color: var(--phosphor);
+      font-family: var(--font-mono);
+      font-size: var(--font-size-0);
+      text-transform: uppercase;
+      letter-spacing: var(--font-letterspacing-5);
+      padding: var(--size-3) var(--size-5);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 3px solid var(--phosphor);
+      margin-bottom: var(--size-5);
+      box-shadow: 0 2px 0 rgba(0, 0, 0, 0.3);
+    }
+
+    .sys-header .title {
+      display: flex;
+      align-items: center;
+      gap: var(--size-3);
+    }
+
+    .sys-header .title span:first-child {
+      font-weight: 600;
+      letter-spacing: var(--font-letterspacing-4);
+    }
+
+    .sys-header .meta {
+      display: flex;
+      align-items: center;
+      gap: var(--size-4);
+      color: #707e91;
+    }
+
+    .live-clock {
+      font-variant-numeric: tabular-nums;
+      background: #0a0a0a;
+      padding: 2px 8px;
+      border: 1px solid #2a2a2a;
+      color: var(--amber);
+    }
+
+    .section-title {
+      font-family: var(--font-mono);
+      font-size: var(--font-size-0);
+      text-transform: uppercase;
+      letter-spacing: var(--font-letterspacing-5);
+      color: var(--neutral-600);
+      margin: var(--size-7) 0 var(--size-3);
+      padding-bottom: var(--size-2);
+      border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    }
+
+    .hero {
+      margin-bottom: var(--size-6);
+    }
+
+    .intro-text {
+      font-size: var(--font-size-1);
+      color: var(--neutral-800);
+      max-width: 820px;
+      line-height: 1.6;
+    }
+
+    .demo-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+      gap: var(--size-5);
+      margin-bottom: var(--size-6);
+    }
+
+    .component-card .card__content {
+      display: flex;
+      flex-direction: column;
+      gap: var(--size-4);
+    }
+
+    .demo-control {
+      padding: var(--size-4);
+      background: #fafafa;
+      border: 1px solid rgba(0, 0, 0, 0.06);
+      box-shadow: var(--inner-shadow-0);
+    }
+
+    .demo-control.crt-context {
+      background: #111;
+      border-color: #2a2a2a;
+    }
+
+    .props-doc {
+      font-family: var(--font-mono);
+      font-size: 10.5px;
+      line-height: 1.35;
+      color: var(--neutral-600);
+      background: #f4f4f4;
+      padding: var(--size-3);
+      border-left: 3px solid var(--neutral-600);
+      white-space: pre-line;
+    }
+
+    .props-doc strong {
+      color: var(--neutral-800);
+      font-weight: 600;
+    }
+
+    .live-console {
+      margin-top: var(--size-6);
+    }
+
+    .live-grid {
+      display: grid;
+      grid-template-columns: 1fr 380px;
+      gap: var(--size-5);
+      align-items: start;
+    }
+
+    @media (max-width: 980px) {
+      .live-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .form-stack {
+      display: flex;
+      flex-direction: column;
+      gap: var(--size-5);
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--size-5);
+    }
+
+    .form-row.single {
+      grid-template-columns: 1fr;
+    }
+
+    .telemetry-readout {
+      font-family: var(--font-mono);
+      font-size: var(--font-size--1);
+      background: #0a0a0a;
+      color: var(--phosphor);
+      padding: var(--size-4);
+      border: 2px solid #2a2a2a;
+      min-height: 280px;
+      box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.6);
+    }
+
+    .telemetry-readout .kv {
+      display: flex;
+      justify-content: space-between;
+      padding: 3px 0;
+      border-bottom: 1px dashed #333;
+    }
+
+    .telemetry-readout .kv:last-child {
+      border-bottom: none;
+    }
+
+    .telemetry-readout .key {
+      color: #707e91;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .telemetry-readout .val {
+      color: #d4aa00;
+      font-weight: 600;
+    }
+
+    .mono {
+      font-family: var(--font-mono);
+      text-transform: uppercase;
+      letter-spacing: var(--font-letterspacing-4);
+    }
+
+    .status-bar {
+      display: flex;
+      align-items: center;
+      gap: var(--size-3);
+      margin-top: var(--size-4);
+      padding-top: var(--size-3);
+      border-top: 1px solid rgba(166, 200, 225, 0.2);
+      color: #707e91;
+      font-size: var(--font-size-0);
+    }
+
+    .instrument-label {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: #555;
+      margin-bottom: 4px;
+    }
+
+    .demo-label {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: var(--neutral-600);
+      margin-bottom: var(--size-2);
+    }
+
+    .terminal-log {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      background: #111;
+      color: #a6c8e1;
+      padding: var(--size-3);
+      border: 1px solid #333;
+      max-height: 110px;
+      overflow: auto;
+      white-space: pre;
+    }
+
+    thx-crt-display[style*="large"] .crt-content {
+      padding: var(--size-6);
+    }
+
+    .page-footer {
+      margin-top: var(--size-7);
+      padding-top: var(--size-4);
+      border-top: 1px solid rgba(0,0,0,0.08);
+      font-family: var(--font-mono);
+      font-size: var(--font-size-0);
+      color: var(--neutral-600);
+      text-align: center;
+      letter-spacing: 1px;
+    }
+  </style>
+</head>
+<body>
+  <div class="terminal-frame">
+    <!-- SYS HEADER -->
+    <div class="sys-header">
+      <div class="title">
+        <span>THX-1138</span>
+        <span style="color:#d4aa00;">// INSTRUMENTATION FORMS TERMINAL</span>
+      </div>
+      <div class="meta">
+        <span id="live-time" class="live-clock">14:32:07</span>
+        <thx-status-leds count="6" label="INSTRUMENTS"></thx-status-leds>
+        <span style="color:#707e91;">LDS-F1138 • v0.1.1</span>
+        <thx-button variant="secondary" size="small" onclick="window.location.href='../../index.html'">MAIN CONSOLE</thx-button>
+      </div>
+    </div>
+
+    <!-- HERO / INTRO -->
+    <div class="hero">
+      <thx-crt-display label="FORMS CATEGORY — CONTROL ROOM INSTRUMENTATION" size="large">
+        <div style="max-width: 860px;">
+          <p style="margin:0 0 var(--size-4) 0; font-size:var(--font-size-2); line-height:1.5; color:#a6c8e1;">
+            Precise data-entry instrumentation. Operators do not "fill out forms" — they adjust parameters on dedicated consoles.
+            All controls participate natively in host forms via FormAssociatedMixin.
+          </p>
+          <div style="display:flex; gap:var(--size-4); align-items:center; flex-wrap:wrap;">
+            <thx-badge variant="pulse">LIVE</thx-badge>
+            <thx-badge variant="primary">64 COMPONENTS</thx-badge>
+            <thx-tag>ZERO DEPENDENCY</thx-tag>
+            <thx-tag>NATIVE FORM SUBMISSION</thx-tag>
+            <span class="mono" style="color:#707e91; font-size:10px;">PHOSPHOR BLUE • AMBER WARNING • CRITICAL ORANGE-RED</span>
+          </div>
+        </div>
+        <div class="status-bar">
+          <span>STATUS: NOMINAL</span>
+          <thx-status-leds count="4"></thx-status-leds>
+          <span style="margin-left:auto;">ALL CONTROLS KEYBOARD &amp; SCREEN-READER ACCESSIBLE</span>
+        </div>
+      </thx-crt-display>
+    </div>
+
+    <div class="section-title">// COMPONENT INSTRUMENTATION — LIVE DEMOS</div>
+
+    <!-- DEMO GRID -->
+    <div class="demo-grid">
+
+      <!-- THX-INPUT -->
+      <thx-card label="THX-INPUT — SINGLE-LINE ENTRY">
+        <div class="component-card">
+          <div class="demo-label">CLINICAL TEXT INSTRUMENT</div>
+          <div class="demo-control">
+            <thx-input label="DESIGNATION" name="demo-input-1" value="THX-1138" placeholder="ENTER ID" required>
+              <span slot="prefix">ID</span>
+              <span slot="help-text">Primary operator identifier.</span>
+            </thx-input>
+          </div>
+          <div class="demo-control" style="margin-top:8px;">
+            <thx-input label="AUTH TOKEN" type="password" value="classified" placeholder="••••••••"></thx-input>
+          </div>
+          <div class="demo-control" style="margin-top:8px;">
+            <thx-input label="COORDINATE" value="07-G" error-message="ENTRY OUT OF RANGE">
+              <span slot="suffix">KM</span>
+            </thx-input>
+          </div>
+          <div class="props-doc">PROPS: label, value, type, placeholder, required, disabled, readonly, errorMessage, minlength, maxlength<br>SLOTS: prefix, suffix, help-text</div>
+        </div>
+      </thx-card>
+
+      <!-- THX-TEXTAREA -->
+      <thx-card label="THX-TEXTAREA — MULTI-LINE LOG">
+        <div class="component-card">
+          <div class="demo-label">DIRECTIVE / LOG ENTRY</div>
+          <div class="demo-control">
+            <thx-textarea 
+              label="OPERATIONS DIRECTIVE" 
+              name="demo-textarea" 
+              rows="5"
+              value="Maintain observation of Sector 7-G. Escalate only on amber threshold breach.">
+              <span slot="help-text">Auto-resizing • Character discipline enforced.</span>
+            </thx-textarea>
+          </div>
+          <div class="props-doc">PROPS: label, value, rows, disabled, readonly, required, errorMessage<br>SLOTS: help-text • Supports autoresize &amp; live counting</div>
+        </div>
+      </thx-card>
+
+      <!-- THX-SELECT -->
+      <thx-card label="THX-SELECT — DROPDOWN SELECTOR">
+        <div class="component-card">
+          <div class="demo-label">CLEARANCE / SECTOR SELECT</div>
+          <div class="demo-control">
+            <thx-select label="CLEARANCE LEVEL" name="demo-select" value="beta">
+              <thx-option value="alpha" label="ALPHA — OBSERVER"></thx-option>
+              <thx-option value="beta" label="BETA — STANDARD"></thx-option>
+              <thx-option value="gamma" label="GAMMA — ELEVATED"></thx-option>
+              <thx-option value="omega" label="OMEGA — RESTRICTED"></thx-option>
+            </thx-select>
+          </div>
+          <div class="demo-control" style="margin-top:8px;">
+            <thx-select label="PROTOCOL MODE" value="standard">
+              <thx-option value="standard">STANDARD</thx-option>
+              <thx-option value="enhanced">ENHANCED</thx-option>
+              <thx-option value="silent">SILENT</thx-option>
+            </thx-select>
+          </div>
+          <div class="props-doc">PROPS: label, value, disabled, required, name<br>CHILDREN: &lt;thx-option value label&gt; • Full keyboard nav + ARIA</div>
+        </div>
+      </thx-card>
+
+      <!-- THX-MULTI-SELECT -->
+      <thx-card label="THX-MULTI-SELECT — MULTI CHOICE">
+        <div class="component-card">
+          <div class="demo-label">ACTIVE ASSETS FILTER</div>
+          <div class="demo-control">
+            <thx-multi-select label="MONITORED ASSETS" name="demo-assets" id="demo-multi">
+              <thx-option value="cam-03" label="CAM-03 NORTH PERIMETER"></thx-option>
+              <thx-option value="drone-07" label="DRONE-07 RECON"></thx-option>
+              <thx-option value="sensor-12" label="SENSOR-12 THERMAL"></thx-option>
+              <thx-option value="relay-09" label="RELAY-09 UPLINK"></thx-option>
+            </thx-multi-select>
+          </div>
+          <div class="props-doc">PROPS: label, value (array/string), required, disabled<br>CHILDREN: &lt;thx-option&gt; • Checkbox indicators + count badge on trigger</div>
+        </div>
+      </thx-card>
+
+      <!-- THX-CHECKBOX -->
+      <thx-card label="THX-CHECKBOX — BOOLEAN FLAG">
+        <div class="component-card">
+          <div class="demo-label">AUDIT &amp; COMPLIANCE</div>
+          <div class="demo-control" style="display:flex; flex-direction:column; gap:14px;">
+            <thx-checkbox name="demo-audit" checked>ENABLE AUDIT LOGGING</thx-checkbox>
+            <thx-checkbox name="demo-sealed">SEAL TO CENTRAL ARCHIVE</thx-checkbox>
+            <thx-checkbox name="demo-disabled" disabled checked>COMPLIANCE LOCKED (DISABLED)</thx-checkbox>
+          </div>
+          <div class="props-doc">PROPS: checked, disabled, required, name, indeterminate<br>Content provides flexible label. Square geometry with geometric indicator.</div>
+        </div>
+      </thx-card>
+
+      <!-- THX-SWITCH -->
+      <thx-card label="THX-SWITCH — POWER TOGGLE">
+        <div class="component-card">
+          <div class="demo-label">LIVE TELEMETRY / BUS CONTROL</div>
+          <div class="demo-control" style="display:flex; flex-direction:column; gap:16px;">
+            <thx-switch label="LIVE FEED" name="demo-telemetry" checked on-label="ARMED" off-label="SAFE"></thx-switch>
+            <thx-switch label="OVERRIDE BUS" name="demo-override" on-label="ENABLED" off-label="STANDBY"></thx-switch>
+            <thx-switch label="DATA RECORD" name="demo-record" checked></thx-switch>
+          </div>
+          <div class="props-doc">PROPS: checked, disabled, on-label, off-label, size (sm/md/lg), name<br>Explicit ON/OFF labels + phosphor-blue active track.</div>
+        </div>
+      </thx-card>
+
+      <!-- THX-RADIO-GROUP -->
+      <thx-card label="THX-RADIO-GROUP + RADIO">
+        <div class="component-card">
+          <div class="demo-label">PROTOCOL SELECTION</div>
+          <div class="demo-control">
+            <thx-radio-group label="EXECUTION MODE" name="demo-protocol" value="standard">
+              <thx-radio value="standard">STANDARD</thx-radio>
+              <thx-radio value="enhanced">ENHANCED</thx-radio>
+              <thx-radio value="silent">SILENT</thx-radio>
+            </thx-radio-group>
+          </div>
+          <div class="demo-control" style="margin-top:12px;">
+            <div class="instrument-label">DISPLAY PROFILE (BUTTON VARIANT)</div>
+            <thx-radio-group label="PROFILE" name="demo-profile" value="cold" variant="button">
+              <thx-radio-button value="cold">COLD</thx-radio-button>
+              <thx-radio-button value="scope">SCOPE</thx-radio-button>
+              <thx-radio-button value="black">BLACK</thx-radio-button>
+            </thx-radio-group>
+          </div>
+          <div class="props-doc">PROPS: label, value, name, required, orientation, variant<br>CHILDREN: &lt;thx-radio&gt; or &lt;thx-radio-button&gt; • Roving arrow-key navigation</div>
+        </div>
+      </thx-card>
+
+      <!-- THX-RANGE -->
+      <thx-card label="THX-RANGE — SLIDER INSTRUMENT">
+        <div class="component-card">
+          <div class="demo-label">PARAMETER TUNING</div>
+          <div class="demo-control">
+            <thx-range 
+              label="SENSITIVITY" 
+              name="demo-sensitivity" 
+              min="0" max="100" value="65" step="5" show-ticks>
+              <span slot="help-text">Keyboard: arrows • Home • End</span>
+            </thx-range>
+          </div>
+          <div class="demo-control" style="margin-top:12px;">
+            <thx-range label="THRESHOLD" name="demo-threshold" min="0" max="10" value="7.5" step="0.5"></thx-range>
+          </div>
+          <div class="props-doc">PROPS: label, value, min, max, step, show-ticks, disabled<br>Always-visible value badge • Immediate visual feedback</div>
+        </div>
+      </thx-card>
+
+      <!-- THX-RATING -->
+      <thx-card label="THX-RATING — PRECISION SCORE">
+        <div class="component-card">
+          <div class="demo-label">CONFIDENCE / RISK METER</div>
+          <div class="demo-control">
+            <thx-rating 
+              label="CONFIDENCE SCORE" 
+              name="demo-confidence" 
+              value="4.0" 
+              max="5" 
+              precision="0.5">
+            </thx-rating>
+          </div>
+          <div class="demo-control" style="margin-top:12px;">
+            <thx-rating label="RISK INDEX" name="demo-risk" value="2.5" max="5" precision="0.5"></thx-rating>
+          </div>
+          <div class="props-doc">PROPS: label, value, max, precision, readonly, disabled<br>Half-step precision • Circular phosphor indicators (not stars)</div>
+        </div>
+      </thx-card>
+
+      <!-- THX-COLOR-PICKER -->
+      <thx-card label="THX-COLOR-PICKER — PALETTE">
+        <div class="component-card">
+          <div class="demo-label">PHOSPHOR TINT SELECTOR</div>
+          <div class="demo-control">
+            <thx-color-picker label="ALERT TINT" name="demo-tint" value="#A6C8E1"></thx-color-picker>
+          </div>
+          <div class="demo-control" style="margin-top:12px;">
+            <thx-color-picker label="WARNING ACCENT" name="demo-warn" value="#D4AA00"></thx-color-picker>
+          </div>
+          <div class="props-doc">PROPS: label, value, disabled, name<br>Curated 4×4 THX palette + native picker fallback + hex readout</div>
+        </div>
+      </thx-card>
+
+    </div>
+
+    <!-- LIVE EXAMPLE PANEL -->
+    <div class="live-console">
+      <div class="section-title">// LIVE EXAMPLE — REAL-TIME MONITORING FORM</div>
+
+      <thx-crt-display label="SECTOR 07 — PARAMETER CONSOLE • FORM-1138" size="large">
+        <form id="live-monitoring-form" class="form-stack">
+          <div class="form-row">
+            <thx-input label="DESIGNATION" name="designation" value="THX-1138" required>
+              <span slot="prefix">ID</span>
+              <span slot="help-text">Primary operator call-sign</span>
+            </thx-input>
+            <thx-select label="CLEARANCE" name="clearance" value="beta" required>
+              <thx-option value="alpha">ALPHA — OBSERVER</thx-option>
+              <thx-option value="beta">BETA — STANDARD</thx-option>
+              <thx-option value="gamma">GAMMA — ELEVATED</thx-option>
+            </thx-select>
+          </div>
+
+          <div class="form-row">
+            <thx-textarea label="OPERATIONS NOTES" name="notes" rows="3" value="Sector stable. Minor variance in telemetry channel 4."></thx-textarea>
+            <thx-multi-select label="ACTIVE ASSETS" name="assets" id="live-assets">
+              <thx-option value="cam-03" label="CAM-03 — NORTH"></thx-option>
+              <thx-option value="drone-07" label="DRONE-07 — RECON"></thx-option>
+              <thx-option value="sensor-12" label="SENSOR-12 — THERMAL"></thx-option>
+              <thx-option value="relay-09" label="RELAY-09 — UPLINK"></thx-option>
+            </thx-multi-select>
+          </div>
+
+          <div class="form-row">
+            <thx-range label="SENSITIVITY" name="sensitivity" min="0" max="100" value="72" step="1" show-ticks>
+              <span slot="help-text">Fine control via arrow keys</span>
+            </thx-range>
+            <thx-radio-group label="PROTOCOL" name="protocol" value="standard">
+              <thx-radio value="standard">STANDARD</thx-radio>
+              <thx-radio value="enhanced">ENHANCED</thx-radio>
+              <thx-radio value="silent">SILENT</thx-radio>
+            </thx-radio-group>
+          </div>
+
+          <div class="form-row">
+            <div>
+              <thx-switch label="LIVE TELEMETRY" name="telemetry" checked on-label="ARMED" off-label="STANDBY"></thx-switch>
+              <div style="height:12px"></div>
+              <thx-checkbox name="audit" checked>ENABLE AUDIT LOG</thx-checkbox>
+            </div>
+            <div>
+              <thx-rating label="CONFIDENCE" name="confidence" value="4.5" max="5" precision="0.5"></thx-rating>
+              <div style="height:8px"></div>
+              <thx-color-picker label="PHOSPHOR TINT" name="tint" value="#A6C8E1"></thx-color-picker>
+            </div>
+          </div>
+
+          <div class="status-bar" style="margin-top: var(--size-2); padding-top: var(--size-4); border-top-color: rgba(166,200,225,0.25);">
+            <thx-button type="submit" variant="primary">TRANSMIT PARAMETERS</thx-button>
+            <thx-button type="reset" variant="secondary">RESET CONSOLE</thx-button>
+            <thx-tag id="live-status" style="margin-left:auto;">READY FOR TRANSMISSION</thx-tag>
+            <thx-status-leds count="3" label="SYNC"></thx-status-leds>
+          </div>
+        </form>
+      </thx-crt-display>
+
+      <!-- TELEMETRY READOUT + LOG -->
+      <div class="live-grid" style="margin-top: var(--size-5);">
+        <thx-crt-display label="DATA BUS — LIVE FORM STATE" style="min-height: 300px;">
+          <div id="telemetry-readout" class="telemetry-readout">
+            <div style="color:#707e91; margin-bottom:8px; font-size:10px;">INTERACTIVE — VALUES UPDATE ON EVERY CHANGE</div>
+            <!-- Populated by JS -->
+          </div>
+          <div class="status-bar" style="margin-top:12px;">
+            <span>FORM DATA LIVE</span>
+            <thx-badge variant="primary" id="form-valid-badge">VALID</thx-badge>
+          </div>
+        </thx-crt-display>
+
+        <div>
+          <thx-crt-display label="TRANSMISSION LOG" style="min-height: 300px;">
+            <div id="transmission-log" class="terminal-log">AWAITING FIRST TRANSMISSION...</div>
+            <div style="margin-top:12px; display:flex; gap:8px;">
+              <thx-button size="small" id="clear-log-btn" variant="secondary">CLEAR LOG</thx-button>
+              <thx-copy-button id="copy-form-btn" value="" copy-text="COPY LAST DATA"></thx-copy-button>
+            </div>
+          </thx-crt-display>
+        </div>
+      </div>
+    </div>
+
+    <div class="page-footer">
+      THX 1138 FORM INSTRUMENTATION — ALL CONTROLS USE FORMFASSOCIATEDMIXIN • NATIVE VALIDATION • FULL KEYBOARD ROVING SUPPORT<br>
+      Built for dense control-room consoles. Place inside &lt;thx-card&gt; or &lt;thx-crt-display&gt; for authentic instrumentation feel.
+    </div>
+  </div>
+
+  <script>
+    // Live clock in header
+    function updateClock() {
+      const el = document.getElementById('live-time');
+      if (!el) return;
+      const now = new Date();
+      const timeStr = now.toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' });
+      el.textContent = timeStr;
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+
+    // Initialize multi-select values (both demo and live)
+    function initMultiSelects() {
+      // Demo multi-select
+      const demoMulti = document.getElementById('demo-multi');
+      if (demoMulti) {
+        demoMulti.value = ['cam-03', 'sensor-12'];
+      }
+
+      // Live console multi-select
+      const liveAssets = document.getElementById('live-assets');
+      if (liveAssets) {
+        liveAssets.value = ['cam-03', 'drone-07'];
+      }
+    }
+
+    // Live telemetry readout updater
+    let lastFormData = '';
+
+    function updateTelemetryReadout() {
+      const form = document.getElementById('live-monitoring-form');
+      const readout = document.getElementById('telemetry-readout');
+      if (!form || !readout) return;
+
+      const data = new FormData(form);
+      let html = '';
+
+      // Collect unique keys and handle multiples (multi-select)
+      const entries = {};
+      for (let [key, value] of data.entries()) {
+        if (!entries[key]) entries[key] = [];
+        entries[key].push(value);
+      }
+
+      Object.keys(entries).forEach(key => {
+        const vals = entries[key];
+        const displayVal = vals.length > 1 ? vals.join(', ') : vals[0];
+        html += `<div class="kv"><span class="key">${key.toUpperCase()}</span><span class="val">${displayVal || '—'}</span></div>`;
+      });
+
+      if (!html) {
+        html = '<div style="color:#707e91;">No form data yet. Interact with controls above.</div>';
+      }
+
+      readout.innerHTML = html;
+
+      // Update validity badge
+      const badge = document.getElementById('form-valid-badge');
+      if (badge) {
+        const requiredFields = form.querySelectorAll('[required]');
+        let valid = true;
+        requiredFields.forEach(f => {
+          if (!f.value && f.tagName !== 'THX-MULTI-SELECT') {
+            valid = false;
+          }
+        });
+        badge.textContent = valid ? 'VALID' : 'INCOMPLETE';
+        badge.setAttribute('variant', valid ? 'primary' : 'warning');
+      }
+    }
+
+    // Transmission log
+    function appendToLog(message) {
+      const log = document.getElementById('transmission-log');
+      if (!log) return;
+
+      const timestamp = new Date().toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' });
+      const entry = `[${timestamp}] ${message}\n`;
+
+      if (log.textContent === 'AWAITING FIRST TRANSMISSION...') {
+        log.textContent = entry;
+      } else {
+        log.textContent = entry + log.textContent;
+      }
+
+      // Keep last ~12 lines
+      const lines = log.textContent.trim().split('\n');
+      if (lines.length > 12) {
+        log.textContent = lines.slice(0, 12).join('\n');
+      }
+    }
+
+    // Setup live form interactivity
+    function setupLiveForm() {
+      const form = document.getElementById('live-monitoring-form');
+      if (!form) return;
+
+      // Live updates on input/change
+      form.addEventListener('input', () => {
+        updateTelemetryReadout();
+      });
+      form.addEventListener('change', () => {
+        updateTelemetryReadout();
+      });
+
+      // Submit handler — realistic transmission
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+
+        const data = new FormData(form);
+        const payload = {};
+        for (let [k, v] of data.entries()) {
+          if (payload[k]) {
+            payload[k] = Array.isArray(payload[k]) ? [...payload[k], v] : [payload[k], v];
+          } else {
+            payload[k] = v;
+          }
+        }
+
+        const status = document.getElementById('live-status');
+        if (status) {
+          status.textContent = 'TRANSMITTED • ' + new Date().toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit' });
+          status.style.color = '#d4aa00';
+        }
+
+        const serialized = JSON.stringify(payload, null, 0);
+        appendToLog('TRANSMITTED: ' + serialized);
+
+        // Flash success visual
+        const crt = form.closest('thx-crt-display');
+        if (crt) {
+          crt.style.boxShadow = '0 0 0 3px #d4aa00, var(--inner-shadow-1)';
+          setTimeout(() => {
+            if (crt) crt.style.boxShadow = '';
+          }, 1200);
+        }
+
+        // Update copy button value
+        const copyBtn = document.getElementById('copy-form-btn');
+        if (copyBtn) {
+          copyBtn.setAttribute('value', serialized);
+        }
+
+        // Reset status after delay
+        setTimeout(() => {
+          if (status) {
+            status.textContent = 'READY FOR TRANSMISSION';
+            status.style.color = '';
+          }
+        }, 2600);
+      });
+
+      // Reset handler
+      form.addEventListener('reset', () => {
+        // Slight delay so native reset finishes
+        setTimeout(() => {
+          updateTelemetryReadout();
+          const status = document.getElementById('live-status');
+          if (status) {
+            status.textContent = 'CONSOLE RESET • READY';
+            status.style.color = '';
+          }
+          appendToLog('CONSOLE RESET');
+        }, 40);
+      });
+
+      // Clear log button
+      const clearBtn = document.getElementById('clear-log-btn');
+      if (clearBtn) {
+        clearBtn.addEventListener('click', () => {
+          const log = document.getElementById('transmission-log');
+          if (log) log.textContent = 'LOG CLEARED. AWAITING TRANSMISSION...';
+        });
+      }
+
+      // Initial population of readout
+      setTimeout(() => {
+        updateTelemetryReadout();
+      }, 180);
+    }
+
+    // Keyboard hint toast (subtle)
+    function addKeyboardHints() {
+      // Optional: users can discover arrow keys on range / radio-group
+      console.log('%c[THX Forms] Instrumentation terminal ready. All form controls support keyboard navigation.', 'color:#666');
+    }
+
+    // Boot sequence
+    function bootTerminal() {
+      initMultiSelects();
+      setupLiveForm();
+      addKeyboardHints();
+
+      // Prime one extra demo status after components are defined
+      customElements.whenDefined('thx-multi-select').then(() => {
+        const demo = document.getElementById('demo-multi');
+        if (demo && !demo.value?.length) {
+          demo.value = ['cam-03', 'sensor-12'];
+        }
+      });
+
+      // Final telemetry sync
+      setTimeout(() => {
+        const readout = document.getElementById('telemetry-readout');
+        if (readout && readout.children.length < 2) {
+          // ensure initial state shown
+          const form = document.getElementById('live-monitoring-form');
+          if (form) {
+            // trigger a synthetic update
+            form.dispatchEvent(new Event('change', { bubbles: true }));
+          }
+        }
+      }, 650);
+
+      // Welcome log entry
+      setTimeout(() => {
+        const log = document.getElementById('transmission-log');
+        if (log && log.textContent.includes('AWAITING')) {
+          log.textContent = '[SYS] INSTRUMENTATION FORMS TERMINAL ONLINE\nAll controls FormAssociated. Ready for live interaction.\n';
+        }
+      }, 1200);
+    }
+
+    // Start when DOM ready
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', bootTerminal);
+    } else {
+      bootTerminal();
+    }
+
+    // Easter egg: click header time to cycle LED states (fun)
+    setTimeout(() => {
+      const timeEl = document.getElementById('live-time');
+      if (timeEl) {
+        timeEl.addEventListener('click', () => {
+          const leds = document.querySelector('.sys-header thx-status-leds');
+          if (leds) {
+            leds.leds = [
+              { active: true, state: 'normal' },
+              { active: true, state: 'normal' },
+              { active: true, state: 'warning' },
+              { active: true, state: 'normal' },
+              { active: false, state: 'normal' },
+              { active: true, state: 'error' }
+            ];
+            setTimeout(() => {
+              if (leds) leds.leds = undefined; // reset to default count pattern
+            }, 1800);
+          }
+        });
+        timeEl.style.cursor = 'pointer';
+        timeEl.title = 'Click to pulse status matrix';
+      }
+    }, 800);
+  </script>
+</body>
+</html>

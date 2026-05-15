@@ -6,6 +6,7 @@
  */
 
 import { LitElement, html, css } from '../../vendor/lit.js';
+import { crtStaticScanlineOverlay } from '../styles/crt-effects.js';
 
 /**
  * @typedef {Object} AvatarConfig
@@ -18,7 +19,7 @@ import { LitElement, html, css } from '../../vendor/lit.js';
 
 /**
  * Avatar component for user representation.
- * Styled with THX 1138 monospace uppercase aesthetic.
+ * Styled with THX 1138 monospace uppercase aesthetic (crt variant uses crt-effects scanlines).
  *
  * @extends {LitElement}
  */
@@ -109,20 +110,9 @@ export class ThxAvatar extends LitElement {
       color: var(--atmos-primary, #a6c8e1);
     }
 
-    .avatar--crt.avatar--square::after,
-    .avatar--crt.avatar--rounded::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: repeating-linear-gradient(
-        0deg,
-        transparent,
-        transparent 2px,
-        rgba(166, 200, 225, 0.05) 2px,
-        rgba(166, 200, 225, 0.05) var(--size-1)
-      );
-      pointer-events: none;
-    }
+    /* CRT scanline for crt variant square/rounded (shared; uses ::before) */
+    ${crtStaticScanlineOverlay('.avatar--crt.avatar--square', { opacity: 0.05 })}
+    ${crtStaticScanlineOverlay('.avatar--crt.avatar--rounded', { opacity: 0.05 })}
 
     .avatar--outline {
       background: transparent;

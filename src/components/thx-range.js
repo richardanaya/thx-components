@@ -6,6 +6,8 @@
  */
 
 import { LitElement, html, css } from '../../vendor/lit.js';
+import { FormAssociatedMixin } from '../mixins/form-associated-mixin.js';
+import { focusVisibleStyles } from '../mixins/focus-visible.js';
 
 let rangeIdCounter = 0;
 
@@ -27,8 +29,7 @@ let rangeIdCounter = 0;
  * THX 1138 styled range slider component
  * @extends {LitElement}
  */
-export class ThxRange extends LitElement {
-  static formAssociated = true;
+export class ThxRange extends FormAssociatedMixin(LitElement) {
 
   static styles = css`
     :host {
@@ -128,7 +129,7 @@ export class ThxRange extends LitElement {
       box-shadow: 0 0 var(--size-2) rgba(166, 200, 225, 0.6);
     }
 
-    input[type='range']:focus::-webkit-slider-thumb {
+    input[type='range']:focus-visible::-webkit-slider-thumb {
       box-shadow: 0 0 0 2px rgba(166, 200, 225, 0.5);
     }
 
@@ -194,6 +195,8 @@ export class ThxRange extends LitElement {
       pointer-events: none;
       z-index: 1;
     }
+
+    ${focusVisibleStyles}
   `;
 
   static properties = {
@@ -214,7 +217,6 @@ export class ThxRange extends LitElement {
 
   constructor() {
     super();
-    this._internals = this.attachInternals?.();
     this._rangeId = `thx-range-${++rangeIdCounter}`;
     this._labelId = `${this._rangeId}-label`;
     this._helpId = `${this._rangeId}-help`;
@@ -269,6 +271,27 @@ export class ThxRange extends LitElement {
   /** @returns {void} */
   formResetCallback() {
     this.value = this._defaultValue;
+  }
+
+  /**
+   * @returns {HTMLInputElement|null}
+   */
+  get rangeElement() {
+    return /** @type {HTMLInputElement|null} */ (this.renderRoot?.querySelector('input[type="range"]'));
+  }
+
+  /**
+   * @returns {void}
+   */
+  focus() {
+    this.rangeElement?.focus();
+  }
+
+  /**
+   * @returns {void}
+   */
+  blur() {
+    this.rangeElement?.blur();
   }
 
   /** @returns {string} */

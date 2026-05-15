@@ -70,3 +70,14 @@ export { ThxTooltip } from './thx-tooltip.js';
 export { ThxTreeItem } from './thx-tree-item.js';
 export { ThxTree } from './thx-tree.js';
 export { ThxVisuallyHidden } from './thx-visually-hidden.js';
+
+// Shared utilities & mixins (for extension & advanced use)
+export { FormAssociatedMixin } from '../mixins/form-associated-mixin.js';
+export { FocusVisibleMixin, focusVisibleStyles, getNextRovingIndex } from '../mixins/focus-visible.js';
+export {
+  crtMonitorStyles,
+  crtStaticScanlineOverlay,
+  crtStaticVignetteOverlay,
+  crtDecorativeOverlay,
+  phosphorTextShadow,
+} from '../styles/crt-effects.js';

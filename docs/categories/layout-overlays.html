@@ -1,0 +1,1067 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>THX 1138 // PANEL ASSEMBLY BAY — LAYOUT &amp; OVERLAYS</title>
+  <link rel="stylesheet" href="../../aesthetics.css" />
+  <script type="module" src="../../webcomponents.js"></script>
+  <style>
+    :root {
+      --term-bg: #0a0c10;
+      --term-panel: #111418;
+      --term-border: #1f252e;
+      --phosphor: #a6c8e1;
+      --amber: #d4aa00;
+      --critical: #d44000;
+      --crt-dark: #0a0a0a;
+      --crt-surface: #111;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background: var(--term-bg);
+      background-image:
+        linear-gradient(rgba(166, 200, 225, 0.028) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(166, 200, 225, 0.028) 1px, transparent 1px);
+      background-size: 26px 26px;
+      color: var(--neutral-300);
+      font-family: var(--font-body);
+      min-height: 100vh;
+      line-height: 1.5;
+    }
+
+    .bay-shell {
+      max-width: 1480px;
+      margin: 0 auto;
+      padding: var(--size-4) var(--size-5);
+    }
+
+    /* Sticky command header — sterile industrial */
+    .command-header {
+      position: sticky;
+      top: 0;
+      z-index: var(--layer-4);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: var(--size-4) var(--size-5);
+      background: rgba(10, 12, 16, 0.96);
+      border-bottom: var(--border-size-1) solid var(--term-border);
+      backdrop-filter: blur(12px);
+      margin-bottom: var(--size-6);
+    }
+
+    .header-left {
+      display: flex;
+      flex-direction: column;
+      gap: var(--size-1);
+    }
+
+    .header-left .section-title {
+      font-family: var(--font-mono);
+      font-size: var(--font-size-0);
+      text-transform: uppercase;
+      letter-spacing: var(--font-letterspacing-5);
+      color: var(--neutral-600);
+    }
+
+    .header-left h1 {
+      margin: 0;
+      font-size: var(--font-size-4);
+      letter-spacing: var(--font-letterspacing-4);
+      color: var(--phosphor);
+      font-weight: var(--font-weight-3);
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: var(--size-4);
+    }
+
+    .status-cluster {
+      display: flex;
+      align-items: center;
+      gap: var(--size-3);
+      font-family: var(--font-mono);
+      font-size: var(--font-size-0);
+      text-transform: uppercase;
+      letter-spacing: var(--font-letterspacing-4);
+      color: var(--neutral-500);
+    }
+
+    .live-clock {
+      font-variant-numeric: tabular-nums;
+      color: var(--amber);
+      min-width: 96px;
+      text-align: right;
+      background: #0a0a0a;
+      padding: 2px 10px;
+      border: 1px solid #2a2a2a;
+    }
+
+    .bay-intro {
+      max-width: 860px;
+      margin-bottom: var(--size-7);
+    }
+
+    .bay-intro p {
+      font-size: var(--font-size-1);
+      color: var(--neutral-400);
+      line-height: 1.65;
+    }
+
+    .section-title {
+      font-family: var(--font-mono);
+      font-size: var(--font-size-0);
+      text-transform: uppercase;
+      letter-spacing: var(--font-letterspacing-5);
+      color: var(--neutral-500);
+      margin: var(--size-7) 0 var(--size-3);
+      padding-bottom: var(--size-2);
+      border-bottom: 1px solid var(--term-border);
+    }
+
+    .section-title .accent {
+      color: var(--phosphor);
+    }
+
+    /* Assembly workbench */
+    .workbench-crt {
+      margin-bottom: var(--size-7);
+    }
+
+    .workbench-inner {
+      display: flex;
+      flex-direction: column;
+      gap: var(--size-4);
+    }
+
+    .panel-stack {
+      display: flex;
+      flex-direction: column;
+      gap: var(--size-4);
+    }
+
+    .card-cluster {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(218px, 1fr));
+      gap: var(--size-4);
+    }
+
+    /* Mechanical readouts */
+    .readout-bar {
+      font-family: var(--font-mono);
+      font-size: var(--font-size-0);
+      text-transform: uppercase;
+      letter-spacing: var(--font-letterspacing-4);
+      background: rgba(0,0,0,0.4);
+      border: 1px solid var(--term-border);
+      padding: var(--size-2) var(--size-3);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: var(--phosphor);
+    }
+
+    .readout-bar .label {
+      color: var(--neutral-500);
+    }
+
+    /* Action station */
+    .action-station {
+      background: var(--term-panel);
+      border: 1px solid var(--term-border);
+      padding: var(--size-5);
+      margin-bottom: var(--size-6);
+    }
+
+    .action-station .station-header {
+      font-family: var(--font-mono);
+      font-size: var(--font-size-0);
+      text-transform: uppercase;
+      letter-spacing: var(--font-letterspacing-5);
+      color: var(--amber);
+      margin-bottom: var(--size-4);
+      display: flex;
+      align-items: center;
+      gap: var(--size-2);
+    }
+
+    .action-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--size-3);
+    }
+
+    .action-grid thx-button {
+      font-family: var(--font-mono);
+      text-transform: uppercase;
+      letter-spacing: var(--font-letterspacing-3);
+    }
+
+    /* Contextual surfaces */
+    .contextual-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: var(--size-5);
+      margin-bottom: var(--size-7);
+    }
+
+    .context-panel {
+      background: var(--term-panel);
+      border: 1px solid var(--term-border);
+      padding: var(--size-4);
+    }
+
+    .context-panel h4 {
+      margin: 0 0 var(--size-3) 0;
+      font-family: var(--font-mono);
+      font-size: var(--font-size-0);
+      text-transform: uppercase;
+      letter-spacing: var(--font-letterspacing-5);
+      color: var(--neutral-500);
+    }
+
+    .status-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--size-4);
+      margin-top: var(--size-4);
+    }
+
+    .status-readout {
+      font-family: var(--font-mono);
+      font-size: var(--font-size-0);
+      text-transform: uppercase;
+      letter-spacing: var(--font-letterspacing-4);
+      padding: 4px 12px;
+      background: #0a0a0a;
+      border: 1px solid #2f3a47;
+      color: var(--phosphor);
+      cursor: pointer;
+      transition: border-color 0.1s ease, box-shadow 0.1s ease;
+    }
+
+    .status-readout:hover {
+      border-color: var(--phosphor);
+      box-shadow: 0 0 0 1px rgba(166, 200, 225, 0.2);
+    }
+
+    /* Carousel visuals — industrial schematics */
+    .carousel-slide {
+      min-height: 238px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: var(--size-4);
+      text-align: center;
+      background: #0b0f14;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .carousel-slide::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: 
+        linear-gradient(rgba(166,200,225,0.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(166,200,225,0.035) 1px, transparent 1px);
+      background-size: 18px 18px;
+      pointer-events: none;
+    }
+
+    .slide-label {
+      font-family: var(--font-mono);
+      font-size: var(--font-size-0);
+      text-transform: uppercase;
+      letter-spacing: var(--font-letterspacing-5);
+      color: var(--amber);
+      margin-bottom: var(--size-2);
+      z-index: 1;
+    }
+
+    .slide-title {
+      font-family: var(--font-mono);
+      font-size: var(--font-size-3);
+      color: var(--phosphor);
+      letter-spacing: var(--font-letterspacing-3);
+      margin: 0 0 var(--size-3) 0;
+      z-index: 1;
+      text-shadow: 0 0 8px rgba(166, 200, 225, 0.4);
+    }
+
+    .slide-desc {
+      font-size: var(--font-size-0);
+      color: var(--neutral-400);
+      max-width: 360px;
+      z-index: 1;
+    }
+
+    .schematic {
+      width: 280px;
+      height: 126px;
+      border: 3px solid var(--phosphor);
+      background: #0a0c10;
+      position: relative;
+      box-shadow: 
+        inset 0 0 40px rgba(0, 0, 0, 0.85),
+        0 0 0 1px rgba(166, 200, 225, 0.15);
+      margin: var(--size-3) 0;
+      z-index: 1;
+    }
+
+    .schematic .rivet {
+      position: absolute;
+      width: 7px;
+      height: 7px;
+      background: var(--amber);
+      border: 1px solid #222;
+      box-shadow: 0 0 0 1px #444;
+    }
+
+    .schematic .rivet.tl { top: 6px; left: 6px; }
+    .schematic .rivet.tr { top: 6px; right: 6px; }
+    .schematic .rivet.bl { bottom: 6px; left: 6px; }
+    .schematic .rivet.br { bottom: 6px; right: 6px; }
+
+    .schematic .trace {
+      position: absolute;
+      background: rgba(166, 200, 225, 0.55);
+      box-shadow: 0 0 4px rgba(166, 200, 225, 0.6);
+    }
+
+    .schematic-chassis .trace.h1 { top: 32px; left: 18px; right: 18px; height: 2px; }
+    .schematic-chassis .trace.h2 { top: 68px; left: 42px; right: 28px; height: 2px; }
+    .schematic-chassis .trace.v1 { top: 24px; bottom: 24px; left: 52px; width: 2px; }
+
+    .schematic-crt .trace {
+      background: #d4aa00;
+      box-shadow: 0 0 6px #d4aa00;
+    }
+
+    .schematic-crt .inner-crt {
+      position: absolute;
+      inset: 18px;
+      border: 2px solid #d4aa00;
+      background: #111;
+    }
+
+    .schematic-overlay .trace {
+      background: #d44000;
+    }
+
+    .schematic-overlay .inner-panel {
+      position: absolute;
+      inset: 22px 18px;
+      border: 1px solid #d44000;
+      background: #1a120e;
+    }
+
+    .metric {
+      position: absolute;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: var(--phosphor);
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      z-index: 2;
+    }
+
+    /* Divider demo row */
+    .divider-demo {
+      display: flex;
+      align-items: stretch;
+      gap: var(--size-5);
+      background: var(--term-panel);
+      padding: var(--size-4);
+      border: 1px solid var(--term-border);
+      margin-bottom: var(--size-5);
+    }
+
+    .divider-demo .label {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: var(--neutral-600);
+      writing-mode: vertical-rl;
+      text-orientation: mixed;
+      align-self: center;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+
+    /* Details cluster */
+    .details-cluster {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(310px, 1fr));
+      gap: var(--size-4);
+    }
+
+    .details-cluster thx-details {
+      background: var(--term-panel);
+      border: 1px solid var(--term-border);
+    }
+
+    /* Modal / drawer notes */
+    .overlay-note {
+      font-family: var(--font-mono);
+      font-size: 10.5px;
+      color: var(--neutral-500);
+      margin-top: var(--size-2);
+    }
+
+    /* Footer bar */
+    .bay-footer {
+      margin-top: var(--size-8);
+      padding: var(--size-4) var(--size-5);
+      border-top: 1px solid var(--term-border);
+      font-family: var(--font-mono);
+      font-size: var(--font-size-0);
+      text-transform: uppercase;
+      letter-spacing: var(--font-letterspacing-5);
+      color: var(--neutral-600);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: var(--size-3);
+    }
+
+    .bay-footer .sys {
+      color: var(--amber);
+    }
+
+    /* Utility polish */
+    .mech-label {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 2.5px;
+      color: var(--neutral-600);
+    }
+
+    thx-card[crt] {
+      margin-bottom: var(--size-1);
+    }
+
+    .demo-card-label {
+      font-family: var(--font-mono);
+      font-size: var(--font-size--1);
+      color: var(--neutral-500);
+      margin-bottom: var(--size-2);
+    }
+  </style>
+</head>
+<body>
+  <div class="bay-shell">
+    <!-- COMMAND HEADER -->
+    <header class="command-header">
+      <div class="header-left">
+        <div class="section-title">SECTOR 04-C • ASSEMBLY DIVISION</div>
+        <h1>PANEL ASSEMBLY BAY</h1>
+      </div>
+      <div class="header-right">
+        <div class="status-cluster">
+          <thx-badge variant="pulse">BAY ACTIVE</thx-badge>
+          <thx-status-leds id="header-leds"></thx-status-leds>
+          <span class="live-clock" id="live-clock">09:41:13</span>
+        </div>
+        <thx-button variant="outline" class="terminal-btn" id="sync-btn">SYNC ALL</thx-button>
+      </div>
+    </header>
+
+    <!-- INTRO -->
+    <div class="bay-intro">
+      <p>
+        Sterile mechanical composition environment. Build instrument-grade control surfaces from 
+        <strong>thx-card</strong>, <strong>thx-split-panel</strong>, and <strong>thx-crt-display</strong> primitives. 
+        Interrupt and configure with clinical <strong>thx-dialog</strong> / <strong>thx-drawer</strong> housings, 
+        contextual <strong>thx-dropdown</strong> and <strong>thx-popup</strong> command surfaces, sequential 
+        <strong>thx-carousel</strong> sequences, and precise <strong>thx-divider</strong> / <strong>thx-details</strong> rhythm.
+      </p>
+    </div>
+
+    <!-- PRIMARY ASSEMBLY WORKBENCH -->
+    <h2 class="section-title"><span class="accent">//</span> 01 — PRIMARY ASSEMBLY WORKBENCH</h2>
+
+    <thx-crt-display class="workbench-crt" label="ASSEMBLY BAY 04-C // DUAL VIEW MONITOR" size="large">
+      <div class="workbench-inner">
+        <thx-split-panel 
+          variant="crt" 
+          orientation="horizontal" 
+          position="58" 
+          start-label="CHASSIS MODULES" 
+          end-label="OVERLAY SYSTEMS"
+          style="height: 420px; border: 1px solid #2a2f38;">
+          
+          <div slot="start">
+            <div class="panel-stack">
+              <thx-card label="FRAME 01-A" hoverable>
+                <div class="mech-label">ALUMINUM ALLOY • 2.8KG</div>
+                <div style="margin-top:8px; font-size:13px; line-height:1.4; color:#a8b8c8;">
+                  480 × 320 mm chassis<br>
+                  12 M4 mounting points<br>
+                  TOLERANCE: ±0.05 mm
+                </div>
+                <div style="margin-top:var(--size-3); display:flex; gap:6px;">
+                  <thx-button size="sm" variant="secondary">ALIGN</thx-button>
+                  <thx-button size="sm" variant="outline">INSPECT</thx-button>
+                </div>
+              </thx-card>
+
+              <thx-card label="FRAME 01-B" hoverable>
+                <div class="mech-label">REINFORCED • 3.1KG</div>
+                <div style="margin-top:8px; font-size:13px; line-height:1.4; color:#a8b8c8;">
+                  480 × 320 mm chassis<br>
+                  16 M4 mounting points<br>
+                  SHIELDING: CLASS-III
+                </div>
+                <div style="margin-top:var(--size-3);">
+                  <thx-badge variant="success">READY</thx-badge>
+                </div>
+              </thx-card>
+
+              <thx-card label="SUB-PANEL C" crt>
+                <div style="font-size:12px; color:#8fa8bc;">INTERNAL CARD CAGE</div>
+                <div style="margin:12px 0; display:grid; grid-template-columns:1fr 1fr; gap:6px; font-size:11px;">
+                  <div>SLOT 1: <span style="color:#d4aa00">POPULATED</span></div>
+                  <div>SLOT 2: <span style="color:#d4aa00">POPULATED</span></div>
+                  <div>SLOT 3: EMPTY</div>
+                  <div>SLOT 4: EMPTY</div>
+                </div>
+              </thx-card>
+            </div>
+          </div>
+
+          <div slot="end">
+            <div class="panel-stack">
+              <thx-card label="OVERLAY HOUSING" hoverable crt>
+                <div class="mech-label">PHOSPHOR FRAME • 1.4KG</div>
+                <div style="margin-top:10px; font-size:13px;">
+                  Integrated CRT surface<br>
+                  4× thx-button stations<br>
+                  2× thx-status-leds clusters
+                </div>
+                <div style="margin:12px 0;"><thx-divider label="INTERFACE RAIL" style="crt" spacing="sm"></thx-divider></div>
+                <div style="font-size:11px; color:#707e91;">STATUS: NOMINAL — 14/14 NODES</div>
+              </thx-card>
+
+              <thx-card label="CONTROL CLUSTER" hoverable>
+                <div style="display:flex; gap:8px; align-items:center;">
+                  <thx-icon name="monitor" size="lg"></thx-icon>
+                  <div>
+                    <div class="mech-label">PRIMARY I/O</div>
+                    <div style="color:#a6c8e1; font-size:13px;">8× INPUT • 6× OUTPUT</div>
+                  </div>
+                </div>
+                <div style="margin-top:14px;">
+                  <thx-button size="sm" variant="primary">CALIBRATE</thx-button>
+                </div>
+              </thx-card>
+
+              <div class="readout-bar">
+                <span class="label">BAY TEMP</span>
+                <span style="color:#d4aa00;">23.8°C</span>
+              </div>
+            </div>
+          </div>
+        </thx-split-panel>
+
+        <!-- Divider + Details inside workbench CRT -->
+        <thx-divider label="ASSEMBLY PROTOCOL LOG" style="crt" spacing="md"></thx-divider>
+
+        <thx-details open>
+          <span slot="summary">EXPANDABLE SUB-ASSEMBLY LOGS • 04-C-1138</span>
+          <div style="padding: var(--size-3) 0; font-size:13px; color:#a8b8c8;">
+            <div style="display:flex; justify-content:space-between; margin-bottom:6px;">
+              <span>14:22 • FRAME 01-A MOUNTED</span> <span style="color:#d4aa00;">OK</span>
+            </div>
+            <div style="display:flex; justify-content:space-between; margin-bottom:6px;">
+              <span>14:29 • OVERLAY HOUSING SEATED</span> <span style="color:#d4aa00;">OK</span>
+            </div>
+            <div style="display:flex; justify-content:space-between;">
+              <span>14:31 • CRT CALIBRATION STARTED</span> <span style="color:#d44000;">IN PROGRESS</span>
+            </div>
+          </div>
+        </thx-details>
+      </div>
+    </thx-crt-display>
+
+    <!-- MODAL & DRAWER CONTROL STATION -->
+    <h2 class="section-title"><span class="accent">//</span> 02 — MODAL INTERVENTION STATIONS</h2>
+
+    <div class="action-station">
+      <div class="station-header">
+        <thx-icon name="lock" size="md"></thx-icon>
+        HEAVY MECHANICAL OVERLAYS — DIALOG &amp; DRAWER
+      </div>
+      <div class="action-grid">
+        <thx-button variant="primary" id="btn-dialog-seal">CONFIRM PANEL SEAL</thx-button>
+        <thx-button variant="secondary" id="btn-drawer-config">OPEN CALIBRATION DRAWER</thx-button>
+        <thx-button variant="outline" id="btn-drawer-logs">OPEN ASSEMBLY LOGS (START)</thx-button>
+        <thx-button variant="error" id="btn-dialog-abort">ABORT SEQUENCE</thx-button>
+      </div>
+      <div class="overlay-note">All overlays feature focus trapping, escape-to-close, and CRT static scanline framing.</div>
+    </div>
+
+    <!-- DIALOGS (placed here but hidden until shown) -->
+    <thx-dialog id="confirm-seal" header-label="CONFIRM PANEL SEAL" size="md">
+      <div style="max-width:420px;">
+        <p style="margin:0 0 14px; color:#222;">This action will lock the current chassis assembly and engage the phosphor overlay housing. All downstream telemetry nodes will be committed.</p>
+        <div style="background:#f5f5f5; padding:12px; border:1px solid #ddd; font-family:var(--font-mono); font-size:12px; margin-bottom:12px;">
+          CHECKLIST:<br>
+          • 16/16 mounting bolts torqued<br>
+          • CRT frame alignment verified<br>
+          • Power rail stable at 48.2V
+        </div>
+        <thx-card label="SEAL INTEGRITY" style="margin-top:8px;">
+          <div style="font-size:13px;">EXPECTED LIFETIME: 87,400 HRS</div>
+        </thx-card>
+      </div>
+      <thx-button-group slot="footer">
+        <thx-button variant="secondary" id="seal-abort">ABORT</thx-button>
+        <thx-button variant="primary" id="seal-confirm">SEAL PANEL</thx-button>
+      </thx-button-group>
+    </thx-dialog>
+
+    <thx-dialog id="confirm-abort" header-label="ABORT SEQUENCE 1138" size="sm">
+      <p style="color:#222; margin:4px 0 16px;">All partially assembled panels will return to staging queue. This action is logged and irreversible for the current shift.</p>
+      <thx-button-group slot="footer">
+        <thx-button variant="secondary">CANCEL</thx-button>
+        <thx-button variant="error" id="abort-final">ABORT SEQUENCE</thx-button>
+      </thx-button-group>
+    </thx-dialog>
+
+    <!-- DRAWERS -->
+    <thx-drawer id="calibration-drawer" header-label="CALIBRATION MODULE — 04-C" placement="end" size="lg">
+      <thx-divider label="ALIGNMENT PARAMETERS" style="crt" spacing="sm"></thx-divider>
+
+      <thx-details>
+        <span slot="summary">CHASSIS PLANE CALIBRATION</span>
+        <div style="padding:6px 0 4px; font-size:13px;">
+          X-AXIS: 0.014° <span style="color:#d4aa00">WITHIN SPEC</span><br>
+          Y-AXIS: 0.007° <span style="color:#d4aa00">WITHIN SPEC</span><br>
+          Z-ROT: 0.021° <span style="color:#d44000">MARGIN</span>
+        </div>
+      </thx-details>
+
+      <thx-details>
+        <span slot="summary">PHOSPHOR CRT TUNING</span>
+        <div style="padding:8px 0;">
+          <div class="readout-bar" style="margin-bottom:8px;">
+            <span class="label">SCAN FREQ</span><span>59.94 Hz</span>
+          </div>
+          <div class="readout-bar">
+            <span class="label">VIGNETTE</span><span>0.82</span>
+          </div>
+        </div>
+      </thx-details>
+
+      <thx-divider spacing="md"></thx-divider>
+
+      <thx-card label="APPLY ACTIONS" crt>
+        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+          <thx-button size="sm" variant="secondary">RESET ZERO</thx-button>
+          <thx-button size="sm" variant="primary">COMMIT CAL</thx-button>
+          <thx-button size="sm" variant="outline">EXPORT LOG</thx-button>
+        </div>
+      </thx-card>
+    </thx-drawer>
+
+    <thx-drawer id="logs-drawer" header-label="ASSEMBLY LOGS — BAY 04-C" placement="start" size="md">
+      <div style="font-family:var(--font-mono); font-size:12px; line-height:1.6; color:#c5d4e3;">
+        <div>09:41:02 — FRAME 01-A MOUNT INITIATED</div>
+        <div>09:41:11 — TORQUE SEQUENCE COMPLETE</div>
+        <div>09:41:19 — OVERLAY SEAT VERIFIED</div>
+        <div style="color:#d4aa00;">09:41:27 — CRT MODULE POWERED</div>
+        <div>09:41:33 — SUB-PANEL C REGISTERED</div>
+        <div>09:41:41 — 14 NODES NOMINAL</div>
+      </div>
+      <thx-divider label="END OF SHIFT LOG" style="crt" spacing="lg"></thx-divider>
+      <div style="font-size:11px; color:#707e91;">ALL ENTRIES SIGNED • OPERATOR: 1138-7</div>
+    </thx-drawer>
+
+    <!-- CONTEXTUAL COMMAND SURFACES -->
+    <h2 class="section-title"><span class="accent">//</span> 03 — CONTEXTUAL COMMAND SURFACES</h2>
+    <p style="max-width:720px; color:#8a97a8; margin-bottom:var(--size-5);">Interactive dropdown menus and positioned CRT popups for in-place operator commands without leaving the primary workbench.</p>
+
+    <div class="contextual-grid">
+      <!-- DROPDOWNS -->
+      <div class="context-panel">
+        <h4>ASSEMBLY PROTOCOLS</h4>
+        <thx-dropdown id="protocol-dropdown" label="SELECT PROTOCOL" header-label="ASSEMBLY PROTOCOLS" placement="bottom"></thx-dropdown>
+        
+        <div id="protocol-readout" class="readout-bar" style="margin-top:var(--size-4);">
+          <span class="label">ACTIVE</span>
+          <span id="protocol-value">—</span>
+        </div>
+      </div>
+
+      <div class="context-panel">
+        <h4>FIELD TOOLS</h4>
+        <thx-dropdown id="tools-dropdown" label="FIELD TOOLS" header-label="DIAGNOSTIC TOOLS"></thx-dropdown>
+
+        <div class="overlay-note" style="margin-top:12px;">Clicking an item dispatches a select event and updates telemetry readouts.</div>
+      </div>
+
+      <!-- POPUPS -->
+      <div class="context-panel">
+        <h4>STATUS POPUPS (CLICK TO INSPECT)</h4>
+        <div class="status-row">
+          <thx-popup title="ALIGNMENT STATUS" placement="top" arrow>
+            <div slot="trigger" class="status-readout">ALIGN • 99.8%</div>
+            <div style="font-family:var(--font-mono); font-size:12px; padding:4px 2px; color:#a8b8c8;">
+              X: +0.014°<br>
+              Y: −0.007°<br>
+              Z: +0.003°<br>
+              <span style="color:#d4aa00;">WITHIN TOLERANCE</span>
+            </div>
+          </thx-popup>
+
+          <thx-popup title="POWER RAIL 04-C" placement="bottom-start" arrow>
+            <div slot="trigger" class="status-readout">PWR • 48.2V</div>
+            <div style="padding:2px 4px; font-family:var(--font-mono); font-size:12px;">
+              RAIL A: 48.19V<br>
+              RAIL B: 48.24V<br>
+              CURRENT: 2.81A<br>
+              <span style="color:#d4aa00;">STABLE</span>
+            </div>
+          </thx-popup>
+
+          <thx-popup title="SEAL INTEGRITY" placement="top-end" arrow modal>
+            <div slot="trigger" class="status-readout" style="border-color:#d44000; color:#d44000;">SEAL • 100%</div>
+            <div style="padding:4px 2px; font-family:var(--font-mono); font-size:12px; color:#c8d4e0;">
+              LAST TORQUE: 14.2 Nm<br>
+              GASKET TEMP: 23.9°C<br>
+              PRESSURE: NOMINAL<br>
+              <span style="color:#d4aa00;">LOCKED</span>
+            </div>
+          </thx-popup>
+        </div>
+      </div>
+    </div>
+
+    <!-- FUNCTIONAL CRT CAROUSEL -->
+    <h2 class="section-title"><span class="accent">//</span> 04 — SEQUENTIAL ASSEMBLY VIEWER</h2>
+
+    <thx-crt-display label="MISSION SEQUENCE • ASSEMBLY PHASES" size="large">
+      <thx-carousel id="assembly-carousel" variant="crt" autoplay interval="5200" loop show-dots show-arrows>
+        
+        <thx-carousel-item label="PHASE 01">
+          <div class="carousel-slide">
+            <div class="slide-label">PHASE 01 — CHASSIS ALIGNMENT</div>
+            <div class="slide-title">FRAME MOUNTING</div>
+            <div class="schematic schematic-chassis">
+              <div class="rivet tl"></div><div class="rivet tr"></div>
+              <div class="rivet bl"></div><div class="rivet br"></div>
+              <div class="trace h1"></div>
+              <div class="trace h2"></div>
+              <div class="trace v1"></div>
+              <div class="metric" style="top:14px; right:16px;">TOL 0.02</div>
+            </div>
+            <div class="slide-desc">Position chassis on reference jig. Engage 12 primary fasteners in star pattern.</div>
+          </div>
+        </thx-carousel-item>
+
+        <thx-carousel-item label="PHASE 02">
+          <div class="carousel-slide">
+            <div class="slide-label">PHASE 02 — CIRCUIT INTEGRATION</div>
+            <div class="slide-title">SUB-PANEL POPULATION</div>
+            <div class="schematic schematic-chassis" style="border-color:#d4aa00;">
+              <div class="rivet tl"></div><div class="rivet tr"></div>
+              <div class="rivet bl"></div><div class="rivet br"></div>
+              <div class="trace h1" style="background:#d4aa00; top:48px;"></div>
+              <div class="trace h2" style="background:#d4aa00; top:82px;"></div>
+              <div class="metric" style="top:18px; left:18px; color:#d4aa00;">8 SLOTS</div>
+            </div>
+            <div class="slide-desc">Insert control cards. Verify backplane continuity before power application.</div>
+          </div>
+        </thx-carousel-item>
+
+        <thx-carousel-item label="PHASE 03">
+          <div class="carousel-slide">
+            <div class="slide-label">PHASE 03 — PHOSPHOR INSTALL</div>
+            <div class="slide-title">CRT MODULE SEATING</div>
+            <div class="schematic schematic-crt">
+              <div class="inner-crt"></div>
+              <div class="rivet tl"></div><div class="rivet tr"></div>
+              <div class="rivet bl"></div><div class="rivet br"></div>
+              <div class="metric" style="bottom:12px; left:18px; color:#d4aa00;">SCAN 60Hz</div>
+            </div>
+            <div class="slide-desc">Lower CRT housing onto overlay frame. Connect 4 high-voltage leads. Calibrate scan geometry.</div>
+          </div>
+        </thx-carousel-item>
+
+        <thx-carousel-item label="PHASE 04">
+          <div class="carousel-slide">
+            <div class="slide-label">PHASE 04 — OVERLAY HOUSING</div>
+            <div class="slide-title">COMMAND SURFACE FIT</div>
+            <div class="schematic schematic-overlay">
+              <div class="inner-panel"></div>
+              <div class="rivet tl"></div><div class="rivet tr"></div>
+              <div class="rivet bl"></div><div class="rivet br"></div>
+              <div class="trace h1" style="top:42px; background:#d44000;"></div>
+              <div class="metric" style="top:14px; right:16px; color:#d44000;">LOCKED</div>
+            </div>
+            <div class="slide-desc">Mount button clusters, status arrays, and popup anchors. Final torque sequence.</div>
+          </div>
+        </thx-carousel-item>
+
+        <thx-carousel-item label="PHASE 05">
+          <div class="carousel-slide">
+            <div class="slide-label">PHASE 05 — FINAL QA</div>
+            <div class="slide-title">SYSTEM VALIDATION</div>
+            <div class="schematic" style="border-color:#a6c8e1; height:106px;">
+              <div class="rivet tl"></div><div class="rivet tr"></div>
+              <div class="rivet bl"></div><div class="rivet br"></div>
+              <div style="position:absolute; inset:22px; border:1px dashed #a6c8e1; display:flex; align-items:center; justify-content:center; font-family:var(--font-mono); font-size:13px; color:#a6c8e1; letter-spacing:3px;">ALL NODES • 100%</div>
+            </div>
+            <div class="slide-desc">Run full telemetry self-test. Record serial + operator signature. Release to integration.</div>
+          </div>
+        </thx-carousel-item>
+      </thx-carousel>
+    </thx-crt-display>
+
+    <!-- DIVIDERS + DETAILS -->
+    <h2 class="section-title"><span class="accent">//</span> 05 — RHYTHM &amp; PROGRESSIVE DISCLOSURE</h2>
+
+    <div class="divider-demo">
+      <div>
+        <div class="mech-label" style="margin-bottom:8px;">HORIZONTAL</div>
+        <thx-divider label="SOLID" style="solid" spacing="md"></thx-divider>
+        <thx-divider label="DASHED" style="dashed" spacing="md"></thx-divider>
+        <thx-divider label="CRT PHOSPHOR" style="crt" spacing="md"></thx-divider>
+        <thx-divider label="INSET" style="inset" spacing="md"></thx-divider>
+      </div>
+      <div style="width:1px; background:#222;"></div>
+      <div>
+        <div class="mech-label" style="margin-bottom:8px;">VERTICAL</div>
+        <div style="display:flex; height:168px; align-items:stretch; gap:22px;">
+          <thx-divider vertical style="crt" label="RAIL"></thx-divider>
+          <thx-divider vertical style="dashed"></thx-divider>
+          <thx-divider vertical style="solid"></thx-divider>
+          <div style="font-family:var(--font-mono); font-size:10px; color:#555; align-self:center; writing-mode:vertical-rl;">MECHANICAL SEPARATORS</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="details-cluster">
+      <thx-details>
+        <span slot="summary">SPEC SHEET — CHASSIS 01-A</span>
+        <thx-card label="MATERIAL" style="margin-top:8px;">
+          <div style="font-size:12px;">AL-6061-T6 • ANODIZED<br>MASS: 2.84 kg<br>FASTENERS: M4 × 12</div>
+        </thx-card>
+      </thx-details>
+
+      <thx-details>
+        <span slot="summary">CRT DISPLAY MODULE</span>
+        <div style="padding:4px 0 8px; font-family:var(--font-mono); font-size:12px; color:#b8c8d8;">
+          RESOLUTION: 1280×1024<br>
+          PHOSPHOR: P31 GREEN-BLUE<br>
+          SCAN: 60 Hz INTERLACED<br>
+          VIGNETTE: 0.78–0.91
+        </div>
+        <thx-divider style="crt" spacing="sm"></thx-divider>
+        <thx-badge variant="success">CALIBRATED</thx-badge>
+      </thx-details>
+
+      <thx-details>
+        <span slot="summary">OVERLAY COMMAND SURFACE</span>
+        <div style="font-size:12px; padding:6px 0;">
+          6× THX-BUTTON (PHOSPHOR)<br>
+          2× THX-DROPDOWN ANCHORS<br>
+          3× THX-POPUP TRIGGERS<br>
+          INTEGRATED THX-STATUS-LEDS
+        </div>
+      </thx-details>
+    </div>
+
+    <!-- BAY FOOTER -->
+    <div class="bay-footer">
+      <div>
+        <span class="sys">THX 1138</span> • PANEL ASSEMBLY BAY v0.1.1 • ALL ELEMENTS LIVE
+      </div>
+      <div style="color:#555;">STERILE GRAY • PHOSPHOR BLUE • AMBER WARNING • CRT SCANLINES</div>
+    </div>
+  </div>
+
+  <script>
+    // Live clock
+    function updateClock() {
+      const clockEl = document.getElementById('live-clock');
+      if (!clockEl) return;
+      
+      setInterval(() => {
+        const now = new Date();
+        const h = String(now.getHours()).padStart(2, '0');
+        const m = String(now.getMinutes()).padStart(2, '0');
+        const s = String(now.getSeconds()).padStart(2, '0');
+        clockEl.textContent = `${h}:${m}:${s}`;
+      }, 1000);
+    }
+
+    // Initialize dropdowns with mechanical protocol items
+    function initDropdowns() {
+      const protocolDD = document.getElementById('protocol-dropdown');
+      if (protocolDD) {
+        protocolDD.items = [
+          { value: 'mount', label: 'MOUNT CHASSIS FRAME' },
+          { value: 'crt', label: 'INSTALL CRT MODULE' },
+          { value: 'overlay', label: 'SEAT OVERLAY HOUSING', variant: 'warning' },
+          { value: 'cal', label: 'RUN FULL CALIBRATION' },
+          { value: 'seal', label: 'FINAL PANEL SEAL', variant: 'primary' },
+          { value: 'qa', label: 'EXECUTE QA SEQUENCE' }
+        ];
+        
+        protocolDD.addEventListener('select', (e) => {
+          const readout = document.getElementById('protocol-value');
+          if (readout) readout.textContent = e.detail.item.label;
+        });
+      }
+
+      const toolsDD = document.getElementById('tools-dropdown');
+      if (toolsDD) {
+        toolsDD.items = [
+          { value: 'torque', label: 'TORQUE WRENCH 4.2Nm' },
+          { value: 'align', label: 'LASER ALIGNMENT TOOL' },
+          { value: 'scan', label: 'BACKPLANE CONTINUITY' },
+          { value: 'volt', label: 'HV RAIL PROBE', variant: 'warning' },
+          { value: 'log', label: 'EXPORT SHIFT LOG' }
+        ];
+        
+        toolsDD.addEventListener('select', (e) => {
+          // Visual feedback on selection
+          const panel = toolsDD.closest('.context-panel');
+          if (panel) {
+            panel.style.transition = 'box-shadow 120ms';
+            panel.style.boxShadow = '0 0 0 2px rgba(166, 200, 225, 0.25)';
+            setTimeout(() => {
+              panel.style.boxShadow = 'none';
+            }, 420);
+          }
+        });
+      }
+    }
+
+    // Wire up dialog + drawer triggers
+    function initOverlayTriggers() {
+      // Dialog: Confirm Seal
+      const btnSeal = document.getElementById('btn-dialog-seal');
+      const dlgSeal = document.getElementById('confirm-seal');
+      if (btnSeal && dlgSeal) {
+        btnSeal.addEventListener('click', () => dlgSeal.show());
+      }
+
+      // Abort dialog
+      const btnAbort = document.getElementById('btn-dialog-abort');
+      const dlgAbort = document.getElementById('confirm-abort');
+      if (btnAbort && dlgAbort) {
+        btnAbort.addEventListener('click', () => dlgAbort.show());
+      }
+
+      // Drawer: Calibration
+      const btnCal = document.getElementById('btn-drawer-config');
+      const drawerCal = document.getElementById('calibration-drawer');
+      if (btnCal && drawerCal) {
+        btnCal.addEventListener('click', () => drawerCal.show());
+      }
+
+      // Drawer: Logs (start placement)
+      const btnLogs = document.getElementById('btn-drawer-logs');
+      const drawerLogs = document.getElementById('logs-drawer');
+      if (btnLogs && drawerLogs) {
+        btnLogs.addEventListener('click', () => drawerLogs.show());
+      }
+
+      // Dialog internal buttons
+      const sealAbort = document.getElementById('seal-abort');
+      const sealConfirm = document.getElementById('seal-confirm');
+      if (sealAbort && dlgSeal) sealAbort.addEventListener('click', () => dlgSeal.hide());
+      if (sealConfirm && dlgSeal) {
+        sealConfirm.addEventListener('click', () => {
+          dlgSeal.hide();
+          // Simulate completion feedback
+          const status = document.querySelector('.readout-bar');
+          if (status) status.style.borderColor = '#d4aa00';
+          setTimeout(() => { if (status) status.style.borderColor = '#2f3a47'; }, 1600);
+        });
+      }
+
+      const abortFinal = document.getElementById('abort-final');
+      if (abortFinal && dlgAbort) {
+        abortFinal.addEventListener('click', () => dlgAbort.hide());
+      }
+    }
+
+    // Optional carousel interaction logging + manual demo button
+    function initCarouselExtras() {
+      const carousel = document.getElementById('assembly-carousel');
+      if (carousel) {
+        carousel.addEventListener('change', (e) => {
+          // Could surface active phase in header if desired
+        });
+        
+        // Keyboard hint
+        carousel.setAttribute('title', 'Use arrow keys or click dots/arrows. Autoplay active.');
+      }
+    }
+
+    // Header sync button demo
+    function initHeaderActions() {
+      const syncBtn = document.getElementById('sync-btn');
+      if (syncBtn) {
+        syncBtn.addEventListener('click', () => {
+          const origText = syncBtn.textContent;
+          syncBtn.textContent = 'SYNCING…';
+          syncBtn.disabled = true;
+          
+          setTimeout(() => {
+            syncBtn.textContent = 'ALL NODES SYNCED';
+            setTimeout(() => {
+              syncBtn.textContent = origText;
+              syncBtn.disabled = false;
+            }, 1100);
+          }, 680);
+        });
+      }
+    }
+
+    // Boot everything
+    function boot() {
+      updateClock();
+      initDropdowns();
+      initOverlayTriggers();
+      initCarouselExtras();
+      initHeaderActions();
+
+      // Gentle initial status pulse on header leds
+      const leds = document.getElementById('header-leds');
+      if (leds) {
+        setTimeout(() => {
+          leds.setAttribute('variant', 'success');
+        }, 800);
+      }
+
+      // Demo: pre-select first protocol item after load for visual polish
+      setTimeout(() => {
+        const protocolDD = document.getElementById('protocol-dropdown');
+        if (protocolDD && protocolDD.items && protocolDD.items.length) {
+          const readout = document.getElementById('protocol-value');
+          if (readout) readout.textContent = protocolDD.items[0].label;
+        }
+      }, 420);
+    }
+
+    // Start when ready
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', boot);
+    } else {
+      boot();
+    }
+  </script>
+</body>
+</html>

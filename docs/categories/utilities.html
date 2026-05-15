@@ -1,0 +1,1068 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>THX 1138 // SUPPORT SYSTEMS BAY — UTILITY RACK TERMINAL</title>
+  <link rel="stylesheet" href="../../aesthetics.css" />
+  <script type="module" src="../../webcomponents.js"></script>
+  <style>
+    :root {
+      --term-bg: #0a0c10;
+      --term-panel: #111418;
+      --term-border: #1f252e;
+      --phosphor: #a6c8e1;
+      --amber: #d4aa00;
+      --critical: #d44000;
+      --success: #3a9f4a;
+      --crt-dark: #0a0a0a;
+      --crt-surface: #111;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background: var(--term-bg);
+      background-image:
+        linear-gradient(rgba(166, 200, 225, 0.022) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(166, 200, 225, 0.022) 1px, transparent 1px);
+      background-size: 24px 24px;
+      color: var(--neutral-300);
+      font-family: var(--font-body);
+      min-height: 100vh;
+      line-height: 1.5;
+    }
+
+    .support-bay {
+      max-width: 1520px;
+      margin: 0 auto;
+      padding: var(--size-4) var(--size-5);
+    }
+
+    /* Sticky industrial command header */
+    .command-header {
+      position: sticky;
+      top: 0;
+      z-index: var(--layer-4);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: var(--size-3) var(--size-5);
+      background: rgba(10, 12, 16, 0.96);
+      border-bottom: var(--border-size-1) solid var(--term-border);
+      backdrop-filter: blur(14px);
+      margin-bottom: var(--size-6);
+    }
+
+    .header-left {
+      display: flex;
+      flex-direction: column;
+      gap: var(--size-1);
+    }
+
+    .header-left .eyebrow {
+      font-family: var(--font-mono);
+      font-size: var(--font-size-0);
+      letter-spacing: var(--font-letterspacing-5);
+      color: #5f6b7a;
+      text-transform: uppercase;
+    }
+
+    .header-left h1 {
+      margin: 0;
+      font-family: var(--font-mono);
+      font-size: clamp(1.25rem, 3vw, 1.85rem);
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--phosphor);
+      font-weight: 600;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: var(--size-4);
+    }
+
+    .status-cluster {
+      display: flex;
+      align-items: center;
+      gap: var(--size-3);
+      font-family: var(--font-mono);
+      font-size: var(--font-size-0);
+      text-transform: uppercase;
+      letter-spacing: var(--font-letterspacing-4);
+      color: var(--neutral-500);
+    }
+
+    .live-clock {
+      font-variant-numeric: tabular-nums;
+      color: var(--amber);
+      min-width: 96px;
+      text-align: right;
+      background: #0a0a0a;
+      padding: 2px 10px;
+      border: 1px solid #2a2a2a;
+    }
+
+    .section-title {
+      font-family: var(--font-mono);
+      font-size: var(--font-size-0);
+      text-transform: uppercase;
+      letter-spacing: var(--font-letterspacing-5);
+      color: var(--neutral-500);
+      margin: var(--size-7) 0 var(--size-3);
+      padding-bottom: var(--size-2);
+      border-bottom: 1px solid var(--term-border);
+    }
+
+    .section-title .accent {
+      color: var(--phosphor);
+    }
+
+    .bay-hero {
+      margin-bottom: var(--size-7);
+    }
+
+    .bay-hero p {
+      font-size: var(--font-size-1);
+      color: var(--neutral-400);
+      line-height: 1.65;
+      max-width: 820px;
+    }
+
+    .demo-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+      gap: var(--size-5);
+      margin-bottom: var(--size-7);
+    }
+
+    .component-card {
+      display: flex;
+      flex-direction: column;
+      gap: var(--size-4);
+    }
+
+    .demo-label {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: var(--neutral-500);
+      margin-bottom: var(--size-2);
+    }
+
+    .demo-panel {
+      background: var(--crt-dark);
+      border: 1px solid var(--term-border);
+      padding: var(--size-4);
+      display: flex;
+      flex-direction: column;
+      gap: var(--size-3);
+    }
+
+    .demo-panel.crt-context {
+      background: #0c0f14;
+      border-color: #242c38;
+    }
+
+    .readout {
+      font-family: var(--font-mono);
+      font-size: var(--font-size-0);
+      text-transform: uppercase;
+      letter-spacing: var(--font-letterspacing-4);
+      background: #0a0a0a;
+      border: 1px solid #2a2a2a;
+      padding: 10px 14px;
+      color: var(--phosphor);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--size-3);
+    }
+
+    .readout .label {
+      color: #707e91;
+      font-size: 10px;
+    }
+
+    .readout .value {
+      color: var(--amber);
+      font-weight: 600;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .live-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--size-5);
+      margin-bottom: var(--size-7);
+    }
+
+    @media (max-width: 980px) {
+      .live-grid { grid-template-columns: 1fr; }
+    }
+
+    .observer-panel {
+      background: #0a0a0a;
+      border: 2px solid #2a2a2a;
+      padding: var(--size-4);
+      box-shadow: inset 0 0 30px rgba(0,0,0,0.7);
+    }
+
+    .observer-log {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      background: #111;
+      color: #a6c8e1;
+      padding: var(--size-3);
+      border: 1px solid #2a2a2a;
+      max-height: 168px;
+      overflow: auto;
+      white-space: pre;
+      line-height: 1.35;
+    }
+
+    .resizable-box {
+      width: 320px;
+      height: 168px;
+      background: linear-gradient(145deg, #1a222c, #111);
+      border: 2px solid #3a4554;
+      resize: both;
+      overflow: auto;
+      min-width: 180px;
+      min-height: 110px;
+      max-width: 100%;
+      box-shadow: inset 0 0 18px rgba(0,0,0,0.6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .resizable-box::after {
+      content: "DRAG CORNER TO RESIZE";
+      position: absolute;
+      bottom: 6px;
+      right: 8px;
+      font-family: var(--font-mono);
+      font-size: 9px;
+      color: #5f6b7a;
+      letter-spacing: 1px;
+      pointer-events: none;
+    }
+
+    .resizable-content {
+      text-align: center;
+      color: var(--phosphor);
+      font-family: var(--font-mono);
+      font-size: 13px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+    }
+
+    .status-bar {
+      display: flex;
+      align-items: center;
+      gap: var(--size-3);
+      margin-top: var(--size-3);
+      padding-top: var(--size-3);
+      border-top: 1px solid rgba(166, 200, 225, 0.18);
+      color: #707e91;
+      font-size: var(--font-size-0);
+      font-family: var(--font-mono);
+      text-transform: uppercase;
+      letter-spacing: var(--font-letterspacing-5);
+    }
+
+    .mono {
+      font-family: var(--font-mono);
+      text-transform: uppercase;
+      letter-spacing: var(--font-letterspacing-4);
+    }
+
+    .instrument-label {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #5f6b7a;
+      margin-bottom: 4px;
+    }
+
+    .terminal-log {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      background: #0c0f14;
+      color: #a6c8e1;
+      padding: var(--size-3);
+      border: 1px solid #2a2a2a;
+      max-height: 142px;
+      overflow: auto;
+      white-space: pre-line;
+      line-height: 1.4;
+    }
+
+    .utility-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: var(--size-5);
+      margin-bottom: var(--size-7);
+    }
+
+    .action-station {
+      background: var(--term-panel);
+      border: 1px solid var(--term-border);
+      padding: var(--size-5);
+    }
+
+    .action-station .station-header {
+      font-family: var(--font-mono);
+      font-size: var(--font-size-0);
+      text-transform: uppercase;
+      letter-spacing: var(--font-letterspacing-5);
+      color: var(--amber);
+      margin-bottom: var(--size-4);
+      display: flex;
+      align-items: center;
+      gap: var(--size-2);
+    }
+
+    .props-doc {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      line-height: 1.35;
+      color: #707e91;
+      background: #0c1118;
+      padding: var(--size-3);
+      border-left: 3px solid #2f3a47;
+      white-space: pre-line;
+    }
+
+    .props-doc strong {
+      color: var(--phosphor);
+    }
+
+    .page-footer {
+      margin-top: var(--size-7);
+      padding-top: var(--size-4);
+      border-top: 1px solid var(--term-border);
+      font-family: var(--font-mono);
+      font-size: var(--font-size-0);
+      color: var(--neutral-500);
+      text-align: center;
+      letter-spacing: 1px;
+    }
+
+    .avatar-row {
+      display: flex;
+      gap: var(--size-5);
+      flex-wrap: wrap;
+      align-items: flex-end;
+    }
+
+    .icon-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(78px, 1fr));
+      gap: var(--size-3);
+    }
+
+    .icon-cell {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      padding: 8px;
+      background: #0a0a0a;
+      border: 1px solid #222;
+      text-align: center;
+    }
+
+    .icon-cell .label {
+      font-family: var(--font-mono);
+      font-size: 9px;
+      color: #707e91;
+      letter-spacing: 0.5px;
+    }
+
+    .skeleton-demo {
+      min-height: 118px;
+    }
+
+    .live-value {
+      font-variant-numeric: tabular-nums;
+      color: var(--amber);
+    }
+
+    thx-crt-display[style*="large"] .crt-content {
+      padding: var(--size-6);
+    }
+  </style>
+</head>
+<body>
+  <div class="support-bay">
+    <!-- COMMAND HEADER -->
+    <div class="command-header">
+      <div class="header-left">
+        <div class="eyebrow">RACK 04-U7 • SUPPORT SYSTEMS</div>
+        <h1>THX-1138 // UTILITY RACK TERMINAL</h1>
+      </div>
+      <div class="header-right">
+        <div class="status-cluster">
+          <span id="live-time" class="live-clock">09:41:12</span>
+          <thx-status-leds count="6" label="BAY"></thx-status-leds>
+        </div>
+        <span style="color:#5f6b7a; font-size:10px;">LDS-U1138 • v0.9.4</span>
+        <thx-button variant="secondary" size="small" onclick="window.location.href='../../index.html'">MAIN CONSOLE</thx-button>
+      </div>
+    </div>
+
+    <!-- HERO -->
+    <div class="bay-hero">
+      <thx-crt-display label="SUPPORT SYSTEMS BAY — UTILITY MODULES • LIVE TELEMETRY" size="large">
+        <div style="max-width: 880px;">
+          <p style="margin:0 0 var(--size-4) 0;">
+            Sterile control-room utilities. Formatters render clinical readouts in real time. Observers deliver live diagnostic logs and dimension telemetry. 
+            Media primitives and accessibility helpers complete the rack. All components are zero-JS drop-in elements with native CRT styling.
+          </p>
+          <div style="display:flex; gap:var(--size-3); align-items:center; flex-wrap:wrap;">
+            <thx-badge variant="pulse">LIVE</thx-badge>
+            <thx-badge variant="primary">12 UTILITIES</thx-badge>
+            <thx-tag>FORMATTERS</thx-tag>
+            <thx-tag>OBSERVERS</thx-tag>
+            <thx-tag>MEDIA</thx-tag>
+            <thx-tag>ACCESSIBILITY</thx-tag>
+            <span class="mono" style="color:#707e91; font-size:10px; margin-left:auto;">PHOSPHOR • AMBER • CRITICAL ORANGE</span>
+          </div>
+        </div>
+        <div class="status-bar">
+          <span>STATUS: NOMINAL — ALL SYSTEMS SYNCHRONIZED</span>
+          <thx-status-leds count="5" style="margin-left:auto;"></thx-status-leds>
+        </div>
+      </thx-crt-display>
+    </div>
+
+    <!-- FORMATTERS RACK -->
+    <div class="section-title">// FORMATTER INSTRUMENTATION — LIVE UPDATING READOUTS</div>
+
+    <div class="demo-grid">
+      <!-- FORMAT-BYTES -->
+      <thx-card label="THX-FORMAT-BYTES — STORAGE / THROUGHPUT">
+        <div class="component-card">
+          <div class="demo-label">MEMORY &amp; BUFFER TELEMETRY</div>
+          <div class="demo-panel">
+            <div class="instrument-label">CORE DUMP • 1024-BASED</div>
+            <thx-format-bytes id="fmt-bytes" value="16777216" precision="2" variant="crt"></thx-format-bytes>
+
+            <div class="instrument-label" style="margin-top:10px;">NETWORK THROUGHPUT • BITS</div>
+            <thx-format-bytes id="fmt-bits" value="124800000" unit="bits" precision="1" variant="crt"></thx-format-bytes>
+          </div>
+          <div class="props-doc">ATTRS: value, unit="bytes|bits", precision, variant="crt"<br>Auto-splits into &lt;span part="value"&gt; + &lt;span part="unit"&gt;</div>
+        </div>
+      </thx-card>
+
+      <!-- FORMAT-NUMBER -->
+      <thx-card label="THX-FORMAT-NUMBER — CLINICAL NUMERICS">
+        <div class="component-card">
+          <div class="demo-label">ENGINEERING &amp; PERCENT TELEMETRY</div>
+          <div class="demo-panel">
+            <div class="instrument-label">CPU LOAD</div>
+            <thx-format-number id="fmt-number" value="87.4" notation="percent" precision="1" variant="crt"></thx-format-number>
+
+            <div class="instrument-label" style="margin-top:10px;">LATENCY (MS) — ENGINEERING</div>
+            <thx-format-number id="fmt-eng" value="1247" notation="engineering" precision="2" variant="crt"></thx-format-number>
+
+            <div class="instrument-label" style="margin-top:10px;">BANDWIDTH CREDIT</div>
+            <thx-format-number id="fmt-curr" value="48320" notation="currency" currency="USD" precision="0" variant="crt"></thx-format-number>
+          </div>
+          <div class="props-doc">NOTATION: decimal | percent | currency | exponential | engineering<br>Perfect inside thx-crt-display instrument banks</div>
+        </div>
+      </thx-card>
+
+      <!-- FORMAT-DATE + RELATIVE-TIME -->
+      <thx-card label="THX-FORMAT-DATE + THX-RELATIVE-TIME">
+        <div class="component-card">
+          <div class="demo-label">TIMESTAMP &amp; LIVE AGE</div>
+          <div class="demo-panel">
+            <div class="instrument-label">MISSION START — CRT STYLE</div>
+            <thx-format-date id="fmt-date" value="2026-04-12T08:14:00Z" format="crt" variant="crt"></thx-format-date>
+
+            <div class="instrument-label" style="margin-top:12px;">RELATIVE ELAPSED (AUTO-UPDATE)</div>
+            <thx-relative-time id="rel-time-1" date="2026-05-10T14:22:00Z" style="font-size:15px;" update="always"></thx-relative-time>
+
+            <div style="margin-top:8px; display:flex; gap:6px; align-items:center;">
+              <thx-relative-time date="2026-05-13T23:50:00Z" style="font-size:13px;"></thx-relative-time>
+              <thx-badge variant="warning" style="font-size:9px;">CRITICAL WINDOW</thx-badge>
+            </div>
+          </div>
+          <div class="props-doc">RELATIVE-TIME: auto ticks every minute (narrow/short/long). Date accepts ISO or timestamp.<br>FORMAT-DATE supports crt, iso, long, unix.</div>
+        </div>
+      </thx-card>
+    </div>
+
+    <!-- MEDIA BAY -->
+    <div class="section-title">// MEDIA ASSETS — AVATARS • ICONS • ANIMATIONS</div>
+
+    <div class="demo-grid">
+      <!-- AVATAR -->
+      <thx-card label="THX-AVATAR — CREW &amp; SYSTEM STATUS">
+        <div class="component-card">
+          <div class="demo-label">OPERATOR &amp; SYSTEM IDENTITIES</div>
+          <div class="avatar-row">
+            <thx-tooltip content="OPS LEAD — ONLINE" placement="top">
+              <thx-avatar name="OPS-07" status="online" size="lg" shape="circle" variant="crt"></thx-avatar>
+            </thx-tooltip>
+            <thx-tooltip content="SECTOR ANALYST" placement="top">
+              <thx-avatar name="A-12" status="away" size="lg" variant="crt"></thx-avatar>
+            </thx-tooltip>
+            <thx-tooltip content="MAINTENANCE DRONE" placement="top">
+              <thx-avatar name="MNT-03" status="busy" size="md" shape="square" variant="crt"></thx-avatar>
+            </thx-tooltip>
+            <thx-tooltip content="OFFLINE RELAY" placement="top">
+              <thx-avatar name="RLY" status="offline" size="md" variant="crt"></thx-avatar>
+            </thx-tooltip>
+          </div>
+          <div class="props-doc">status: online | away | busy | offline • shape: circle | square<br>variant="crt" adds phosphor frame + glow</div>
+        </div>
+      </thx-card>
+
+      <!-- ICON -->
+      <thx-card label="THX-ICON — CLINICAL MONOCHROME SET">
+        <div class="component-card">
+          <div class="demo-label">INSTRUMENT SYMBOLS</div>
+          <div class="icon-grid">
+            <div class="icon-cell"><thx-icon name="warning" size="lg" color="warning"></thx-icon><div class="label">WARNING</div></div>
+            <div class="icon-cell"><thx-icon name="check" size="lg" color="success"></thx-icon><div class="label">NOMINAL</div></div>
+            <div class="icon-cell"><thx-icon name="info" size="lg"></thx-icon><div class="label">INFO</div></div>
+            <div class="icon-cell"><thx-icon name="database" size="lg"></thx-icon><div class="label">DB</div></div>
+            <div class="icon-cell"><thx-icon name="monitor" size="lg"></thx-icon><div class="label">CRT</div></div>
+            <div class="icon-cell"><thx-icon name="user" size="lg"></thx-icon><div class="label">CREW</div></div>
+          </div>
+          <div class="props-doc">Built-in names: warning, check, info, close, database, monitor, user, arrow-*, etc.<br>color="primary|warning|error|success"</div>
+        </div>
+      </thx-card>
+
+      <!-- ANIMATED IMAGE + ANIMATION -->
+      <thx-card label="THX-ANIMATED-IMAGE + THX-ANIMATION">
+        <div class="component-card">
+          <div class="demo-label">CRT MEDIA + ENTRANCE FX</div>
+          <div class="demo-panel" style="align-items:center; gap:14px;">
+            <thx-animated-image 
+              src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjIwIiBoZWlnaHQ9IjExMCIgdmlld0JveD0iMCAwIDIyMCAxMTAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjIyMCIgaGVpZ2h0PSIxMTAiIGZpbGw9IiMwYTBhMGEiLz48dGV4dCB4PSIxMTAiIHk9IjQyIiBmaWxsPSIjYTZjOGUxIiBmb250LWZhbWlseT0ibW9ub3NwYWNlIiBmb250LXNpemU9IjE0IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5TQ0FOIEZFRUQgMDE8L3RleHQ+PHBhdGggZD0iTTMwIDc1IEwxOTAgNzUiIHN0cm9rZT0iI2E2YzhlMSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtZGFzaGFycmF5PSI0IDQiLz48L3N2Zz4="
+              alt="SCAN FEED 01"
+              variant="crt"
+              scanlines
+              vignette
+              style="width:100%; max-width:280px;">
+            </thx-animated-image>
+
+            <div style="display:flex; gap:8px; flex-wrap:wrap; justify-content:center;">
+              <thx-animation id="anim-1" name="fade" direction="in" duration="380">
+                <thx-badge variant="primary">FADE IN</thx-badge>
+              </thx-animation>
+              <thx-animation id="anim-2" name="slide" direction="in" duration="420">
+                <thx-tag>SLIDE RIGHT</thx-tag>
+              </thx-animation>
+              <thx-animation id="anim-3" name="scale" direction="in" duration="360">
+                <thx-badge variant="warning">SCALE UP</thx-badge>
+              </thx-animation>
+            </div>
+            <div style="display:flex; gap:6px;">
+              <thx-button size="small" variant="secondary" onclick="replayAnimations()">REPLAY ENTRANCES</thx-button>
+            </div>
+          </div>
+          <div class="props-doc">thx-animated-image supports crt + scanlines + vignette<br>thx-animation: name="fade|slide|scale|scan|flicker", direction, duration, trigger</div>
+        </div>
+      </thx-card>
+    </div>
+
+    <!-- OBSERVERS DECK -->
+    <div class="section-title">// OBSERVER ARRAY — LIVE DOM &amp; DIMENSION TELEMETRY</div>
+
+    <div class="live-grid">
+      <!-- MUTATION OBSERVER -->
+      <thx-crt-display label="MUTATION OBSERVER — REAL-TIME DOM LOG" style="min-height: 360px;">
+        <div class="observer-panel">
+          <div style="display:flex; gap:8px; margin-bottom:10px; flex-wrap:wrap;">
+            <thx-button size="small" onclick="mutateAddTag()">+ ADD TAG</thx-button>
+            <thx-button size="small" onclick="mutateToggleAttr()">TOGGLE CLASS</thx-button>
+            <thx-button size="small" onclick="mutateAppendChild()">APPEND CHILD</thx-button>
+            <thx-button size="small" variant="secondary" onclick="mutateClearArea()">CLEAR AREA</thx-button>
+          </div>
+
+          <thx-mutation-observer id="mut-observer" active observe-attributes="true" observe-child-list="true" attribute-filter="class,data-status" max-entries="28">
+            <div id="mutation-target" class="demo-panel" style="min-height: 98px; padding:10px;">
+              <div style="color:#707e91; font-size:10px; margin-bottom:6px;">MUTATION TARGET AREA — INTERACT TO LOG</div>
+              <div id="mutation-content">
+                <thx-tag data-status="stable">SECTOR-7G</thx-tag>
+              </div>
+            </div>
+          </thx-mutation-observer>
+
+          <div class="status-bar" style="margin-top:8px;">
+            <span id="mut-status">OBSERVING • 28 ENTRIES MAX</span>
+            <thx-button size="small" onclick="toggleMutationObserver()" id="mut-toggle-btn">PAUSE</thx-button>
+          </div>
+        </div>
+      </thx-crt-display>
+
+      <!-- RESIZE OBSERVER -->
+      <thx-crt-display label="RESIZE OBSERVER — LIVE DIMENSION FEED" style="min-height: 360px;">
+        <div class="observer-panel">
+          <div class="instrument-label" style="margin-bottom:6px;">DRAG THE CONTENT AREA — DIMENSIONS UPDATE LIVE IN CRT READOUT</div>
+
+          <thx-resize-observer id="resize-obs" active detailed resizable>
+            <div style="padding:14px 18px; background:#0c1118; color:#a6c8e1; font-family:var(--font-mono); text-transform:uppercase; letter-spacing:1.5px; min-height:118px; display:flex; align-items:center; justify-content:center; text-align:center; border:1px dashed #2a2a2a;">
+              RESIZABLE FIXTURE<br>
+              <span style="font-size:10px; color:#707e91; display:block; margin-top:6px;">DRAG CORNERS — LIVE W×H + ASPECT TELEMETRY</span>
+            </div>
+          </thx-resize-observer>
+
+          <div class="status-bar">
+            <span>BUILT-IN RESIZABLE + DETAILED RECT READOUT</span>
+            <thx-button size="small" variant="secondary" onclick="resetResizeObserver()">RESET</thx-button>
+          </div>
+        </div>
+      </thx-crt-display>
+    </div>
+
+    <!-- UTILITIES CONSOLE -->
+    <div class="section-title">// UTILITY CONTROL CONSOLE — INCLUDE • TOOLTIP • SKELETON • SPINNER • LEDS • A11Y</div>
+
+    <div class="utility-grid">
+      <!-- INCLUDE -->
+      <thx-card label="THX-INCLUDE — DYNAMIC MODULE LOADER">
+        <div class="component-card">
+          <div class="demo-label">EXTERNAL SNIPPET INJECTION</div>
+          <div class="demo-panel">
+            <thx-include id="demo-include" mode="html" variant="crt" style="min-height:68px;"></thx-include>
+            <div style="margin-top:8px;">
+              <thx-button size="small" onclick="loadDynamicInclude()">LOAD DYNAMIC SUPPORT MODULE</thx-button>
+              <thx-button size="small" variant="secondary" onclick="clearInclude()">CLEAR</thx-button>
+            </div>
+          </div>
+          <div class="props-doc">src + mode="html|text|json" • refresh-interval • show-refresh<br>Data URLs supported for static demos.</div>
+        </div>
+      </thx-card>
+
+      <!-- TOOLTIP -->
+      <thx-card label="THX-TOOLTIP — CONTEXTUAL HELP">
+        <div class="component-card">
+          <div class="demo-label">RICH &amp; WARNING VARIANTS</div>
+          <div class="demo-panel" style="gap:16px;">
+            <div>
+              <thx-tooltip content="CRITICAL THRESHOLD BREACH — 87% CPU" placement="right" variant="warning">
+                <thx-icon name="warning" size="lg" color="warning" style="cursor:help;"></thx-icon>
+              </thx-tooltip>
+              <span style="margin-left:10px; font-size:12px;">Hover icon for warning tooltip</span>
+            </div>
+
+            <div>
+              <thx-tooltip placement="top">
+                <thx-button size="small">DEPLOY MODULE</thx-button>
+                <div slot="content">
+                  <strong>DEPLOYMENT CONFIRMED</strong><br>
+                  4 nodes • 12s estimated
+                </div>
+              </thx-tooltip>
+            </div>
+
+            <div>
+              <span>Status: <thx-tooltip content="ALL NOMINAL — LAST CHECK 09:39" placement="bottom"><strong style="color:#3a9f4a; cursor:help;">NOMINAL</strong></thx-tooltip></span>
+            </div>
+          </div>
+          <div class="props-doc">placement, variant="warning|error", rich slot="content"</div>
+        </div>
+      </thx-card>
+
+      <!-- STATUS LEDS + VISUALLY HIDDEN -->
+      <thx-card label="THX-STATUS-LEDS + VISUALLY-HIDDEN">
+        <div class="component-card">
+          <div class="demo-label">INDICATOR MATRIX + SKIP LINK</div>
+          <div class="demo-panel">
+            <div>
+              <div class="instrument-label">BAY STATUS MATRIX</div>
+              <thx-status-leds id="demo-leds" count="8" label="RACK"></thx-status-leds>
+              <div style="margin-top:8px; display:flex; gap:6px;">
+                <thx-button size="small" onclick="pulseLeds()">PULSE ALL</thx-button>
+                <thx-button size="small" variant="secondary" onclick="setLedError()">INJECT ERROR</thx-button>
+              </div>
+            </div>
+
+            <div style="margin-top:12px; border-top:1px solid #222; padding-top:10px;">
+              <div class="instrument-label">ACCESSIBILITY — SKIP LINK DEMO</div>
+              <thx-visually-hidden focusable>
+                <a href="#main-utilities" class="mono" style="font-size:11px; color:#a6c8e1; text-decoration:underline;">SKIP TO UTILITY CONSOLE</a>
+              </thx-visually-hidden>
+              <div style="font-size:10px; color:#707e91; margin-top:4px;">Tab to focus — link becomes visible with phosphor ring</div>
+            </div>
+          </div>
+          <div class="props-doc">status-leds: count, label, leds (array for state control)<br>visually-hidden: focusable | skip-link | announce</div>
+        </div>
+      </thx-card>
+
+      <!-- SKELETON + SPINNER -->
+      <thx-card label="THX-SKELETON + THX-SPINNER — LOADING STATES">
+        <div class="component-card">
+          <div class="demo-label">TELEMETRY LOAD SIMULATION</div>
+          <div class="demo-panel skeleton-demo">
+            <div id="skeleton-area">
+              <thx-skeleton id="skel-1" lines="2" animate style="margin-bottom:8px;"></thx-skeleton>
+              <thx-skeleton id="skel-2" lines="1" animate width="65%"></thx-skeleton>
+            </div>
+            <div id="loaded-area" style="display:none;">
+              <div style="display:flex; align-items:center; gap:8px;">
+                <thx-format-bytes value="4915200" precision="1" variant="crt"></thx-format-bytes>
+                <span class="mono" style="color:#3a9f4a; font-size:10px;">LOADED</span>
+              </div>
+              <div style="margin-top:4px; font-size:11px;">3 modules synchronized • 48s ago</div>
+            </div>
+          </div>
+          <div style="display:flex; gap:6px; margin-top:4px;">
+            <thx-button size="small" onclick="simulateLoad()">FETCH SUPPORT LOG</thx-button>
+            <thx-spinner id="load-spinner" size="sm" style="display:none;"></thx-spinner>
+          </div>
+          <div class="props-doc">skeleton: lines, animate, width/height • spinner: size sm|md|lg, variant</div>
+        </div>
+      </thx-card>
+    </div>
+
+    <!-- LIVE INTEGRATION EXAMPLE -->
+    <div class="section-title">// INTEGRATION NOTES — TERMINAL STYLE</div>
+
+    <thx-crt-display label="SUPPORT SYSTEMS BAY — USAGE PATTERNS" style="margin-bottom: var(--size-6);">
+      <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: var(--size-5);">
+        <div>
+          <div class="instrument-label">FORMATTER IN TELEMETRY PANEL</div>
+          <div class="terminal-log" style="font-size:10.5px; margin-top:6px;">
+&lt;thx-crt-display label="MEM-04"&gt;
+  &lt;thx-format-bytes value="33554432" precision="1" variant="crt"&gt;&lt;/thx-format-bytes&gt;
+  &lt;thx-relative-time date="2026-05-13T07:18:00Z"&gt;&lt;/thx-relative-time&gt;
+&lt;/thx-crt-display&gt;
+          </div>
+        </div>
+        <div>
+          <div class="instrument-label">OBSERVER AROUND DYNAMIC LIST</div>
+          <div class="terminal-log" style="font-size:10.5px; margin-top:6px;">
+&lt;thx-mutation-observer active observe-child-list&gt;
+  &lt;ul id="log-list"&gt;&lt;/ul&gt;
+&lt;/thx-mutation-observer&gt;
+
+&lt;script&gt; list.append(...) &lt;/script&gt;
+          </div>
+        </div>
+        <div>
+          <div class="instrument-label">THX-INCLUDE + TOOLTIP + AVATAR</div>
+          <div class="terminal-log" style="font-size:10.5px; margin-top:6px;">
+&lt;thx-include src="/api/crew-status" mode="html"&gt;&lt;/thx-include&gt;
+&lt;thx-tooltip content="OPS ONLINE"&gt;
+  &lt;thx-avatar name="OPS-07" status="online"&gt;&lt;/thx-avatar&gt;
+&lt;/thx-tooltip&gt;
+          </div>
+        </div>
+      </div>
+      <div class="status-bar" style="margin-top: var(--size-4);">
+        <span>ALL UTILITIES PARTICIPATE IN LIGHT DOM — FULLY STYLEABLE VIA PARTS &amp; CSS</span>
+      </div>
+    </thx-crt-display>
+
+    <div class="page-footer">
+      THX 1138 SUPPORT SYSTEMS BAY • FORMATTERS • OBSERVERS • MEDIA • UTILITIES<br>
+      ZERO BOILERPLATE • LIVE UPDATING • CRT NATIVE • FULLY ACCESSIBLE
+    </div>
+  </div>
+
+  <script>
+    // Live clock
+    function updateClock() {
+      const el = document.getElementById('live-time');
+      if (!el) return;
+      const now = new Date();
+      el.textContent = now.toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+
+    // Live formatter updates
+    let bytesVal = 16777216;
+    let numVal = 87.4;
+    let engVal = 1247;
+
+    function updateLiveFormatters() {
+      const bytesEl = document.getElementById('fmt-bytes');
+      const bitsEl = document.getElementById('fmt-bits');
+      const numEl = document.getElementById('fmt-number');
+      const engEl = document.getElementById('fmt-eng');
+      const currEl = document.getElementById('fmt-curr');
+      const dateEl = document.getElementById('fmt-date');
+
+      if (bytesEl) {
+        bytesVal = Math.round(bytesVal * 1.014 + (Math.random() * 120000));
+        bytesEl.setAttribute('value', bytesVal);
+      }
+      if (bitsEl) {
+        bitsEl.setAttribute('value', Math.round(124800000 + Math.random() * 1800000));
+      }
+      if (numEl) {
+        numVal = Math.min(99.8, Math.max(61.2, numVal + (Math.random() - 0.5) * 3.2));
+        numEl.setAttribute('value', numVal.toFixed(1));
+      }
+      if (engEl) {
+        engVal = Math.round(engVal * (0.98 + Math.random() * 0.05));
+        engEl.setAttribute('value', engVal);
+      }
+      if (currEl) {
+        currEl.setAttribute('value', Math.round(48320 + Math.random() * 420));
+      }
+      if (dateEl) {
+        // Occasionally advance the date demo by a few minutes for visual interest
+        if (Math.random() < 0.18) {
+          const d = new Date('2026-04-12T08:14:00Z');
+          d.setMinutes(d.getMinutes() + 7);
+          dateEl.setAttribute('value', d.toISOString());
+        }
+      }
+    }
+    setInterval(updateLiveFormatters, 2350);
+
+    // Animation replay
+    function replayAnimations() {
+      ['anim-1', 'anim-2', 'anim-3'].forEach(id => {
+        const anim = document.getElementById(id);
+        if (!anim) return;
+        anim.trigger = false;
+        // Force restart by toggling trigger
+        setTimeout(() => {
+          if (anim) anim.trigger = true;
+        }, 40);
+      });
+    }
+
+    // Mutation observer demo helpers
+    let mutationActive = true;
+
+    function mutateAddTag() {
+      const container = document.getElementById('mutation-content');
+      if (!container) return;
+      const tag = document.createElement('thx-tag');
+      tag.textContent = 'NEW-' + Math.floor(Math.random() * 90 + 10);
+      tag.setAttribute('data-status', 'new');
+      tag.setAttribute('removable', '');
+      container.appendChild(tag);
+    }
+
+    function mutateToggleAttr() {
+      const container = document.getElementById('mutation-target');
+      if (!container) return;
+      if (container.classList.contains('highlight-mut')) {
+        container.classList.remove('highlight-mut');
+        container.removeAttribute('data-status');
+      } else {
+        container.classList.add('highlight-mut');
+        container.setAttribute('data-status', 'modified');
+      }
+    }
+
+    function mutateAppendChild() {
+      const container = document.getElementById('mutation-content');
+      if (!container) return;
+      const p = document.createElement('div');
+      p.style.cssText = 'font-size:10px; color:#707e91; margin-top:4px;';
+      p.textContent = 'LOG ENTRY @ ' + new Date().toLocaleTimeString('en-US', { hour12: false });
+      container.appendChild(p);
+    }
+
+    function mutateClearArea() {
+      const container = document.getElementById('mutation-content');
+      if (container) container.innerHTML = '<span style="color:#5f6b7a; font-size:10px;">AREA CLEARED — READY FOR NEW MUTATIONS</span>';
+    }
+
+    function toggleMutationObserver() {
+      const obs = document.getElementById('mut-observer');
+      const btn = document.getElementById('mut-toggle-btn');
+      const status = document.getElementById('mut-status');
+      if (!obs) return;
+
+      mutationActive = !mutationActive;
+      if (mutationActive) {
+        obs.setAttribute('active', '');
+        if (btn) btn.textContent = 'PAUSE';
+        if (status) status.textContent = 'OBSERVING • LIVE';
+        obs.style.opacity = '1';
+      } else {
+        obs.removeAttribute('active');
+        if (btn) btn.textContent = 'RESUME';
+        if (status) status.textContent = 'STANDBY • PAUSED';
+        obs.style.opacity = '0.65';
+      }
+    }
+
+    // Resize observer helpers
+    function resetResizeObserver() {
+      const obs = document.getElementById('resize-obs');
+      if (obs) {
+        // The component internally resets its slotted content size when we toggle a transient attribute
+        const content = obs.querySelector('.content-slot, [style*="resize"]');
+        if (content) {
+          content.style.width = '320px';
+          content.style.height = '148px';
+        }
+      }
+    }
+
+    // Dynamic include loader using data URL (fully self-contained)
+    function loadDynamicInclude() {
+      const inc = document.getElementById('demo-include');
+      if (!inc) return;
+
+      const html = `
+        <div style="display:flex; align-items:center; gap:10px; padding:2px 4px;">
+          <thx-status-leds count="3" label="DYN"></thx-status-leds>
+          <div>
+            <div style="color:#a6c8e1; font-family:monospace; font-size:11px; letter-spacing:0.5px;">SUPPORT-MOD-07 LOADED</div>
+            <div style="color:#707e91; font-size:9px;">14 modules • 0.9s fetch</div>
+          </div>
+        </div>
+      `;
+      const dataUrl = 'data:text/html;charset=utf-8,' + encodeURIComponent(html);
+      inc.setAttribute('src', dataUrl);
+
+      // flash effect
+      const parent = inc.parentElement;
+      if (parent) {
+        parent.style.boxShadow = '0 0 0 2px #d4aa00';
+        setTimeout(() => { if (parent) parent.style.boxShadow = ''; }, 820);
+      }
+    }
+
+    function clearInclude() {
+      const inc = document.getElementById('demo-include');
+      if (inc) inc.removeAttribute('src');
+    }
+
+    // LEDS interactive
+    function pulseLeds() {
+      const leds = document.getElementById('demo-leds');
+      if (!leds) return;
+      leds.setAttribute('count', '8');
+      // Flash all on warning briefly via custom leds array
+      leds.leds = [
+        {active:true, state:'warning'}, {active:true, state:'normal'}, {active:true, state:'warning'},
+        {active:true, state:'normal'}, {active:true, state:'warning'}, {active:true, state:'normal'},
+        {active:true, state:'warning'}, {active:true, state:'normal'}
+      ];
+      setTimeout(() => {
+        if (leds) leds.leds = undefined; // reset to default pattern
+      }, 1650);
+    }
+
+    function setLedError() {
+      const leds = document.getElementById('demo-leds');
+      if (!leds) return;
+      leds.leds = [
+        {active:true, state:'normal'}, {active:true, state:'normal'}, {active:true, state:'normal'},
+        {active:false, state:'normal'}, {active:true, state:'error'}, {active:true, state:'error'},
+        {active:true, state:'warning'}, {active:true, state:'normal'}
+      ];
+      setTimeout(() => {
+        if (leds) leds.leds = undefined;
+      }, 2400);
+    }
+
+    // Skeleton / Spinner load simulation
+    function simulateLoad() {
+      const skelArea = document.getElementById('skeleton-area');
+      const loadedArea = document.getElementById('loaded-area');
+      const spinner = document.getElementById('load-spinner');
+
+      if (!skelArea || !loadedArea) return;
+
+      skelArea.style.display = 'none';
+      loadedArea.style.display = 'none';
+      if (spinner) spinner.style.display = 'inline-block';
+
+      setTimeout(() => {
+        if (spinner) spinner.style.display = 'none';
+        loadedArea.style.display = 'block';
+
+        // Re-arm for next demo
+        setTimeout(() => {
+          if (skelArea && loadedArea) {
+            skelArea.style.display = 'block';
+            loadedArea.style.display = 'none';
+          }
+        }, 5200);
+      }, 1250);
+    }
+
+    // Boot everything
+    function bootUtilityBay() {
+      // Prime initial formatter values
+      setTimeout(() => {
+        updateLiveFormatters();
+      }, 380);
+
+      // Seed a couple of mutations so the log has initial activity
+      setTimeout(() => {
+        const content = document.getElementById('mutation-content');
+        if (content) {
+          const extra = document.createElement('span');
+          extra.style.cssText = 'font-size:9px; color:#5f6b7a; margin-left:8px;';
+          extra.textContent = '• SYNCED';
+          content.appendChild(extra);
+        }
+      }, 900);
+
+      // Gentle initial animation trigger
+      setTimeout(() => {
+        const a1 = document.getElementById('anim-1');
+        const a2 = document.getElementById('anim-2');
+        const a3 = document.getElementById('anim-3');
+        if (a1) a1.trigger = true;
+        if (a2) setTimeout(() => a2 && (a2.trigger = true), 120);
+        if (a3) setTimeout(() => a3 && (a3.trigger = true), 240);
+      }, 750);
+
+      // Prime resize observer with initial size hint (component handles live)
+      const resizeBox = document.getElementById('resizable-demo');
+      if (resizeBox) {
+        resizeBox.title = 'Resize me — dimensions update live in CRT readout';
+      }
+
+      // Make sure include is empty initially (clean state)
+      const inc = document.getElementById('demo-include');
+      if (inc) {
+        inc.removeAttribute('src');
+      }
+
+      // Welcome log hint in console
+      console.log('%c[THX Utilities] Support Systems Bay online. All formatters, observers, and utilities live.', 'color:#5f6b7a');
+
+      // Easter egg: clicking the header time cycles a full bay status pulse
+      setTimeout(() => {
+        const timeEl = document.getElementById('live-time');
+        if (timeEl) {
+          timeEl.style.cursor = 'pointer';
+          timeEl.title = 'Click to pulse full bay status matrix';
+          timeEl.addEventListener('click', () => {
+            const leds = document.querySelector('.command-header thx-status-leds');
+            if (leds) {
+              leds.leds = Array.from({length:6}, (_,i) => ({ active: true, state: i % 2 === 0 ? 'warning' : 'normal' }));
+              setTimeout(() => {
+                if (leds) leds.leds = undefined;
+              }, 1350);
+            }
+          });
+        }
+      }, 1100);
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', bootUtilityBay);
+    } else {
+      bootUtilityBay();
+    }
+  </script>
+</body>
+</html>

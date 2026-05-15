@@ -1,0 +1,1014 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>THX 1138 // SCOPE ROOM — CRT DATA VISUALIZATION TERMINAL</title>
+  <link rel="stylesheet" href="../../aesthetics.css" />
+  <script type="module" src="../../webcomponents.js"></script>
+  <style>
+    :root {
+      --term-bg: #0a0c10;
+      --term-panel: #111418;
+      --term-border: #1f252e;
+      --phosphor: #a6c8e1;
+      --amber: #d4aa00;
+      --critical: #d44000;
+      --success: #3a9f4a;
+      --grid: #1a222c;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background: var(--term-bg);
+      background-image:
+        linear-gradient(rgba(166, 200, 225, 0.018) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(166, 200, 225, 0.018) 1px, transparent 1px);
+      background-size: 22px 22px;
+      color: var(--neutral-300);
+      font-family: var(--font-body);
+      min-height: 100vh;
+      line-height: 1.5;
+    }
+
+    .scope-room {
+      max-width: 1620px;
+      margin: 0 auto;
+      padding: var(--size-4) var(--size-5);
+    }
+
+    /* COMMAND HEADER — sticky rack console */
+    .command-header {
+      position: sticky;
+      top: 0;
+      z-index: var(--layer-4);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: var(--size-3) var(--size-5);
+      background: rgba(10, 12, 16, 0.96);
+      border-bottom: var(--border-size-1) solid var(--term-border);
+      backdrop-filter: blur(14px);
+      margin-bottom: var(--size-6);
+    }
+
+    .header-left h1 {
+      margin: 0;
+      font-family: var(--font-mono);
+      font-size: clamp(1.35rem, 3.2vw, 2.05rem);
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--phosphor);
+      font-weight: 600;
+    }
+
+    .header-left .eyebrow {
+      font-family: var(--font-mono);
+      font-size: var(--font-size-0);
+      letter-spacing: var(--font-letterspacing-5);
+      color: #5f6b7a;
+      text-transform: uppercase;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: var(--size-5);
+    }
+
+    .live-clock {
+      font-family: var(--font-mono);
+      font-size: 15px;
+      letter-spacing: 3px;
+      background: #0a0c10;
+      padding: 4px 14px;
+      border: 1px solid var(--term-border);
+      color: var(--amber);
+      box-shadow: inset 0 0 6px rgba(0,0,0,0.6);
+    }
+
+    .system-status {
+      display: flex;
+      align-items: center;
+      gap: var(--size-2);
+      font-family: var(--font-mono);
+      font-size: var(--font-size-0);
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: var(--success);
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      background: var(--success);
+      border-radius: 50%;
+      box-shadow: 0 0 6px var(--success);
+      animation: pulse 2s infinite ease-in-out;
+    }
+
+    @keyframes pulse {
+      0%,100% { opacity: 1; }
+      50% { opacity: 0.45; }
+    }
+
+    /* Section headers */
+    .section-header {
+      font-family: var(--font-mono);
+      font-size: var(--font-size-0);
+      text-transform: uppercase;
+      letter-spacing: var(--font-letterspacing-5);
+      color: #5f6b7a;
+      margin: var(--size-7) 0 var(--size-3);
+      padding-bottom: var(--size-2);
+      border-bottom: 1px solid var(--term-border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .section-header .label {
+      color: var(--phosphor);
+      font-weight: 600;
+    }
+
+    /* Instrument grids */
+    .instrument-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: var(--size-4);
+    }
+
+    .instrument-grid.tight {
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: var(--size-3);
+    }
+
+    .dual-panel {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--size-4);
+    }
+
+    @media (max-width: 860px) {
+      .dual-panel { grid-template-columns: 1fr; }
+    }
+
+    /* CRT container overrides for docs */
+    thx-crt-display {
+      width: 100%;
+    }
+
+    .crt-content > * {
+      width: 100%;
+    }
+
+    /* Panel labels inside instruments */
+    .panel-label {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 2.5px;
+      color: #5f6b7a;
+      margin-bottom: var(--size-2);
+      padding-bottom: var(--size-1);
+      border-bottom: 1px solid rgba(166,200,225,0.12);
+    }
+
+    /* Live readouts */
+    .readout {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      background: rgba(0,0,0,0.35);
+      border: 1px solid var(--term-border);
+      padding: 6px 10px;
+      color: var(--neutral-400);
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      margin-top: var(--size-2);
+    }
+
+    .readout strong {
+      color: var(--phosphor);
+      font-weight: 600;
+    }
+
+    .readout .value {
+      color: var(--amber);
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* Usage notes — consistent with other docs */
+    .usage-note {
+      margin-top: var(--size-3);
+      padding: var(--size-2) var(--size-3);
+      background: rgba(10, 12, 16, 0.7);
+      border-left: 3px solid var(--phosphor);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: var(--font-letterspacing-4);
+      color: var(--neutral-500);
+      line-height: 1.4;
+    }
+
+    .usage-note code {
+      font-family: var(--font-mono);
+      background: rgba(0, 0, 0, 0.5);
+      padding: 1px 6px;
+      border-radius: 1px;
+      color: var(--phosphor);
+      font-size: 10px;
+      text-transform: none;
+      letter-spacing: normal;
+    }
+
+    .usage-note strong {
+      color: var(--amber);
+      font-weight: 600;
+    }
+
+    /* Telemetry wall specific */
+    .telemetry-wall {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: var(--size-3);
+    }
+
+    /* Status LED clusters */
+    .led-cluster {
+      display: flex;
+      flex-direction: column;
+      gap: var(--size-2);
+    }
+
+    /* Action bar */
+    .action-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--size-2);
+      margin-top: var(--size-3);
+    }
+
+    .terminal-btn {
+      font-family: var(--font-mono);
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      font-size: 11px;
+      padding: 6px 14px;
+      border: 1px solid var(--term-border);
+      background: #111418;
+      color: var(--phosphor);
+      cursor: pointer;
+      transition: all 80ms ease;
+    }
+
+    .terminal-btn:hover {
+      border-color: var(--phosphor);
+      color: #fff;
+      background: #1a222c;
+    }
+
+    .terminal-btn.danger {
+      border-color: var(--critical);
+      color: var(--critical);
+    }
+
+    .terminal-btn.danger:hover {
+      background: rgba(212, 64, 0, 0.1);
+    }
+
+    /* Footer */
+    .footer-meta {
+      margin-top: var(--size-7);
+      padding-top: var(--size-4);
+      border-top: 1px solid var(--term-border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: var(--font-mono);
+      font-size: var(--font-size-0);
+      text-transform: uppercase;
+      letter-spacing: var(--font-letterspacing-4);
+      color: #5f6b7a;
+      flex-wrap: wrap;
+      gap: var(--size-2);
+    }
+
+    .footer-meta a {
+      color: var(--phosphor);
+      text-decoration: none;
+    }
+
+    .footer-meta a:hover {
+      text-decoration: underline;
+    }
+
+    /* Chart + gauge container tweaks */
+    thx-chart-line,
+    thx-chart-bar,
+    thx-chart-gauge,
+    thx-chart-monitors,
+    thx-progress-bar,
+    thx-progress-ring,
+    thx-status-leds {
+      width: 100%;
+    }
+
+    thx-image-comparer {
+      width: 100%;
+      max-width: 100%;
+    }
+
+    /* Scope room title accent */
+    .rack-label {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 4px;
+      color: #5f6b7a;
+      margin-bottom: 2px;
+    }
+
+    /* Subtle CRT inner glow hint for certain panels */
+    .instrument-panel {
+      position: relative;
+    }
+  </style>
+</head>
+<body>
+  <div class="scope-room">
+    <!-- COMMAND HEADER -->
+    <header class="command-header">
+      <div class="header-left">
+        <div class="eyebrow">LDS-1138 // VISUAL INSTRUMENTATION RACK</div>
+        <h1>SCOPE ROOM — CRT DATA VISUALIZATION</h1>
+      </div>
+      <div class="header-right">
+        <div class="system-status">
+          <div class="status-dot"></div>
+          <span>ALL CHANNELS LIVE</span>
+        </div>
+        <div class="live-clock" id="live-clock">00:00:00</div>
+        <div style="font-family: var(--font-mono); font-size:11px; color:#5f6b7a; text-align:right; line-height:1.1;">
+          14 MAY 2026<br>
+          <span style="color:var(--amber);">UTC-0</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- HERO: PRIMARY LIVE WAVEFORM SCOPE -->
+    <div class="rack-label">// PRIMARY TELEMETRY — REAL-TIME OSCILLOSCOPE</div>
+    <thx-crt-display label="WAVEFORM SCOPE • SECTOR 07-A" variant="scope" size="large" style="margin-bottom: var(--size-5);">
+      <div style="display: grid; grid-template-columns: 1fr 240px; gap: var(--size-4); align-items: start;">
+        <div>
+          <div class="panel-label">LIVE SENSOR TRACE — COMPLIANCE + VARIANCE</div>
+          <thx-chart-line id="primary-waveform" height="210"></thx-chart-line>
+          <div class="readout">
+            <span>TRACE RATE:</span> <strong class="value">240 SAMP/SEC</strong>
+            <span style="margin-left:auto;">STATUS:</span> <strong style="color:var(--success);">NOMINAL</strong>
+          </div>
+        </div>
+        <div>
+          <div class="panel-label">CHANNEL STATUS</div>
+          <thx-status-leds id="waveform-leds" count="6" label="TRACES"></thx-status-leds>
+
+          <div style="margin-top: var(--size-3);">
+            <div class="action-bar">
+              <button class="terminal-btn" onclick="injectWaveformAnomaly()">INJECT ANOMALY</button>
+              <button class="terminal-btn" onclick="resetWaveform()">RESET TRACE</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </thx-crt-display>
+
+    <!-- SIZE & VARIANT MATRIX -->
+    <div class="section-header">
+      <span><span class="label">CRT DISPLAY VARIANTS</span> — SIZES &amp; SCOPE MODE</span>
+    </div>
+    <div class="instrument-grid tight">
+      <!-- Small -->
+      <thx-crt-display label="SMALL • TIGHT" size="small">
+        <div class="panel-label">MICRO GAUGE</div>
+        <thx-chart-gauge id="gauge-small" value="67" label="VOLT" min="0" max="100" style="max-width: 148px; margin: 0 auto;"></thx-chart-gauge>
+        <div style="margin-top: 6px;">
+          <thx-status-leds count="4" style="max-width:160px;"></thx-status-leds>
+        </div>
+      </thx-crt-display>
+
+      <!-- Medium default crt -->
+      <thx-crt-display label="MEDIUM • CRT">
+        <div class="panel-label">PROCESS METER</div>
+        <div style="display:flex; justify-content:center; gap: var(--size-4); align-items:flex-end; flex-wrap:wrap;">
+          <thx-progress-ring id="ring-medium" value="78" size="92" variant="crt" label="SYNC"></thx-progress-ring>
+          <thx-chart-gauge value="41" label="LOAD" threshold="75" style="width:118px;"></thx-chart-gauge>
+        </div>
+        <thx-progress-bar id="bar-medium" value="63" label="BUFFER" variant="crt" show-value style="margin-top:var(--size-3);"></thx-progress-bar>
+      </thx-crt-display>
+
+      <!-- Large scope -->
+      <thx-crt-display label="LARGE • SCOPE GRID" variant="scope" size="large">
+        <div class="panel-label">ANALOG PANEL METER — THERMAL</div>
+        <div style="display:flex; justify-content:center;">
+          <thx-chart-gauge id="gauge-large" value="54" label="°C" min="0" max="120" threshold="95" style="width: 240px;"></thx-chart-gauge>
+        </div>
+        <div class="readout" style="margin-top:var(--size-3); font-size:11px;">
+          <span>THRESHOLD:</span> <strong>95°C</strong> <span style="margin-left:auto; color:var(--amber);">NOMINAL</span>
+        </div>
+      </thx-crt-display>
+    </div>
+
+    <div class="usage-note">
+      <strong>USAGE:</strong> &lt;thx-crt-display label="TITLE" variant="scope" size="large"&gt;...&lt;/thx-crt-display&gt; — variant="scope" swaps scanlines for vector grid. Sizes control frame weight &amp; padding.
+    </div>
+
+    <!-- CHARTS CLUSTER: BAR + GAUGES + MONITORS -->
+    <div class="section-header">
+      <span><span class="label">INSTRUMENT CLUSTER</span> — BARS • GAUGES • MONITORS</span>
+    </div>
+    <div class="dual-panel">
+      <!-- Bar chart in CRT -->
+      <thx-crt-display label="THROUGHPUT • HORIZONTAL BAR">
+        <div class="panel-label">RACK LINE EFFICIENCY</div>
+        <thx-chart-bar id="bar-chart" style="min-height: 178px;"></thx-chart-bar>
+        <div class="action-bar">
+          <button class="terminal-btn" onclick="spikeBarValues()">SPIKE VALUES</button>
+          <button class="terminal-btn" onclick="resetBarChart()">NORMALIZE</button>
+        </div>
+      </thx-crt-display>
+
+      <!-- Multiple live gauges -->
+      <thx-crt-display label="ANALOG GAUGE BANK" variant="scope">
+        <div class="panel-label">PRESSURE • TEMP • FLOW • PWR</div>
+        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--size-3);">
+          <thx-chart-gauge id="gauge-psi" value="62" label="PSI" threshold="80"></thx-chart-gauge>
+          <thx-chart-gauge id="gauge-temp" value="38" label="°C" unit="C" threshold="65"></thx-chart-gauge>
+          <thx-chart-gauge id="gauge-flow" value="91" label="FLOW" threshold="85"></thx-chart-gauge>
+          <thx-chart-gauge id="gauge-pwr" value="27" label="PWR" threshold="70"></thx-chart-gauge>
+        </div>
+      </thx-crt-display>
+    </div>
+
+    <!-- TELEMETRY WALL -->
+    <div class="section-header">
+      <span><span class="label">TELEMETRY WALL</span> — MULTI-CHANNEL SMALL MULTIPLES + PROGRESS</span>
+    </div>
+    <thx-crt-display label="TELEMETRY WALL — 8 CHANNELS • SECTOR ALPHA" size="large">
+      <div class="panel-label">AT-A-GLANCE MONITOR BANK + AUXILIARY PROGRESS</div>
+
+      <thx-chart-monitors id="telemetry-monitors" columns="4" style="margin-bottom: var(--size-4);"></thx-chart-monitors>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: var(--size-4);">
+        <div>
+          <div class="panel-label">CORE BUFFER</div>
+          <thx-progress-bar id="telemetry-progress-1" value="87" variant="crt" show-value label="BUFFER-01"></thx-progress-bar>
+          <thx-progress-bar id="telemetry-progress-2" value="54" variant="crt" show-value label="BUFFER-02" style="margin-top: var(--size-3);"></thx-progress-bar>
+        </div>
+        <div>
+          <div class="panel-label">EFFICIENCY RINGS</div>
+          <div style="display:flex; gap:var(--size-4); align-items:center; flex-wrap:wrap;">
+            <thx-progress-ring id="telemetry-ring-1" value="92" size="78" variant="crt" label="EFF"></thx-progress-ring>
+            <thx-progress-ring id="telemetry-ring-2" value="41" size="78" variant="crt" label="COOL"></thx-progress-ring>
+            <thx-progress-ring id="telemetry-ring-3" value="76" size="78" variant="crt" label="SYNC"></thx-progress-ring>
+          </div>
+        </div>
+      </div>
+    </thx-crt-display>
+
+    <div class="usage-note">
+      <strong>TELEMETRY WALL PATTERN:</strong> &lt;thx-chart-monitors&gt; renders a responsive grid of small CRT tiles (label + large value + percent bar + optional alert). Combine with &lt;thx-progress-bar variant="crt"&gt; and rings for dense wall displays.
+    </div>
+
+    <!-- STATUS LEDS + LIVE MATRIX -->
+    <div class="section-header">
+      <span><span class="label">STATUS MATRIX</span> — thx-status-leds LIVE ARRAYS</span>
+    </div>
+    <div class="instrument-grid">
+      <thx-crt-display label="CORE RELAY ARRAY" size="small">
+        <thx-status-leds id="status-leds-core" count="10" label="RELAYS 01-10"></thx-status-leds>
+        <div class="readout"><span>ACTIVE:</span> <strong id="leds-core-count">7/10</strong></div>
+      </thx-crt-display>
+
+      <thx-crt-display label="CAMERA LATTICE — 16 NODES" variant="scope" size="small">
+        <thx-status-leds id="status-leds-cams" count="16" label="NODES"></thx-status-leds>
+        <div class="action-bar" style="margin-top:var(--size-2);">
+          <button class="terminal-btn" onclick="cycleCameraStates()">CYCLE STATES</button>
+          <button class="terminal-btn danger" onclick="triggerCriticalLEDs()">CRITICAL EVENT</button>
+        </div>
+      </thx-crt-display>
+
+      <thx-crt-display label="CUSTOM LED STATES">
+        <div class="panel-label">MIXED WARNING / ERROR</div>
+        <thx-status-leds id="status-leds-custom"></thx-status-leds>
+      </thx-crt-display>
+    </div>
+
+    <!-- FORENSIC IMAGE COMPARER BAY -->
+    <div class="section-header">
+      <span><span class="label">FORENSIC ANALYSIS BAY</span> — IMAGE COMPARER IN CRT FRAME</span>
+    </div>
+    <div class="dual-panel">
+      <thx-crt-display label="RAW vs ENHANCED — SLIDER COMPARE" variant="scope" size="large">
+        <thx-image-comparer
+          id="image-comparer"
+          before-label="RAW FEED"
+          after-label="ENHANCED"
+          style="max-width: 100%;">
+        </thx-image-comparer>
+        <div class="action-bar" style="margin-top: var(--size-3);">
+          <button class="terminal-btn" onclick="regenerateComparerImages()">REGENERATE SCAN</button>
+          <button class="terminal-btn" onclick="setComparerLabels()">TOGGLE LABELS</button>
+        </div>
+      </thx-crt-display>
+
+      <thx-crt-display label="COMPARER NOTES">
+        <div class="panel-label">INSTRUMENT BEHAVIOR</div>
+        <div style="font-family: var(--font-mono); font-size: 11px; line-height: 1.55; color: #8fa3b8;">
+          Drag the vertical divider or use arrow keys when focused.<br><br>
+          ARIA slider semantics with live value text.<br>
+          Phosphor glow on handle. Static CRT vignette + scanlines applied internally.
+        </div>
+        <div class="usage-note" style="margin-top: var(--size-4); font-size:10px;">
+          &lt;thx-image-comparer before-src="..." after-src="..." before-label="RAW" after-label="ENHANCED"&gt;
+        </div>
+      </thx-crt-display>
+    </div>
+
+    <!-- FINAL INTEGRATION NOTES -->
+    <div class="section-header">
+      <span><span class="label">INTEGRATION NOTES</span></span>
+    </div>
+    <thx-crt-display label="SCOPE ROOM BEST PRACTICES" variant="crt">
+      <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: var(--size-4); font-size: 12px; line-height:1.5;">
+        <div>
+          <strong style="color:var(--amber); text-transform:uppercase; letter-spacing:1px;">Data Binding</strong><br>
+          • Line / Bar / Monitors: set <code>.data</code> property via JS (reactive).<br>
+          • Gauge / Progress / Ring / LEDs: attribute or property driven (live updates).<br>
+          • Image comparer: <code>before-src</code> / <code>after-src</code> (data: URIs supported).
+        </div>
+        <div>
+          <strong style="color:var(--amber); text-transform:uppercase; letter-spacing:1px;">Composition</strong><br>
+          Wrap any viz inside <code>&lt;thx-crt-display&gt;</code> (crt/scope) or <code>&lt;thx-card crt&gt;</code>.<br>
+          Use <code>variant="crt"</code> on progress for matching scanline texture.<br>
+          All components respect <code>prefers-reduced-motion</code>.
+        </div>
+        <div>
+          <strong style="color:var(--amber); text-transform:uppercase; letter-spacing:1px;">Live Patterns</strong><br>
+          Use <code>setInterval</code> + random walk / sine for realistic telemetry.<br>
+          Shift arrays for scrolling oscilloscope effect on <code>thx-chart-line</code>.<br>
+          Cross threshold on gauges → automatic amber warning state.
+        </div>
+      </div>
+    </thx-crt-display>
+
+    <div class="footer-meta">
+      <div>
+        THX COMPONENTS v0.1.1 — CRT SUBSYSTEM • <a href="../index.html">RETURN TO DOC INDEX</a>
+      </div>
+      <div style="text-align:right;">
+        PHOSPHOR BLUE #A6C8E1 • AMBER #D4AA00 • CRITICAL #D44000<br>
+        <span style="color:#5f6b7a;">ALL VISUAL EFFECTS VIA crt-effects.js</span>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    // Helper
+    const $ = (id) => document.getElementById(id);
+
+    // Live clock
+    function updateClock() {
+      const now = new Date();
+      const h = String(now.getHours()).padStart(2, '0');
+      const m = String(now.getMinutes()).padStart(2, '0');
+      const s = String(now.getSeconds()).padStart(2, '0');
+      const clock = $('live-clock');
+      if (clock) clock.textContent = `${h}:${m}:${s}`;
+    }
+    updateClock();
+    setInterval(updateClock, 1000);
+
+    // SVG data URI generator (for image comparer — fully self-contained)
+    const svgUri = (svg) => `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`;
+
+    const scanSvg = (title, accent, bg = '#0a0a0a') => svgUri(`
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540">
+        <rect width="960" height="540" fill="${bg}"/>
+        <defs>
+          <linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="${accent}" stop-opacity="0.9"/>
+            <stop offset="100%" stop-color="${accent}" stop-opacity="0.3"/>
+          </linearGradient>
+        </defs>
+        <g stroke="${accent}" stroke-width="1.6" opacity="0.65">
+          <path d="M50 460 Q180 180 310 410 Q470 110 590 300 Q710 80 860 220" fill="none"/>
+          <path d="M70 120 H900 M70 210 H900 M70 300 H900 M70 390 H900" opacity="0.3"/>
+          <circle cx="720" cy="170" r="88" fill="none" stroke-width="1.2"/>
+          <circle cx="720" cy="170" r="36" fill="none"/>
+          <circle cx="720" cy="170" r="7" fill="${accent}"/>
+          <!-- scan grid -->
+          <path d="M120 70 V470 M260 70 V470 M400 70 V470 M540 70 V470 M680 70 V470" opacity="0.22"/>
+        </g>
+        <text x="58" y="78" fill="${accent}" font-family="Courier New" font-size="26" letter-spacing="7">${title}</text>
+        <text x="58" y="510" fill="${accent}" font-family="Courier New" font-size="15" letter-spacing="4">LDS-1138 // SCOPE ARCHIVE • VERIFIED</text>
+        <rect x="40" y="40" width="880" height="460" fill="none" stroke="${accent}" stroke-width="3" opacity="0.15"/>
+      </svg>
+    `);
+
+    // ========== PRIMARY WAVEFORM — realtime scrolling oscilloscope ==========
+    let waveformData = {
+      labels: ['00','04','08','12','16','20','24','28','32','36','40','44'],
+      min: 0,
+      max: 100,
+      series: [
+        { name: 'COMP', color: '#a6c8e1', data: [48, 51, 57, 63, 59, 68, 72, 65, 71, 78, 74, 81] },
+        { name: 'VAR', color: '#707e91', data: [12, 9, 18, 14, 21, 17, 24, 19, 26, 22, 29, 25], dasharray: '3 2' }
+      ]
+    };
+
+    function updatePrimaryWaveform() {
+      const chart = $('primary-waveform');
+      if (!chart) return;
+
+      // Simulate realtime: shift data left, add new sample (sine + noise)
+      const t = Date.now() / 420;
+      waveformData.series.forEach((s, idx) => {
+        const base = idx === 0 ? 62 : 18;
+        const amp = idx === 0 ? 19 : 9;
+        const newVal = Math.max(4, Math.min(96,
+          Math.round(base + Math.sin(t + idx) * amp + (Math.random() - 0.5) * 11)
+        ));
+        s.data.shift();
+        s.data.push(newVal);
+      });
+
+      // Update labels (scrolling time)
+      waveformData.labels.shift();
+      const last = parseInt(waveformData.labels[waveformData.labels.length - 1], 10) || 44;
+      waveformData.labels.push(String((last + 4) % 100).padStart(2, '0'));
+
+      chart.data = { ...waveformData };
+    }
+
+    function injectWaveformAnomaly() {
+      const chart = $('primary-waveform');
+      if (!chart) return;
+      // Force spike on primary series
+      waveformData.series[0].data = waveformData.series[0].data.map((v, i) =>
+        i > 6 ? Math.min(99, v + 22 + Math.random() * 12) : v
+      );
+      chart.data = { ...waveformData };
+      // Flash a warning LED
+      const leds = $('waveform-leds');
+      if (leds) {
+        leds.leds = [
+          {active:true}, {active:true}, {active:true,state:'warning'},
+          {active:true}, {active:true}, {active:true,state:'warning'}
+        ];
+        setTimeout(() => {
+          if (leds) leds.leds = [{active:true},{active:true},{active:true},{active:true},{active:true},{active:true}];
+        }, 2400);
+      }
+    }
+
+    function resetWaveform() {
+      waveformData = {
+        labels: ['00','04','08','12','16','20','24','28','32','36','40','44'],
+        min: 0,
+        max: 100,
+        series: [
+          { name: 'COMP', color: '#a6c8e1', data: [48, 51, 57, 63, 59, 68, 72, 65, 71, 78, 74, 81] },
+          { name: 'VAR', color: '#707e91', data: [12, 9, 18, 14, 21, 17, 24, 19, 26, 22, 29, 25], dasharray: '3 2' }
+        ]
+      };
+      const chart = $('primary-waveform');
+      if (chart) chart.data = { ...waveformData };
+    }
+
+    // ========== BAR CHART ==========
+    let barData = [
+      { label: 'LINE-A', value: 94 },
+      { label: 'LINE-B', value: 71 },
+      { label: 'LINE-C', value: 88 },
+      { label: 'LINE-D', value: 53, warning: true },
+      { label: 'LINE-E', value: 99 }
+    ];
+
+    function updateBarChart() {
+      const bar = $('bar-chart');
+      if (!bar) return;
+      // gentle random walk
+      barData = barData.map(d => {
+        let nv = d.value + (Math.random() - 0.5) * 6;
+        nv = Math.max(18, Math.min(100, Math.round(nv)));
+        return { ...d, value: nv, warning: nv < 55 || d.warning && nv < 70 };
+      });
+      bar.data = [...barData];
+    }
+
+    function spikeBarValues() {
+      const bar = $('bar-chart');
+      barData = barData.map((d, i) => ({
+        ...d,
+        value: 88 + Math.round(Math.random() * 11),
+        warning: i === 3
+      }));
+      if (bar) bar.data = [...barData];
+    }
+
+    function resetBarChart() {
+      barData = [
+        { label: 'LINE-A', value: 94 },
+        { label: 'LINE-B', value: 71 },
+        { label: 'LINE-C', value: 88 },
+        { label: 'LINE-D', value: 53, warning: true },
+        { label: 'LINE-E', value: 99 }
+      ];
+      const bar = $('bar-chart');
+      if (bar) bar.data = [...barData];
+    }
+
+    // ========== LIVE GAUGES ==========
+    const gaugeIds = ['gauge-psi', 'gauge-temp', 'gauge-flow', 'gauge-pwr', 'gauge-small', 'gauge-large'];
+
+    function animateGauges() {
+      gaugeIds.forEach((id, idx) => {
+        const g = $(id);
+        if (!g) return;
+        let v = g.value || 50;
+        const drift = Math.sin(Date.now() / 900 + idx) * 3.5 + (Math.random() - 0.5) * 2.2;
+        v = Math.max(g.min || 0, Math.min(g.max || 100, Math.round(v + drift)));
+        g.value = v;
+      });
+    }
+
+    // ========== TELEMETRY MONITORS + PROGRESS + RINGS ==========
+    let monitorData = [
+      { label: 'CAM-01', value: '97.4', percent: 97 },
+      { label: 'CAM-02', value: '88.1', percent: 88 },
+      { label: 'THERM-7', value: '41', percent: 41 },
+      { label: 'PRESS', value: '76', percent: 76 },
+      { label: 'FLOW-3', value: '92', percent: 92, alert: false },
+      { label: 'PWR-02', value: '58', percent: 58 },
+      { label: 'NODE-4', value: '99', percent: 99 },
+      { label: 'SEC-09', value: '31', percent: 31, alert: true }
+    ];
+
+    function updateMonitors() {
+      const mon = $('telemetry-monitors');
+      if (!mon) return;
+
+      monitorData = monitorData.map((m, i) => {
+        let p = m.percent + (Math.random() - 0.5) * 5.5;
+        p = Math.max(8, Math.min(99, Math.round(p)));
+        const alert = p < 35 || (m.alert && p < 60);
+        let val = m.value;
+        if (typeof val === 'string' && val.includes('.')) {
+          val = (parseFloat(val) + (Math.random()-0.5)*1.4).toFixed(1);
+        } else if (!isNaN(parseFloat(val))) {
+          val = String(Math.round(parseFloat(val) + (Math.random()-0.5)*2.5));
+        }
+        return { ...m, percent: p, value: val, alert };
+      });
+      mon.data = [...monitorData];
+    }
+
+    function animateProgress() {
+      const p1 = $('telemetry-progress-1');
+      const p2 = $('telemetry-progress-2');
+      const r1 = $('telemetry-ring-1');
+      const r2 = $('telemetry-ring-2');
+      const r3 = $('telemetry-ring-3');
+
+      if (p1) {
+        let v = p1.value || 80;
+        v = Math.max(40, Math.min(98, v + (Math.random()-0.5)*4));
+        p1.value = Math.round(v);
+      }
+      if (p2) {
+        let v = p2.value || 50;
+        v = Math.max(22, Math.min(89, v + (Math.random()-0.5)*5.5));
+        p2.value = Math.round(v);
+      }
+      [r1, r2, r3].forEach((r, i) => {
+        if (!r) return;
+        let v = r.value || 60;
+        v = Math.max(18, Math.min(97, Math.round(v + Math.sin(Date.now()/700 + i)*3 + (Math.random()-0.5)*2)));
+        r.value = v;
+      });
+    }
+
+    // ========== STATUS LEDS ==========
+    let coreLeds = Array.from({length:10}, (_,i) => ({active: i % 3 !== 0, state: i === 7 ? 'warning' : 'normal'}));
+    let camLeds = Array.from({length:16}, (_,i) => ({active: true, state: i % 7 === 0 ? 'warning' : 'normal'}));
+
+    function updateCoreLeds() {
+      const el = $('status-leds-core');
+      if (!el) return;
+      coreLeds = coreLeds.map((l, i) => {
+        if (Math.random() < 0.12) {
+          return { active: !l.active, state: l.state };
+        }
+        return l;
+      });
+      el.leds = [...coreLeds];
+      // update readout
+      const countEl = $('leds-core-count');
+      if (countEl) {
+        const activeCount = coreLeds.filter(l => l.active).length;
+        countEl.textContent = `${activeCount}/10`;
+      }
+    }
+
+    function updateCameraLeds() {
+      const el = $('status-leds-cams');
+      if (!el) return;
+      camLeds = camLeds.map((l, i) => {
+        if (Math.random() < 0.09) {
+          const states = ['normal','warning','error'];
+          const newState = states[Math.floor(Math.random()*states.length)];
+          return { active: Math.random() > 0.08, state: newState };
+        }
+        return l;
+      });
+      el.leds = [...camLeds];
+    }
+
+    function cycleCameraStates() {
+      const el = $('status-leds-cams');
+      if (!el) return;
+      camLeds = camLeds.map((l, i) => ({
+        active: true,
+        state: ['normal','normal','warning','error'][i % 4]
+      }));
+      el.leds = [...camLeds];
+      setTimeout(() => {
+        if (el) updateCameraLeds();
+      }, 2100);
+    }
+
+    function triggerCriticalLEDs() {
+      const el = $('status-leds-cams');
+      if (!el) return;
+      camLeds = camLeds.map(() => ({active: Math.random() > 0.3, state: 'error'}));
+      el.leds = [...camLeds];
+      setTimeout(() => {
+        if (el) {
+          camLeds = Array.from({length:16}, (_,i) => ({active: true, state: i % 5 === 0 ? 'warning' : 'normal'}));
+          el.leds = [...camLeds];
+        }
+      }, 2800);
+    }
+
+    function initCustomLeds() {
+      const el = $('status-leds-custom');
+      if (!el) return;
+      el.leds = [
+        {active:true, state:'normal'},
+        {active:true, state:'normal'},
+        {active:true, state:'warning'},
+        {active:false},
+        {active:true, state:'error'},
+        {active:true, state:'normal'},
+        {active:true, state:'warning'},
+        {active:true, state:'normal'}
+      ];
+    }
+
+    // ========== IMAGE COMPARER ==========
+    let comparerVariant = 0;
+
+    function initImageComparer() {
+      const cmp = $('image-comparer');
+      if (!cmp) return;
+
+      const before = scanSvg('RAW SURVEILLANCE', '#707e91', '#0b0e14');
+      const after = scanSvg('ENHANCED VECTOR', '#a6c8e1', '#0a0c10');
+
+      cmp.beforeSrc = before;
+      cmp.afterSrc = after;
+      cmp.beforeLabel = 'RAW FEED';
+      cmp.afterLabel = 'ENHANCED';
+    }
+
+    function regenerateComparerImages() {
+      const cmp = $('image-comparer');
+      if (!cmp) return;
+      comparerVariant = (comparerVariant + 1) % 3;
+
+      const titles = ['RAW SURVEILLANCE', 'PRE-FILTER', 'CLASSIFIED'];
+      const accents = ['#707e91', '#8fa3b8', '#a6c8e1'];
+      const bgs = ['#0b0e14', '#0a0c10', '#111418'];
+
+      const before = scanSvg(titles[comparerVariant], accents[comparerVariant], bgs[comparerVariant]);
+      const after = scanSvg('ENHANCED • ' + (comparerVariant + 1), '#a6c8e1', '#0a0c10');
+
+      cmp.beforeSrc = before;
+      cmp.afterSrc = after;
+    }
+
+    function setComparerLabels() {
+      const cmp = $('image-comparer');
+      if (!cmp) return;
+      const currentBefore = cmp.beforeLabel || 'RAW FEED';
+      cmp.beforeLabel = currentBefore === 'RAW FEED' ? 'BEFORE' : 'RAW FEED';
+      cmp.afterLabel = currentBefore === 'RAW FEED' ? 'AFTER' : 'ENHANCED';
+    }
+
+    // ========== INITIALIZATION ==========
+    function initAll() {
+      // Primary waveform
+      const waveform = $('primary-waveform');
+      if (waveform) {
+        waveform.data = { ...waveformData };
+        // realtime updates
+        setInterval(updatePrimaryWaveform, 680);
+      }
+
+      // Bar chart
+      const bar = $('bar-chart');
+      if (bar) {
+        bar.data = [...barData];
+        setInterval(updateBarChart, 1350);
+      }
+
+      // Gauges
+      setInterval(animateGauges, 920);
+
+      // Telemetry monitors
+      const mon = $('telemetry-monitors');
+      if (mon) {
+        mon.data = [...monitorData];
+        setInterval(updateMonitors, 980);
+      }
+
+      // Progress + rings
+      setInterval(animateProgress, 760);
+
+      // LED clusters
+      const core = $('status-leds-core');
+      if (core) {
+        core.leds = [...coreLeds];
+        setInterval(updateCoreLeds, 620);
+      }
+
+      const cams = $('status-leds-cams');
+      if (cams) {
+        cams.leds = [...camLeds];
+        setInterval(updateCameraLeds, 740);
+      }
+
+      initCustomLeds();
+
+      // Waveform LEDs (static init + occasional flicker)
+      const wleds = $('waveform-leds');
+      if (wleds) {
+        wleds.leds = [{active:true},{active:true},{active:true},{active:true},{active:true},{active:true}];
+        setInterval(() => {
+          if (wleds && Math.random() < 0.3) {
+            wleds.leds = [{active:true},{active:true},{active:Math.random()>0.2},{active:true},{active:true},{active:Math.random()>0.15}];
+            setTimeout(() => {
+              if (wleds) wleds.leds = [{active:true},{active:true},{active:true},{active:true},{active:true},{active:true}];
+            }, 420);
+          }
+        }, 2100);
+      }
+
+      // Image comparer
+      initImageComparer();
+
+      // Boot message in console for devs
+      console.log('%c[THX] SCOPE ROOM CRT documentation initialized — all instruments live.', 'color:#5f6b7a; font-family:monospace');
+    }
+
+    // Boot after components are registered
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', () => {
+        // slight delay to ensure custom elements upgraded
+        setTimeout(initAll, 60);
+      });
+    } else {
+      setTimeout(initAll, 40);
+    }
+
+    // Keyboard hint (ESC resets primary waveform)
+    document.addEventListener('keydown', (e) => {
+      if (e.key.toLowerCase() === 'r' && document.activeElement.tagName === 'BODY') {
+        resetWaveform();
+      }
+      if (e.key === 'Escape') {
+        resetWaveform();
+        const bar = $('bar-chart');
+        if (bar) resetBarChart();
+      }
+    });
+
+    // Expose a couple helpers on window for console tinkering (dev friendly)
+    window.THX_SCOPE = {
+      resetWaveform, injectWaveformAnomaly, spikeBarValues, regenerateComparerImages
+    };
+  </script>
+</body>
+</html>

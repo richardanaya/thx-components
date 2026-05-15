@@ -6,21 +6,26 @@
  */
 
 import { LitElement, html, css } from '../../vendor/lit.js';
+import {
+  crtMonitorStyles,
+  crtStaticScanlineOverlay,
+  crtStaticVignetteOverlay,
+} from '../styles/crt-effects.js';
 
 /**
  * @typedef {Object} AnimatedImageConfig
  * @property {string} src - Image source URL
  * @property {string} alt - Alt text for accessibility
  * @property {string} variant - Visual variant: 'default' | 'crt' | 'scope'
- * @property {boolean} scanlines - Whether to show scanline overlay
- * @property {boolean} vignette - Whether to show vignette effect
+ * @property {boolean} scanlines - Whether to show scanline overlay (uses crt-effects)
+ * @property {boolean} vignette - Whether to show vignette effect (uses crt-effects)
  * @property {boolean} monochrome - Whether to apply monochrome filter
  * @property {string} aspectRatio - Aspect ratio: 'auto' | '1:1' | '4:3' | '16:9'
  */
 
 /**
  * Animated image component with CRT monitor effects.
- * Styled with THX 1138 surveillance-state aesthetic.
+ * Styled with THX 1138 surveillance-state aesthetic (CRT/scanline/vignette/scope via crt-effects.js).
  *
  * @extends {LitElement}
  */
@@ -65,7 +70,9 @@ export class ThxAnimatedImage extends LitElement {
       filter: grayscale(100%) contrast(1.1);
     }
 
-    /* CRT variant */
+    ${crtMonitorStyles}
+
+    /* CRT variant (frame + img filter; scanlines/vignette via crt-surface when variant= crt) */
     .image-container--crt {
       background: var(--crt-bg, #111);
       border: var(--size-2) solid var(--crt-border, #2a2a2a);
@@ -77,7 +84,7 @@ export class ThxAnimatedImage extends LitElement {
       filter: grayscale(30%) contrast(1.2) brightness(0.9);
     }
 
-    /* Scope/Oscilloscope variant */
+    /* Scope/Oscilloscope variant (grid from shared when crt-surface) */
     .image-container--scope {
       background: var(--crt-bg-dark, #0a0a0a);
       border: calc(var(--size-2) + var(--size-1)) solid var(--crt-border, #2a2a2a);
@@ -85,58 +92,14 @@ export class ThxAnimatedImage extends LitElement {
       box-shadow: inset 0 0 calc(var(--size-7) + var(--size-2)) rgba(0, 0, 0, 0.8);
     }
 
-    .image-container--scope::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background-image:
-        linear-gradient(rgba(166, 200, 225, 0.1) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(166, 200, 225, 0.1) 1px, transparent 1px);
-      background-size: var(--size-4) var(--size-4);
-      pointer-events: none;
-      z-index: var(--layer-1);
-    }
-
     .image-container--scope img {
       filter: grayscale(50%) sepia(20%) contrast(1.3);
       opacity: 0.9;
     }
 
-    /* Scanlines overlay */
-    .image-container--scanlines::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: repeating-linear-gradient(
-        0deg,
-        transparent,
-        transparent 2px,
-        rgba(166, 200, 225, 0.04) 2px,
-        rgba(166, 200, 225, 0.04) var(--size-1)
-      );
-      pointer-events: none;
-      z-index: var(--layer-2);
-      animation: var(--duration-pause) linear infinite;
-    }
-
-    @keyframes scanlines {
-      0% {
-        transform: translateY(0);
-      }
-      100% {
-        transform: translateY(4px);
-      }
-    }
-
-    /* Vignette overlay */
-    .image-container--vignette::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(ellipse at center, transparent 50%, rgba(0, 0, 0, 0.4) 100%);
-      pointer-events: none;
-      z-index: calc(var(--layer-2) + 1);
-    }
+    /* Explicit scanlines/vignette overlays via shared static (for non-crt/scope cases; crt/scope use crtMonitorStyles) */
+    ${crtStaticScanlineOverlay('.image-container--scanlines', { opacity: 0.04 })}
+    ${crtStaticVignetteOverlay('.image-container--vignette', { opacity: 0.4 })}
 
     /* CRT label */
     .image-label {
@@ -145,7 +108,7 @@ export class ThxAnimatedImage extends LitElement {
       right: var(--size-2);
       font-family: var(--font-mono, 'Courier New', Courier, monospace);
       font-size: var(--font-size-0);
-      color: #666;
+      color: var(--neutral-600, #666);
       text-transform: uppercase;
       letter-spacing: var(--font-letterspacing-4);
       z-index: calc(var(--layer-2) + 5);
@@ -297,6 +260,7 @@ export class ThxAnimatedImage extends LitElement {
       'image-container--monochrome': this.monochrome,
       'image-container--interactive': this.interactive,
       'image-container--loading': this.loading || !this.src,
+      'crt-surface': this.variant === 'crt' || this.variant === 'scope', // enables crtMonitorStyles (animated scanlines for crt, grid for scope)
     };
 
     const classString = Object.entries(classes)

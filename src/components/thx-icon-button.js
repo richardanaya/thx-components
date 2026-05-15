@@ -7,6 +7,8 @@
  */
 
 import { LitElement, html, css } from '../../vendor/lit.js';
+import { focusVisibleStyles } from '../mixins/focus-visible.js';
+import { crtStaticScanlineOverlay } from '../styles/crt-effects.js';
 
 /**
  * @typedef {Object} IconButtonConfig
@@ -17,6 +19,7 @@ import { LitElement, html, css } from '../../vendor/lit.js';
  * @property {boolean} [disabled] - Whether the button is disabled
  * @property {boolean} [loading] - Whether the button shows loading state
  * @property {boolean} [pulse] - Whether to show a pulsing glow effect
+ * @property {boolean} [scanlines] - Whether to show CRT scanline overlay (uses crt-effects)
  */
 
 export class ThxIconButton extends LitElement {
@@ -146,26 +149,18 @@ export class ThxIconButton extends LitElement {
       }
     }
 
-    /* Loading spinner */
-    .icon-button.loading::after {
-      content: '';
-      position: absolute;
-      width: var(--size-3);
-      height: var(--size-3);
-      border: var(--border-size-2) solid transparent;
-      border-top-color: currentColor;
-      border-radius: var(--radius-round);
-      animation: spin 1s linear infinite;
-    }
-
-    @keyframes spin {
-      to {
-        transform: rotate(360deg);
-      }
+    /* Loading state - uses thx-spinner */
+    .icon-button.loading {
+      pointer-events: none;
     }
 
     .icon-button.loading .button-content {
-      opacity: 0;
+      display: none;
+    }
+
+    .icon-button thx-spinner {
+      display: inline-flex;
+      vertical-align: middle;
     }
 
     /* Active state */
@@ -188,20 +183,15 @@ export class ThxIconButton extends LitElement {
       border-radius: var(--radius-round);
     }
 
-    /* CRT scanline effect overlay */
-    .icon-button.scanlines::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: repeating-linear-gradient(
-        0deg,
-        transparent,
-        transparent 1px,
-        rgba(166, 200, 225, 0.1) 1px,
-        rgba(166, 200, 225, 0.1) 2px
-      );
-      pointer-events: none;
+    /* CRT scanline effect overlay (shared) */
+    ${crtStaticScanlineOverlay('.icon-button.scanlines', { opacity: 0.1 })}
+
+    button:focus-visible {
+      outline: none;
+      box-shadow: var(--focus-ring-glow, 0 0 0 2px rgba(166, 200, 225, 0.45));
     }
+
+    ${focusVisibleStyles}
   `;
 
   static properties = {
@@ -249,6 +239,25 @@ export class ThxIconButton extends LitElement {
     }
   }
 
+  focus() {
+    this.renderRoot?.querySelector('button')?.focus();
+  }
+
+  blur() {
+    this.renderRoot?.querySelector('button')?.blur();
+  }
+
+  /**
+   * Maps button variant to appropriate thx-spinner variant.
+   * @returns {'crt' | 'warning' | 'error'}
+   */
+  get _spinnerVariant() {
+    const v = (this.variant || '').toLowerCase();
+    if (v.includes('warning')) return 'warning';
+    if (v.includes('error')) return 'error';
+    return 'crt';
+  }
+
   /**
    * Gets the icon content
    * @returns {string}
@@ -282,11 +291,15 @@ export class ThxIconButton extends LitElement {
         ?disabled=${this.disabled || this.loading}
         @click=${this._handleClick}
         aria-label="${this.label || this.icon || 'button'}"
+        aria-busy=${this.loading ? 'true' : 'false'}
         type="button"
       >
         <span class="button-content">
           <slot>${this._getIconContent()}</slot>
         </span>
+        ${this.loading
+          ? html`<thx-spinner size="sm" variant=${this._spinnerVariant}></thx-spinner>`
+          : ''}
       </button>
     `;
   }

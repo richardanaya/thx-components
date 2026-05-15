@@ -81,6 +81,18 @@ For the theme, load the CSS explicitly:
 import 'thx-components/aesthetics.css';
 ```
 
+## Extending components
+
+Advanced users and AI agents can import shared primitives:
+
+```js
+import { FormAssociatedMixin } from 'thx-components/src/mixins/form-associated-mixin.js';
+import { focusVisibleStyles } from 'thx-components/src/mixins/focus-visible.js';
+import { crtMonitorStyles } from 'thx-components/src/styles/crt-effects.js';
+```
+
+See DESIGN.md for the component contract (focus(), CRT surface rules, form participation).
+
 ## Verification
 
 ```bash

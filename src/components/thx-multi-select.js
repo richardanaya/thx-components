@@ -6,6 +6,8 @@
  */
 
 import { LitElement, html, css } from '../../vendor/lit.js';
+import { FormAssociatedMixin } from '../mixins/form-associated-mixin.js';
+import { focusVisibleStyles } from '../mixins/focus-visible.js';
 
 /**
  * @typedef {Object} MultiSelectOption
@@ -20,8 +22,7 @@ import { LitElement, html, css } from '../../vendor/lit.js';
  * Allows selecting multiple options with checkboxes
  * @extends {LitElement}
  */
-export class ThxMultiSelect extends LitElement {
-  static formAssociated = true;
+export class ThxMultiSelect extends FormAssociatedMixin(LitElement) {
 
   static styles = css`
     :host {
@@ -51,12 +52,12 @@ export class ThxMultiSelect extends LitElement {
       height: calc(var(--size-7) + var(--size-2));
       padding: 0 calc(var(--size-7) + var(--size-2)) 0 calc(var(--size-2) + var(--size-1));
       border: none;
-      border-bottom: var(--border-size-2) solid #ccc;
+      border-bottom: var(--border-size-2) solid var(--neutral-200, #e0e0e0);
       font-family: inherit;
       font-size: var(--font-size-1);
       text-transform: uppercase;
       letter-spacing: var(--font-letterspacing-2);
-      background: white;
+      background: var(--neutral-100, #fafafa);
       color: var(--neutral-800, #333);
       cursor: pointer;
       display: flex;
@@ -70,13 +71,13 @@ export class ThxMultiSelect extends LitElement {
     }
 
     .trigger:hover {
-      border-color: #666;
+      border-color: var(--neutral-600, #666);
     }
 
-    .trigger:focus {
+    .trigger:focus-visible {
       outline: none;
       border-color: var(--atmos-primary, #a6c8e1);
-      box-shadow: 0 0 0 2px rgba(166, 200, 225, 0.3);
+      box-shadow: var(--focus-ring-glow, 0 0 0 2px rgba(166, 200, 225, 0.3));
     }
 
     .trigger.open {
@@ -90,7 +91,7 @@ export class ThxMultiSelect extends LitElement {
     }
 
     .placeholder {
-      color: #aaa;
+      color: var(--neutral-600, #666);
     }
 
     .selected-text {
@@ -117,7 +118,7 @@ export class ThxMultiSelect extends LitElement {
       top: 100%;
       left: 0;
       right: 0;
-      background: white;
+      background: var(--neutral-100, #fafafa);
       border: var(--border-size-1) solid var(--atmos-primary, #a6c8e1);
       border-top: none;
       box-shadow: 0 var(--size-1) calc(var(--size-2) + var(--size-1)) rgba(0, 0, 0, 0.15);
@@ -166,8 +167,8 @@ export class ThxMultiSelect extends LitElement {
     .checkbox {
       width: var(--size-3);
       height: var(--size-3);
-      border: var(--border-size-2) solid #999;
-      background: white;
+      border: var(--border-size-2) solid var(--neutral-600, #666);
+      background: var(--neutral-100, #fafafa);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -175,8 +176,8 @@ export class ThxMultiSelect extends LitElement {
     }
 
     .option.selected .checkbox {
-      border-color: #444;
-      background: #444;
+      border-color: var(--neutral-800, #333);
+      background: var(--neutral-800, #333);
     }
 
     .checkbox::after {
@@ -217,6 +218,8 @@ export class ThxMultiSelect extends LitElement {
       font-weight: var(--font-weight-6);
       margin-left: var(--size-2);
     }
+
+    ${focusVisibleStyles}
   `;
 
   /**
@@ -238,7 +241,6 @@ export class ThxMultiSelect extends LitElement {
 
   constructor() {
     super();
-    this._internals = this.attachInternals?.();
     /** @type {string} */
     this.label = '';
     /** @type {string} */
@@ -259,6 +261,9 @@ export class ThxMultiSelect extends LitElement {
     /** @type {number} */
     this._activeIndex = -1;
     this._baseId = `thx-multi-select-${Math.random().toString(36).slice(2)}`;
+
+    /** @type {(e: MouseEvent) => void} */
+    this._handleClickOutside = this._handleClickOutside.bind(this);
   }
 
   /** @param {import('lit').PropertyValues} changedProperties */
@@ -273,7 +278,13 @@ export class ThxMultiSelect extends LitElement {
    */
   connectedCallback() {
     super.connectedCallback();
+    document.addEventListener('click', this._handleClickOutside);
     this._syncOptions();
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    document.removeEventListener('click', this._handleClickOutside);
   }
 
   /**
@@ -307,6 +318,27 @@ export class ThxMultiSelect extends LitElement {
   formResetCallback() {
     this.value = [...this._defaultValue];
     this._updateActiveIndex();
+  }
+
+  /**
+   * @returns {HTMLElement|null}
+   */
+  get triggerElement() {
+    return /** @type {HTMLElement|null} */ (this.renderRoot?.querySelector('.trigger'));
+  }
+
+  /**
+   * @returns {void}
+   */
+  focus() {
+    this.triggerElement?.focus();
+  }
+
+  /**
+   * @returns {void}
+   */
+  blur() {
+    this.triggerElement?.blur();
   }
 
   /**
@@ -490,8 +522,20 @@ export class ThxMultiSelect extends LitElement {
    * @returns {void}
    */
   handleBlur(e) {
+    // Keep blur for Tab key behavior, but primary outside-click is handled by document listener
     const relatedTarget = /** @type {Node|null} */ (e.relatedTarget);
     if (relatedTarget && !this.contains(relatedTarget)) {
+      this.close();
+    }
+  }
+
+  /**
+   * Handles clicks outside the component to close the dropdown (Shadow DOM safe).
+   * @param {MouseEvent} e
+   * @returns {void}
+   */
+  _handleClickOutside(e) {
+    if (this.open && !e.composedPath().includes(this)) {
       this.close();
     }
   }

@@ -6,6 +6,8 @@
  */
 
 import { LitElement, html, css } from '../../vendor/lit.js';
+import { crtStaticScanlineOverlay } from '../styles/crt-effects.js';
+import { focusVisibleStyles, getNextRovingIndex } from '../mixins/focus-visible.js';
 
 // Forward declarations for type checking
 /** @typedef {import('./thx-tab.js').ThxTab} ThxTab */
@@ -63,20 +65,8 @@ export class ThxTabGroup extends LitElement {
       border-bottom-color: rgba(166, 200, 225, 0.2);
     }
 
-    :host([variant='crt'])::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: repeating-linear-gradient(
-        0deg,
-        transparent,
-        transparent 2px,
-        rgba(166, 200, 225, 0.04) 2px,
-        rgba(166, 200, 225, 0.04) var(--size-1)
-      );
-      pointer-events: none;
-      z-index: var(--layer-2);
-    }
+    /* CRT scanline on host for variant=crt (shared) */
+    ${crtStaticScanlineOverlay(':host([variant="crt"])', { opacity: 0.04 })}
 
     /* Compact variant */
     :host([variant='compact']) {
@@ -125,6 +115,8 @@ export class ThxTabGroup extends LitElement {
       border-left: var(--border-size-1) solid rgba(0, 0, 0, 0.08);
       padding: var(--size-3) 0;
     }
+
+    ${focusVisibleStyles}
   `;
 
   /**
@@ -165,6 +157,32 @@ export class ThxTabGroup extends LitElement {
   }
 
   /**
+   * Public focus method: delegates to the active or first enabled tab for excellent keyboard UX.
+   * @returns {void}
+   */
+  focus() {
+    const active = this.querySelector('thx-tab[active]');
+    if (active && !active.disabled) {
+      active.focus?.();
+      return;
+    }
+    const firstEnabled = this._getEnabledTabs()[0];
+    firstEnabled?.focus?.();
+  }
+
+  /**
+   * Public blur method.
+   * @returns {void}
+   */
+  blur() {
+    const activeEl = document.activeElement;
+    // If focus is within this group (host or shadow child), blur it
+    if (activeEl && (this === activeEl || this.contains(activeEl) || this.shadowRoot?.contains(activeEl))) {
+      activeEl.blur();
+    }
+  }
+
+  /**
    * Update tab and panel states
    * @returns {void}
    * @private
@@ -179,7 +197,7 @@ export class ThxTabGroup extends LitElement {
       thxTab.active = panelId === this.activeTab;
       if (!thxTab.id) thxTab.id = `thx-tab-${index + 1}`;
       thxTab.setAttribute('aria-controls', panelId || '');
-      thxTab.setAttribute('tabindex', thxTab.active && !thxTab.disabled ? '0' : '-1');
+      // tabindex now managed internally by thx-tab based on its active state (cleaner roving)
     });
 
     panels.forEach(panel => {
@@ -212,21 +230,34 @@ export class ThxTabGroup extends LitElement {
     if (tabs.length === 0) return;
 
     e.preventDefault();
-    const currentIndex = Math.max(
-      0,
-      tabs.findIndex(tab => tab === document.activeElement || tab.shadowRoot?.activeElement)
-    );
-    let nextIndex = currentIndex;
 
-    if (e.key === 'Home') nextIndex = 0;
-    else if (e.key === 'End') nextIndex = tabs.length - 1;
-    else if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
-      nextIndex = (currentIndex + 1) % tabs.length;
-    } else nextIndex = (currentIndex - 1 + tabs.length) % tabs.length;
+    // Robustly find current focused tab index (handles shadow DOM delegation)
+    let currentIndex = tabs.findIndex(tab => {
+      const activeEl = document.activeElement;
+      if (tab === activeEl) return true;
+      if (tab.shadowRoot?.activeElement) return true;
+      // Check if focus is inside this tab's button
+      const btn = tab.renderRoot?.querySelector('button[role="tab"]');
+      return btn && (btn === activeEl || activeEl === tab);
+    });
+    if (currentIndex < 0) {
+      // Fallback to currently active tab
+      currentIndex = tabs.findIndex(tab => tab.active);
+      if (currentIndex < 0) currentIndex = 0;
+    }
 
-    const nextTab = /** @type {ThxTab} */ (/** @type {unknown} */ (tabs[nextIndex]));
-    nextTab.focus();
-    if (nextTab.panel) this.selectTab(nextTab.panel);
+    let direction;
+    if (e.key === 'Home') direction = 'first';
+    else if (e.key === 'End') direction = 'last';
+    else if (e.key === 'ArrowRight' || e.key === 'ArrowDown') direction = 'next';
+    else direction = 'prev';
+
+    const result = getNextRovingIndex(tabs, currentIndex, direction);
+    const nextTab = /** @type {ThxTab} */ (/** @type {unknown} */ (result.item || tabs[result.index]));
+    if (nextTab) {
+      nextTab.focus();
+      if (nextTab.panel) this.selectTab(nextTab.panel);
+    }
   }
 
   /**

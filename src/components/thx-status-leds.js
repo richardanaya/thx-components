@@ -34,8 +34,8 @@ export class ThxStatusLeds extends LitElement {
     .status-led {
       width: var(--size-2);
       height: var(--size-2);
-      background: #333;
-      border: var(--border-size-1) solid #444;
+      background: var(--neutral-800, #333);
+      border: var(--border-size-1) solid var(--neutral-600, #666);
       transition: all var(--duration-moderate-1) ease;
     }
 

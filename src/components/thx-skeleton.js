@@ -6,6 +6,7 @@
  */
 
 import { LitElement, html, css } from '../../vendor/lit.js';
+import { crtStaticScanlineOverlay } from '../styles/crt-effects.js';
 
 /**
  * @typedef {Object} SkeletonConfig
@@ -18,7 +19,7 @@ import { LitElement, html, css } from '../../vendor/lit.js';
 
 /**
  * Skeleton loading placeholder component.
- * Styled with THX 1138 monochrome CRT aesthetic.
+ * Styled with THX 1138 monochrome CRT aesthetic (crt variant uses crt-effects for scanlines).
  *
  * @extends {LitElement}
  */
@@ -128,20 +129,8 @@ export class ThxSkeleton extends LitElement {
       }
     }
 
-    /* Scanline effect */
-    .skeleton--crt .skeleton__item::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: repeating-linear-gradient(
-        0deg,
-        transparent,
-        transparent 2px,
-        rgba(166, 200, 225, 0.05) 2px,
-        rgba(166, 200, 225, 0.05) var(--size-1)
-      );
-      pointer-events: none;
-    }
+    /* Scanline effect (shared) - crtPulse shimmer kept as component-specific */
+    ${crtStaticScanlineOverlay('.skeleton--crt .skeleton__item', { opacity: 0.05 })}
 
     /* Size presets */
     .skeleton__item--sm {

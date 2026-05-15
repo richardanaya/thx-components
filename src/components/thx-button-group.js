@@ -81,7 +81,7 @@ export class ThxButtonGroup extends LitElement {
     :host([size='lg']) ::slotted(thx-button) {
       padding: calc(var(--size-2) + var(--size-1)) var(--size-5) !important;
       font-size: var(--font-size-0) !important;
-      height: 44px !important;
+      height: var(--size-11) !important;
     }
   `;
 
@@ -96,6 +96,27 @@ export class ThxButtonGroup extends LitElement {
     super();
     /** @type {string} Size variant: sm, md, lg */
     this.size = 'md';
+    this._onSlotChange = this._onSlotChange.bind(this);
+  }
+
+  connectedCallback() {
+    super.connectedCallback();
+    this.shadowRoot?.querySelector('slot')?.addEventListener('slotchange', this._onSlotChange);
+    this._onSlotChange();
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    this.shadowRoot?.querySelector('slot')?.removeEventListener('slotchange', this._onSlotChange);
+  }
+
+  _onSlotChange() {
+    const slot = this.shadowRoot?.querySelector('slot');
+    if (!slot) return;
+    const buttons = slot.assignedElements({ flatten: true }).filter(el =>
+      el.tagName === 'THX-BUTTON' || el.tagName === 'thx-button'
+    );
+    buttons.forEach(btn => btn.setAttribute('grouped', ''));
   }
 
   /**

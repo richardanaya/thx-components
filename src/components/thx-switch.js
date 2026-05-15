@@ -6,6 +6,8 @@
  */
 
 import { LitElement, html, css } from '../../vendor/lit.js';
+import { FormAssociatedMixin } from '../mixins/form-associated-mixin.js';
+import { focusVisibleStyles } from '../mixins/focus-visible.js';
 
 /**
  * @typedef {Object} SwitchProps
@@ -22,8 +24,7 @@ import { LitElement, html, css } from '../../vendor/lit.js';
  * THX 1138 styled toggle switch component
  * @extends {LitElement}
  */
-export class ThxSwitch extends LitElement {
-  static formAssociated = true;
+export class ThxSwitch extends FormAssociatedMixin(LitElement) {
 
   static styles = css`
     :host {
@@ -40,7 +41,7 @@ export class ThxSwitch extends LitElement {
     .switch-wrapper {
       display: inline-flex;
       align-items: center;
-      gap: var(--size-2);
+      gap: var(--size-1);
     }
 
     .switch-track {
@@ -56,53 +57,58 @@ export class ThxSwitch extends LitElement {
 
     /* Sizes */
     .size-sm .switch-track {
-      width: var(--size-7);
-      height: var(--size-3);
+      width: 28px;
+      height: 16px;
     }
 
     .size-md .switch-track {
-      width: 44px;
-      height: var(--size-5);
+      width: 36px;
+      height: 20px;
     }
 
     .size-lg .switch-track {
-      width: 56px;
-      height: 30px;
+      width: 44px;
+      height: 24px;
     }
 
     .switch-thumb {
       position: absolute;
-      top: 2px;
-      left: 2px;
       background: white;
       transition: transform var(--duration-moderate-1);
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
     }
 
     .size-sm .switch-thumb {
-      width: var(--size-3);
-      height: var(--size-3);
+      width: 14px;
+      height: 14px;
+      top: 1px;
+      left: 1px;
     }
 
     .size-md .switch-thumb {
-      width: var(--size-4);
-      height: var(--size-4);
+      width: 18px;
+      height: 18px;
+      top: 1px;
+      left: 1px;
     }
 
     .size-lg .switch-thumb {
-      width: 26px;
-      height: 26px;
+      width: 22px;
+      height: 22px;
+      top: 1px;
+      left: 1px;
     }
 
     .size-sm .switch-track.checked .switch-thumb {
-      transform: translateX(14px);
+      transform: translateX(12px);
     }
 
     .size-md .switch-track.checked .switch-thumb {
-      transform: translateX(20px);
+      transform: translateX(16px);
     }
 
     .size-lg .switch-track.checked .switch-thumb {
-      transform: translateX(26px);
+      transform: translateX(20px);
     }
 
     .switch-input {
@@ -131,8 +137,15 @@ export class ThxSwitch extends LitElement {
       color: var(--neutral-600, #666);
       text-transform: uppercase;
       letter-spacing: var(--font-letterspacing-4);
-      min-width: 30px;
+      min-width: 20px;
+      text-align: center;
     }
+
+    .switch-track:focus-visible {
+      box-shadow: var(--focus-ring-glow, 0 0 0 2px rgba(166, 200, 225, 0.5));
+    }
+
+    ${focusVisibleStyles}
   `;
 
   static properties = {
@@ -147,7 +160,6 @@ export class ThxSwitch extends LitElement {
 
   constructor() {
     super();
-    this._internals = this.attachInternals?.();
     /** @type {boolean} */
     this.checked = false;
     this._defaultChecked = this.checked;
@@ -160,9 +172,9 @@ export class ThxSwitch extends LitElement {
     /** @type {string} */
     this.size = 'md';
     /** @type {string} */
-    this.onLabel = 'ON';
+    this.onLabel = '';
     /** @type {string} */
-    this.offLabel = 'OFF';
+    this.offLabel = '';
   }
 
   /** @param {Map<string, unknown>} changedProperties */
@@ -200,6 +212,14 @@ export class ThxSwitch extends LitElement {
     this.checked = !this.checked;
     this._updateFormValue();
     this.dispatchEvent(new Event('change', { bubbles: true, composed: true }));
+  }
+
+  focus() {
+    this.renderRoot?.querySelector('.switch-track')?.focus();
+  }
+
+  blur() {
+    this.renderRoot?.querySelector('.switch-track')?.blur();
   }
 
   /**
@@ -252,7 +272,7 @@ export class ThxSwitch extends LitElement {
           />
           <span class="switch-thumb"></span>
         </div>
-        <span class="state-label">${stateLabel}</span>
+        ${stateLabel ? html`<span class="state-label">${stateLabel}</span>` : ''}
         <slot></slot>
       </div>
     `;

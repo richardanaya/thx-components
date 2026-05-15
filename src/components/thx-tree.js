@@ -6,6 +6,8 @@
  */
 
 import { LitElement, html, css } from '../../vendor/lit.js';
+import { crtStaticScanlineOverlay } from '../styles/crt-effects.js';
+import { focusVisibleStyles, getNextRovingIndex } from '../mixins/focus-visible.js';
 
 // Forward declaration for type checking
 /** @typedef {import('./thx-tree-item.js').ThxTreeItem} ThxTreeItem */
@@ -94,27 +96,15 @@ export class ThxTree extends LitElement {
       border-bottom-color: rgba(166, 200, 225, 0.2);
     }
 
-    :host([variant='crt'])::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: repeating-linear-gradient(
-        0deg,
-        transparent,
-        transparent 2px,
-        rgba(166, 200, 225, 0.04) 2px,
-        rgba(166, 200, 225, 0.04) var(--size-1)
-      );
-      pointer-events: none;
-      z-index: var(--layer-2);
-    }
+    /* CRT scanline for variant=crt (shared) */
+    ${crtStaticScanlineOverlay(':host([variant="crt"])', { opacity: 0.04 })}
 
     :host([variant='crt']) .crt-label {
       position: absolute;
       top: var(--size-1);
       right: var(--size-2);
       font-size: var(--font-size-0);
-      color: #666;
+      color: var(--neutral-600, #666);
       text-transform: uppercase;
       letter-spacing: var(--font-letterspacing-4);
       z-index: calc(var(--layer-2) + 5);
@@ -140,6 +130,8 @@ export class ThxTree extends LitElement {
     :host([selection='multiple']) .tree-header::after {
       content: ' // MULTI SELECT';
     }
+
+    ${focusVisibleStyles}
   `;
 
   /**
@@ -159,6 +151,52 @@ export class ThxTree extends LitElement {
     this.variant = 'default';
     /** @type {string} Selection mode: none, single, multiple */
     this.selection = 'none';
+  }
+
+  firstUpdated() {
+    // Initialize roving tabindex so tree is single tab-stop
+    this._updateRovingTabindex();
+  }
+
+  /**
+   * Public focus: focuses the first visible item (or selected) for keyboard entry.
+   * @returns {void}
+   */
+  focus() {
+    const items = this._getVisibleItems();
+    if (!items.length) return;
+    // Prefer a selected one, else first
+    const preferred = items.find(i => i.selected) || items[0];
+    preferred.focus?.();
+    this._updateRovingTabindex(preferred);
+  }
+
+  /**
+   * Public blur.
+   * @returns {void}
+   */
+  blur() {
+    const activeEl = document.activeElement;
+    if (activeEl && (this.contains(activeEl) || this.shadowRoot?.contains(activeEl))) {
+      activeEl.blur();
+    }
+  }
+
+  /**
+   * Ensure only one visible treeitem has tabindex=0 (roving), others -1.
+   * Makes tree keyboard navigation first-class (single tab stop).
+   * @param {ThxTreeItem|null} [focusedItem]
+   * @returns {void}
+   * @private
+   */
+  _updateRovingTabindex(focusedItem = null) {
+    const items = this._getVisibleItems();
+    if (!items.length) return;
+    const target = focusedItem || items.find(i => i.selected) || items[0];
+    items.forEach(item => {
+      const thxItem = /** @type {ThxTreeItem} */ (/** @type {unknown} */ (item));
+      thxItem.setAttribute('tabindex', thxItem === target ? '0' : '-1');
+    });
   }
 
   /** @returns {ThxTreeItem[]} */
@@ -189,10 +227,20 @@ export class ThxTree extends LitElement {
 
     const items = this._getVisibleItems();
     if (items.length === 0) return;
-    const currentIndex = Math.max(
-      0,
-      items.findIndex(item => item === document.activeElement || item.shadowRoot?.activeElement)
-    );
+
+    // Robust current index detection for roving
+    let currentIndex = items.findIndex(item => {
+      const activeEl = document.activeElement;
+      if (item === activeEl) return true;
+      if (item.shadowRoot?.activeElement) return true;
+      const div = item.renderRoot?.querySelector('[role="treeitem"]');
+      return div && (div === activeEl || activeEl === item);
+    });
+    if (currentIndex < 0) {
+      currentIndex = items.findIndex(i => i.selected);
+      if (currentIndex < 0) currentIndex = 0;
+    }
+
     const current = items[currentIndex];
     e.preventDefault();
 
@@ -202,30 +250,50 @@ export class ThxTree extends LitElement {
     }
 
     if (e.key === 'ArrowRight') {
-      if (current.hasChildren && !current.expanded) current.toggle();
-      else this._focusItem(items[Math.min(currentIndex + 1, items.length - 1)]);
-      return;
-    }
-
-    if (e.key === 'ArrowLeft') {
-      if (current.hasChildren && current.expanded) current.toggle();
-      else {
-        const parent = /** @type {ThxTreeItem|null} */ (
-          /** @type {unknown} */ (current.parentElement?.closest('thx-tree-item'))
-        );
-        this._focusItem(parent || current);
+      if (current.hasChildren && !current.expanded) {
+        current.toggle();
+        // After expand, visible items may change; re-init roving
+        this.updateComplete.then(() => {
+          const newItems = this._getVisibleItems();
+          const next = newItems.find(i => i === current) || newItems[0];
+          this._focusItem(next);
+          this._updateRovingTabindex(next);
+        });
+      } else {
+        const nextIdx = Math.min(currentIndex + 1, items.length - 1);
+        this._focusItem(items[nextIdx]);
+        this._updateRovingTabindex(items[nextIdx]);
       }
       return;
     }
 
-    let nextIndex = currentIndex;
-    if (e.key === 'Home') nextIndex = 0;
-    else if (e.key === 'End') nextIndex = items.length - 1;
-    else if (e.key === 'ArrowDown') {
-      nextIndex = Math.min(currentIndex + 1, items.length - 1);
-    } else nextIndex = Math.max(currentIndex - 1, 0);
+    if (e.key === 'ArrowLeft') {
+      if (current.hasChildren && current.expanded) {
+        current.toggle();
+        this._updateRovingTabindex(current);
+      } else {
+        const parent = /** @type {ThxTreeItem|null} */ (
+          /** @type {unknown} */ (current.parentElement?.closest('thx-tree-item'))
+        );
+        const target = parent || current;
+        this._focusItem(target);
+        this._updateRovingTabindex(target);
+      }
+      return;
+    }
 
-    this._focusItem(items[nextIndex]);
+    let direction;
+    if (e.key === 'Home') direction = 'first';
+    else if (e.key === 'End') direction = 'last';
+    else if (e.key === 'ArrowDown') direction = 'next';
+    else direction = 'prev';
+
+    const result = getNextRovingIndex(items, currentIndex, direction);
+    const nextItem = /** @type {ThxTreeItem} */ (/** @type {unknown} */ (result.item || items[result.index]));
+    if (nextItem) {
+      this._focusItem(nextItem);
+      this._updateRovingTabindex(nextItem);
+    }
   }
 
   /**
@@ -233,7 +301,10 @@ export class ThxTree extends LitElement {
    * @returns {void}
    */
   _focusItem(item) {
-    item?.focus();
+    if (!item) return;
+    item.focus?.();
+    // Ensure roving is set so only this one is in tab order
+    this._updateRovingTabindex(item);
   }
 
   /**

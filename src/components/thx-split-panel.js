@@ -141,11 +141,11 @@ export class ThxSplitPanel extends LitElement {
     }
 
     :host([variant='crt']) .divider {
-      background: #222;
+      background: var(--crt-bg-dark, #0a0a0a);
     }
 
     :host([variant='crt']) .divider-handle {
-      background: #111;
+      background: var(--crt-bg, #111);
       border-color: var(--atmos-primary, #a6c8e1);
       box-shadow: 0 0 var(--size-2) rgba(166, 200, 225, 0.3);
     }

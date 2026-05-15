@@ -7,6 +7,7 @@
  */
 
 import { LitElement, html, css } from '../../vendor/lit.js';
+import { crtStaticScanlineOverlay } from '../styles/crt-effects.js';
 
 /**
  * @typedef {Object} DropdownItem
@@ -54,7 +55,7 @@ export class ThxDropdown extends LitElement {
     }
 
     .dropdown-trigger.open {
-      background: #111;
+      background: var(--crt-bg, #111);
       color: var(--atmos-primary, #a6c8e1);
       border-color: var(--atmos-primary, #a6c8e1);
     }
@@ -140,21 +141,8 @@ export class ThxDropdown extends LitElement {
       transform: translateX(0);
     }
 
-    /* CRT scanline effect */
-    .dropdown-menu::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: repeating-linear-gradient(
-        0deg,
-        transparent,
-        transparent 2px,
-        rgba(166, 200, 225, 0.04) 2px,
-        rgba(166, 200, 225, 0.04) var(--size-1)
-      );
-      pointer-events: none;
-      z-index: var(--layer-2);
-    }
+    /* CRT scanline effect (shared) */
+    ${crtStaticScanlineOverlay('.dropdown-menu')}
 
     .dropdown-header {
       padding: calc(var(--size-2) + var(--size-1)) var(--size-3);
@@ -163,7 +151,7 @@ export class ThxDropdown extends LitElement {
       color: var(--atmos-secondary, #707e91);
       text-transform: uppercase;
       letter-spacing: var(--font-letterspacing-5);
-      border-bottom: var(--border-size-1) solid #333;
+      border-bottom: var(--border-size-1) solid var(--neutral-800, #333);
     }
 
     .dropdown-item {
@@ -220,7 +208,7 @@ export class ThxDropdown extends LitElement {
 
     .dropdown-divider {
       height: 1px;
-      background: #333;
+      background: var(--neutral-800, #333);
       margin: var(--size-2) 0;
     }
 
@@ -333,7 +321,7 @@ export class ThxDropdown extends LitElement {
    * @returns {void}
    */
   _handleClickOutside(e) {
-    if (this.open && !this.contains(/** @type {Node} */ (e.target))) {
+    if (this.open && !e.composedPath().includes(this)) {
       this.hide();
     }
   }

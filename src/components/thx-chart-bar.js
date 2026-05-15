@@ -59,14 +59,14 @@ export class ThxChartBar extends LitElement {
 
     .bar-fill {
       height: 100%;
-      background: linear-gradient(90deg, #444 0%, var(--atmos-primary, #a6c8e1) 100%);
+      background: linear-gradient(90deg, var(--neutral-800, #333) 0%, var(--atmos-primary, #a6c8e1) 100%);
       box-shadow: 0 0 var(--size-2) rgba(166, 200, 225, 0.3);
       position: relative;
       transition: width var(--duration-moderate-2) ease;
     }
 
     .bar-fill.warning {
-      background: linear-gradient(90deg, #666 0%, var(--accent-warning, #d4aa00) 100%);
+      background: linear-gradient(90deg, var(--neutral-600, #666) 0%, var(--accent-warning, #d4aa00) 100%);
       box-shadow: 0 0 var(--size-2) rgba(212, 170, 0, 0.4);
     }
 

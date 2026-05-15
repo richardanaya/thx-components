@@ -6,6 +6,7 @@
  */
 
 import { LitElement, html, css } from '../../vendor/lit.js';
+import { focusVisibleStyles } from '../mixins/focus-visible.js';
 
 /**
  * @typedef {Object} ButtonProps
@@ -180,26 +181,29 @@ export class ThxButton extends LitElement {
       pointer-events: none;
     }
 
-    .loading::after {
-      content: '';
-      width: calc(var(--size-2) + var(--size-1));
-      height: calc(var(--size-2) + var(--size-1));
-      border: var(--border-size-2) solid transparent;
-      border-top-color: currentColor;
-      border-radius: var(--radius-round);
-      margin-left: var(--size-2);
-      animation: spin 1s linear infinite;
+    .button-content {
+      display: contents;
     }
 
-    @keyframes spin {
-      to {
-        transform: rotate(360deg);
-      }
+    .button-content.hidden {
+      display: none;
+    }
+
+    thx-spinner {
+      display: inline-flex;
+      vertical-align: middle;
     }
 
     button:active:not(:disabled) {
       transform: translateY(1px);
     }
+
+    button:focus-visible {
+      outline: none;
+      box-shadow: var(--focus-ring-glow, 0 0 0 2px rgba(166, 200, 225, 0.45));
+    }
+
+    ${focusVisibleStyles}
   `;
 
   static properties = {
@@ -239,6 +243,31 @@ export class ThxButton extends LitElement {
   }
 
   /**
+   * @returns {void}
+   */
+  focus() {
+    this.renderRoot?.querySelector('button')?.focus();
+  }
+
+  /**
+   * @returns {void}
+   */
+  blur() {
+    this.renderRoot?.querySelector('button')?.blur();
+  }
+
+  /**
+   * Maps button variant to appropriate thx-spinner variant.
+   * @returns {'crt' | 'warning' | 'error'}
+   */
+  get _spinnerVariant() {
+    const v = (this.variant || '').toLowerCase();
+    if (v.includes('warning')) return 'warning';
+    if (v.includes('error')) return 'error';
+    return 'crt';
+  }
+
+  /**
    * @returns {import('lit').TemplateResult}
    */
   render() {
@@ -248,9 +277,13 @@ export class ThxButton extends LitElement {
         class=${classes}
         ?disabled=${this.disabled || this.loading}
         type=${this.type}
+        aria-busy=${this.loading ? 'true' : 'false'}
         @click=${this.handleClick}
       >
-        <slot></slot>
+        <span class="button-content ${this.loading ? 'hidden' : ''}"><slot></slot></span>
+        ${this.loading
+          ? html`<thx-spinner size="sm" variant=${this._spinnerVariant}></thx-spinner>`
+          : ''}
       </button>
     `;
   }

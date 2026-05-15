@@ -6,6 +6,8 @@
  */
 
 import { LitElement, html, css } from '../../vendor/lit.js';
+import { FormAssociatedMixin } from '../mixins/form-associated-mixin.js';
+import { focusVisibleStyles } from '../mixins/focus-visible.js';
 
 /**
  * @typedef {Object} SelectProps
@@ -28,8 +30,7 @@ import { LitElement, html, css } from '../../vendor/lit.js';
  * THX 1138 styled select component
  * @extends {LitElement}
  */
-export class ThxSelect extends LitElement {
-  static formAssociated = true;
+export class ThxSelect extends FormAssociatedMixin(LitElement) {
 
   static styles = css`
     :host {
@@ -65,7 +66,7 @@ export class ThxSelect extends LitElement {
       font-size: var(--font-size-1);
       text-transform: uppercase;
       letter-spacing: var(--font-letterspacing-2);
-      background: white;
+      background: var(--neutral-100, #fafafa);
       color: var(--neutral-800, #333);
       cursor: pointer;
       display: flex;
@@ -82,10 +83,10 @@ export class ThxSelect extends LitElement {
       border-color: var(--neutral-600, #666);
     }
 
-    .select-trigger:focus {
+    .select-trigger:focus-visible {
       outline: none;
       border-color: var(--atmos-primary, #a6c8e1);
-      box-shadow: 0 0 0 2px rgba(166, 200, 225, 0.3);
+      box-shadow: var(--focus-ring-glow, 0 0 0 2px rgba(166, 200, 225, 0.3));
     }
 
     .select-trigger.disabled {
@@ -126,7 +127,7 @@ export class ThxSelect extends LitElement {
       top: 100%;
       left: 0;
       right: 0;
-      background: white;
+      background: var(--neutral-100, #fafafa);
       border: var(--border-size-1) solid var(--neutral-200, #e0e0e0);
       border-top: none;
       box-shadow: 0 var(--size-1) var(--size-2) rgba(0, 0, 0, 0.1);
@@ -173,6 +174,8 @@ export class ThxSelect extends LitElement {
       text-transform: uppercase;
       text-align: center;
     }
+
+    ${focusVisibleStyles}
   `;
 
   static properties = {
@@ -189,7 +192,6 @@ export class ThxSelect extends LitElement {
 
   constructor() {
     super();
-    this._internals = this.attachInternals?.();
     /** @type {string} */
     this.value = '';
     this._defaultValue = this.value;
@@ -246,6 +248,27 @@ export class ThxSelect extends LitElement {
   formResetCallback() {
     this.value = this._defaultValue;
     this._updateActiveIndex();
+  }
+
+  /**
+   * @returns {HTMLElement|null}
+   */
+  get triggerElement() {
+    return /** @type {HTMLElement|null} */ (this.renderRoot?.querySelector('.select-trigger'));
+  }
+
+  /**
+   * @returns {void}
+   */
+  focus() {
+    this.triggerElement?.focus();
+  }
+
+  /**
+   * @returns {void}
+   */
+  blur() {
+    this.triggerElement?.blur();
   }
 
   /**

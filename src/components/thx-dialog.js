@@ -3,10 +3,11 @@
 /**
  * @fileoverview THX 1138 styled modal dialog component
  * @module thx-dialog
- * @description A clinical, dystopian dialog with CRT-style overlay aesthetics
+ * @description A clinical, dystopian dialog with CRT-style overlay aesthetics (uses crt-effects for scanlines)
  */
 
 import { LitElement, html, css } from '../../vendor/lit.js';
+import { crtStaticScanlineOverlay } from '../styles/crt-effects.js';
 
 /**
  * @typedef {Object} DialogState
@@ -74,21 +75,8 @@ export class ThxDialog extends LitElement {
       width: min(800px, 90vw);
     }
 
-    /* CRT scanline effect overlay */
-    .dialog-container::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: repeating-linear-gradient(
-        0deg,
-        transparent,
-        transparent 2px,
-        rgba(166, 200, 225, 0.03) 2px,
-        rgba(166, 200, 225, 0.03) var(--size-1)
-      );
-      pointer-events: none;
-      z-index: var(--layer-2);
-    }
+    /* CRT scanline effect overlay (shared, subtle 0.03 opacity) */
+    ${crtStaticScanlineOverlay('.dialog-container', { opacity: 0.03 })}
 
     .dialog-header {
       background: var(--crt-bg, #111);
@@ -96,7 +84,7 @@ export class ThxDialog extends LitElement {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      border-bottom: var(--border-size-1) solid #333;
+      border-bottom: var(--border-size-1) solid var(--neutral-800, #333);
       position: relative;
       z-index: var(--layer-1);
     }
@@ -174,6 +162,8 @@ export class ThxDialog extends LitElement {
     this.size = 'md';
     /** @type {boolean} */
     this.noHeader = false;
+    /** @type {string|undefined} */
+    this._previousOverflow = undefined;
     /** @type {boolean} */
     this.noFooter = false;
     /** @type {Element|null} */
@@ -185,8 +175,15 @@ export class ThxDialog extends LitElement {
     if (changedProperties.has('open')) {
       if (this.open) {
         this._previousFocus = document.activeElement;
+        // Basic body scroll lock
+        this._previousOverflow = document.body.style.overflow;
+        document.body.style.overflow = 'hidden';
         this.updateComplete.then(() => this._focusDialog());
       } else {
+        // Restore scroll
+        if (this._previousOverflow !== undefined) {
+          document.body.style.overflow = this._previousOverflow;
+        }
         this._restoreFocus();
       }
     }

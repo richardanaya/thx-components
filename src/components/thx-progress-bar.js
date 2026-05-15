@@ -6,6 +6,7 @@
  */
 
 import { LitElement, html, css } from '../../vendor/lit.js';
+import { crtStaticScanlineOverlay } from '../styles/crt-effects.js';
 
 /**
  * @typedef {Object} ProgressBarConfig
@@ -19,7 +20,7 @@ import { LitElement, html, css } from '../../vendor/lit.js';
 
 /**
  * Linear progress bar component for displaying progress indicators.
- * Styled with THX 1138 CRT/phosphor aesthetic.
+ * Styled with THX 1138 CRT/phosphor aesthetic (crt variant uses crt-effects scanline on track).
  *
  * @extends {LitElement}
  */
@@ -133,21 +134,8 @@ export class ThxProgressBar extends LitElement {
       text-shadow: 0 0 var(--size-1) rgba(166, 200, 225, 0.5);
     }
 
-    /* CRT scanline effect */
-    .progress--crt .progress__track::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: repeating-linear-gradient(
-        0deg,
-        transparent,
-        transparent 2px,
-        rgba(166, 200, 225, 0.05) 2px,
-        rgba(166, 200, 225, 0.05) var(--size-1)
-      );
-      pointer-events: none;
-      z-index: 2;
-    }
+    /* CRT scanline effect on track (shared) */
+    ${crtStaticScanlineOverlay('.progress--crt .progress__track', { opacity: 0.05, z: 2 })}
   `;
 
   /**

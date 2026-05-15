@@ -6,6 +6,7 @@
  */
 
 import { LitElement, html, css } from '../../vendor/lit.js';
+import { crtMonitorStyles } from '../styles/crt-effects.js';
 
 /**
  * @typedef {Object} CardConfig
@@ -17,6 +18,7 @@ import { LitElement, html, css } from '../../vendor/lit.js';
 /**
  * Card component for content containers.
  * Styled with THX 1138 monochrome aesthetic.
+ * CRT variant uses centralized crt-effects for scanlines/vignette.
  *
  * @extends {LitElement}
  */
@@ -71,15 +73,13 @@ export class ThxCard extends LitElement {
         0 0 15px rgba(166, 200, 225, 0.3);
     }
 
-    /* CRT Display Variant */
+    ${crtMonitorStyles}
+
+    /* CRT Display Variant (composes with .crt-surface for shared scanlines/vignette) */
     .card--crt {
-      background: var(--crt-bg, #111);
-      border: calc(var(--size-2) + var(--size-1)) solid var(--crt-border, #2a2a2a);
-      border-radius: var(--size-1);
-      box-shadow: inset 0 0 var(--size-4) rgba(0, 0, 0, 0.5);
       padding: var(--size-4);
       color: var(--atmos-primary, #a6c8e1);
-      overflow: hidden;
+      /* base frame, border, bg, ::before/::after, keyframes, reduced-motion provided by crtMonitorStyles via .crt-surface */
     }
 
     .card--crt .card__header {
@@ -88,40 +88,6 @@ export class ThxCard extends LitElement {
 
     .card--crt .card__label {
       color: var(--atmos-secondary, #707e91);
-    }
-
-    .card--crt::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: repeating-linear-gradient(
-        0deg,
-        transparent,
-        transparent 2px,
-        rgba(166, 200, 225, 0.04) 2px,
-        rgba(166, 200, 225, 0.04) var(--size-1)
-      );
-      pointer-events: none;
-      z-index: var(--layer-2);
-      animation: scanlines var(--duration-pause) linear infinite;
-    }
-
-    @keyframes scanlines {
-      0% {
-        transform: translateY(0);
-      }
-      100% {
-        transform: translateY(4px);
-      }
-    }
-
-    .card--crt::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(ellipse at center, transparent 50%, rgba(0, 0, 0, 0.4) 100%);
-      pointer-events: none;
-      z-index: calc(var(--layer-2) + 1);
     }
 
     .card--crt .card__content {
@@ -139,12 +105,6 @@ export class ThxCard extends LitElement {
 
     .card--crt .card__inner-border {
       border-color: rgba(166, 200, 225, 0.1);
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      .card--crt::before {
-        animation: none;
-      }
     }
   `;
 
@@ -180,6 +140,7 @@ export class ThxCard extends LitElement {
     const cardClasses = {
       card: true,
       'card--crt': this.crt,
+      'crt-surface': this.crt, // enables shared crtMonitorStyles scanlines + vignette + reduced-motion
       'card--hoverable': this.hoverable,
     };
 

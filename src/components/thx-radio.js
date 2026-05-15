@@ -6,6 +6,8 @@
  */
 
 import { LitElement, html, css } from '../../vendor/lit.js';
+import { FormAssociatedMixin } from '../mixins/form-associated-mixin.js';
+import { focusVisibleStyles } from '../mixins/focus-visible.js';
 
 /**
  * @typedef {Object} RadioProps
@@ -19,7 +21,7 @@ import { LitElement, html, css } from '../../vendor/lit.js';
  * THX 1138 styled radio button component
  * @extends {LitElement}
  */
-export class ThxRadio extends LitElement {
+export class ThxRadio extends FormAssociatedMixin(LitElement) {
   static styles = css`
     :host {
       display: inline-flex;
@@ -43,8 +45,8 @@ export class ThxRadio extends LitElement {
       width: var(--size-3);
       height: var(--size-3);
       border: var(--border-size-2) solid var(--neutral-600, #666);
-      border-radius: var(--radius-round);
-      background: white;
+      border-radius: 0;
+      background: var(--neutral-100, #fafafa);
       cursor: pointer;
       transition: all var(--duration-quick-2);
       margin: 0;
@@ -68,12 +70,17 @@ export class ThxRadio extends LitElement {
       width: var(--size-2);
       height: var(--size-2);
       background: var(--neutral-800, #333);
-      border-radius: var(--radius-round);
+      border-radius: 0;
     }
 
-    input[type='radio']:focus {
+    input[type='radio']:focus-visible {
       outline: none;
-      box-shadow: 0 0 0 2px rgba(166, 200, 225, 0.5);
+      box-shadow: var(--focus-ring-glow, 0 0 0 2px rgba(166, 200, 225, 0.5));
+    }
+
+    :host([rounded]) input[type='radio'],
+    :host([rounded]) input[type='radio']:checked::after {
+      border-radius: var(--radius-round);
     }
 
     .label {
@@ -86,6 +93,8 @@ export class ThxRadio extends LitElement {
     :host([disabled]) .label {
       color: var(--neutral-600, #666);
     }
+
+    ${focusVisibleStyles}
   `;
 
   static properties = {
@@ -93,6 +102,7 @@ export class ThxRadio extends LitElement {
     disabled: { type: Boolean, reflect: true },
     value: { type: String },
     name: { type: String },
+    rounded: { type: Boolean, reflect: true },
   };
 
   constructor() {
@@ -105,6 +115,8 @@ export class ThxRadio extends LitElement {
     this.value = '';
     /** @type {string} */
     this.name = '';
+    /** @type {boolean} */
+    this.rounded = false;
   }
 
   /**

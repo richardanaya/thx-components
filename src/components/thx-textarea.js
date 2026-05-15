@@ -6,6 +6,8 @@
  */
 
 import { LitElement, html, css } from '../../vendor/lit.js';
+import { FormAssociatedMixin } from '../mixins/form-associated-mixin.js';
+import { focusVisibleStyles } from '../mixins/focus-visible.js';
 
 let textareaIdCounter = 0;
 
@@ -30,8 +32,7 @@ let textareaIdCounter = 0;
  * THX 1138 styled textarea component
  * @extends {LitElement}
  */
-export class ThxTextarea extends LitElement {
-  static formAssociated = true;
+export class ThxTextarea extends FormAssociatedMixin(LitElement) {
 
   static styles = css`
     :host {
@@ -63,9 +64,9 @@ export class ThxTextarea extends LitElement {
       border-bottom: var(--border-size-2) solid var(--neutral-200, #e0e0e0);
       font-family: var(--font-mono, 'Courier New', Courier, monospace);
       font-size: var(--font-size-1);
-      text-transform: uppercase;
+      text-transform: none;
       letter-spacing: var(--font-letterspacing-2);
-      background: white;
+      background: var(--neutral-100, #fafafa);
       color: var(--neutral-800, #333);
       transition:
         border-color var(--duration-moderate-1),
@@ -75,14 +76,18 @@ export class ThxTextarea extends LitElement {
       line-height: var(--font-lineheight-4);
     }
 
+    :host([uppercase]) textarea {
+      text-transform: uppercase;
+    }
+
     textarea::placeholder {
       color: var(--neutral-600, #666);
     }
 
-    textarea:focus {
+    textarea:focus-visible {
       outline: none;
       border-color: var(--atmos-primary, #a6c8e1);
-      box-shadow: 0 0 0 2px rgba(166, 200, 225, 0.3);
+      box-shadow: var(--focus-ring-glow, 0 0 0 2px rgba(166, 200, 225, 0.3));
     }
 
     textarea:disabled {
@@ -145,6 +150,8 @@ export class ThxTextarea extends LitElement {
     .help-text.error {
       color: var(--accent-error, #d44000);
     }
+
+    ${focusVisibleStyles}
   `;
 
   static properties = {
@@ -163,11 +170,11 @@ export class ThxTextarea extends LitElement {
     resize: { type: String },
     errorMessage: { type: String },
     showCharCount: { type: Boolean },
+    uppercase: { type: Boolean, reflect: true },
   };
 
   constructor() {
     super();
-    this._internals = this.attachInternals?.();
     this._textareaId = `thx-textarea-${++textareaIdCounter}`;
     this._labelId = `${this._textareaId}-label`;
     this._helpId = `${this._textareaId}-help`;
@@ -185,6 +192,8 @@ export class ThxTextarea extends LitElement {
     this.readonly = false;
     /** @type {boolean} */
     this.required = false;
+    /** @type {boolean} */
+    this.uppercase = false;
     /** @type {string} */
     this.name = '';
     /** @type {number} */
@@ -207,6 +216,7 @@ export class ThxTextarea extends LitElement {
 
   /** @param {Map<string, unknown>} changedProperties */
   updated(changedProperties) {
+    super.updated(changedProperties);
     if (changedProperties.has('value') || changedProperties.has('disabled')) {
       this._updateFormValue();
     }
@@ -215,6 +225,8 @@ export class ThxTextarea extends LitElement {
   /** @returns {void} */
   firstUpdated() {
     this._defaultValue = this.value;
+    super.firstUpdated();
+    // _updateFormValue already called by super, but keep for explicitness / compat
     this._updateFormValue();
   }
 
@@ -225,7 +237,8 @@ export class ThxTextarea extends LitElement {
 
   /** @returns {void} */
   formResetCallback() {
-    this.value = this._defaultValue;
+    super.formResetCallback();
+    // mixin restores _defaultValue and calls _sync; our _update is redundant but harmless
   }
 
   /** @returns {string|undefined} */

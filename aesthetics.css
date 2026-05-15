@@ -52,6 +52,12 @@
   --font-display: 'Helvetica Neue', Helvetica, Arial, sans-serif;
   --font-body: 'Helvetica Neue', Helvetica, Arial, sans-serif;
   --font-mono: 'Courier New', Courier, monospace;
+
+  /* Focus ring (used by native elements + all thx-* interactive components) */
+  --focus-ring-color: var(--atmos-primary, #a6c8e1);
+  --focus-ring-width: 2px;
+  --focus-ring-glow: 0 0 0 2px color-mix(in srgb, var(--focus-ring-color) 35%, transparent),
+                     0 0 var(--size-2, 8px) rgba(166, 200, 225, 0.45);
 }
 
 /* ============================================
@@ -381,9 +387,18 @@ textarea {
   text-transform: none;
 }
 
-input:focus,
-select:focus,
-textarea:focus {
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: none;
+  border-color: var(--focus-ring-color);
+  box-shadow: var(--focus-ring-glow);
+}
+
+/* Fallback for older browsers or forced focus */
+input:focus:not(:focus-visible),
+select:focus:not(:focus-visible),
+textarea:focus:not(:focus-visible) {
   outline: none;
   border-color: #666;
 }
@@ -484,10 +499,10 @@ input[type='checkbox']:checked::after {
   transform: rotate(45deg);
 }
 
-input[type='radio']:focus,
-input[type='checkbox']:focus {
+input[type='radio']:focus-visible,
+input[type='checkbox']:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 2px rgba(100, 100, 100, 0.3);
+  box-shadow: var(--focus-ring-glow);
 }
 
 /* Inline form labels */
@@ -543,6 +558,15 @@ input[type='button']:active {
   background: #c0c0c0;
   border-color: #666;
   transform: translateY(1px);
+}
+
+button:focus-visible,
+input[type='submit']:focus-visible,
+input[type='reset']:focus-visible,
+input[type='button']:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring-glow);
+  border-color: var(--focus-ring-color);
 }
 
 button:disabled,

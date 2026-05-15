@@ -1,0 +1,798 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>THX 1138 // COMMAND NAVIGATION TERMINAL</title>
+    <link rel="stylesheet" href="../../aesthetics.css" />
+    <style>
+      /* COMMAND NAVIGATION TERMINAL — immersive dark control room aesthetic */
+      :root {
+        --term-bg: #0a0c10;
+        --term-panel: #111418;
+        --term-border: #1f252e;
+        --phosphor: #a6c8e1;
+        --amber: #d4aa00;
+        --alert: #d44000;
+      }
+
+      body {
+        margin: 0;
+        padding: 0;
+        background: var(--term-bg);
+        background-image:
+          linear-gradient(rgba(166, 200, 225, 0.035) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(166, 200, 225, 0.035) 1px, transparent 1px);
+        background-size: 28px 28px;
+        color: var(--neutral-300);
+        font-family: var(--font-body);
+        min-height: 100vh;
+        line-height: 1.5;
+      }
+
+      .terminal-shell {
+        max-width: 1480px;
+        margin: 0 auto;
+        padding: var(--size-4) var(--size-5);
+      }
+
+      /* Sticky command header */
+      .command-header {
+        position: sticky;
+        top: 0;
+        z-index: var(--layer-4);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: var(--size-4) var(--size-5);
+        background: rgba(10, 12, 16, 0.96);
+        border-bottom: var(--border-size-1) solid var(--term-border);
+        backdrop-filter: blur(12px);
+        margin-bottom: var(--size-5);
+      }
+
+      .header-left {
+        display: flex;
+        flex-direction: column;
+        gap: var(--size-1);
+      }
+
+      .header-left .section-title {
+        font-family: var(--font-mono);
+        font-size: var(--font-size-0);
+        text-transform: uppercase;
+        letter-spacing: var(--font-letterspacing-5);
+        color: var(--neutral-600);
+      }
+
+      .header-left h1 {
+        margin: 0;
+        font-size: var(--font-size-4);
+        letter-spacing: var(--font-letterspacing-4);
+        color: var(--phosphor);
+        font-weight: var(--font-weight-3);
+      }
+
+      .header-right {
+        display: flex;
+        align-items: center;
+        gap: var(--size-4);
+      }
+
+      .status-cluster {
+        display: flex;
+        align-items: center;
+        gap: var(--size-3);
+        font-family: var(--font-mono);
+        font-size: var(--font-size-0);
+        text-transform: uppercase;
+        letter-spacing: var(--font-letterspacing-4);
+        color: var(--neutral-500);
+      }
+
+      .live-clock {
+        font-variant-numeric: tabular-nums;
+        color: var(--amber);
+        min-width: 92px;
+        text-align: right;
+      }
+
+      /* Main navigation grid */
+      .nav-grid {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: var(--size-5);
+        margin-bottom: var(--size-5);
+      }
+
+      .side-stack {
+        display: flex;
+        flex-direction: column;
+        gap: var(--size-5);
+      }
+
+      /* CRT + Card wrappers — heavy usage */
+      .demo-crt {
+        display: block;
+      }
+
+      .demo-card {
+        display: block;
+        margin-bottom: var(--size-4);
+      }
+
+      /* Tab group inside CRT feels native */
+      thx-tab-group[variant="crt"] {
+        margin: 0;
+      }
+
+      /* Tree and Menu inside their CRTs */
+      thx-tree,
+      thx-menu {
+        width: 100%;
+      }
+
+      /* Breadcrumb container */
+      .breadcrumb-crt {
+        padding: var(--size-3) var(--size-4);
+      }
+
+      .breadcrumb-crt thx-breadcrumb {
+        font-size: var(--font-size-1);
+      }
+
+      /* Selected / status readouts */
+      .readout {
+        margin-top: var(--size-3);
+        padding: var(--size-2) var(--size-3);
+        background: rgba(0, 0, 0, 0.35);
+        border: var(--border-size-1) solid var(--term-border);
+        font-family: var(--font-mono);
+        font-size: var(--font-size-0);
+        text-transform: uppercase;
+        letter-spacing: var(--font-letterspacing-4);
+        color: var(--neutral-400);
+      }
+
+      .readout strong {
+        color: var(--phosphor);
+      }
+
+      /* Live terminal log */
+      .nav-log {
+        font-family: var(--font-mono);
+        font-size: 13px;
+        line-height: 1.45;
+        background: #0b0d11;
+        border: var(--border-size-1) solid var(--crt-border, #2a2a2a);
+        border-radius: var(--size-1);
+        padding: var(--size-3);
+        height: 188px;
+        overflow-y: auto;
+        color: #9bb8d1;
+        box-shadow: inset 0 0 18px rgba(0, 0, 0, 0.6);
+      }
+
+      .log-line {
+        padding: 2px 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.035);
+        display: flex;
+        gap: var(--size-2);
+      }
+
+      .log-line:last-child {
+        border-bottom: none;
+      }
+
+      .log-line .t {
+        color: var(--neutral-600);
+        flex-shrink: 0;
+        width: 72px;
+      }
+
+      .log-line.warn { color: var(--amber); }
+      .log-line.crit { color: var(--alert); }
+      .log-line.success { color: #7ed321; }
+
+      /* Usage notes — THX-styled labels */
+      .usage-note {
+        margin-top: var(--size-3);
+        padding: var(--size-2) var(--size-3);
+        background: rgba(10, 12, 16, 0.7);
+        border-left: 3px solid var(--phosphor);
+        font-family: var(--font-mono);
+        font-size: var(--font-size-0);
+        text-transform: uppercase;
+        letter-spacing: var(--font-letterspacing-4);
+        color: var(--neutral-500);
+        line-height: 1.35;
+      }
+
+      .usage-note code {
+        font-family: var(--font-mono);
+        background: rgba(0, 0, 0, 0.4);
+        padding: 1px 5px;
+        border-radius: 2px;
+        color: var(--phosphor);
+        font-size: 11px;
+      }
+
+      .usage-note strong {
+        color: var(--amber);
+        font-weight: var(--font-weight-2);
+      }
+
+      /* Panel headers inside cards / crts */
+      .panel-label {
+        font-family: var(--font-mono);
+        font-size: var(--font-size-0);
+        text-transform: uppercase;
+        letter-spacing: var(--font-letterspacing-5);
+        color: var(--neutral-600);
+        margin-bottom: var(--size-3);
+        padding-bottom: var(--size-2);
+        border-bottom: var(--border-size-1) solid var(--term-border);
+      }
+
+      /* Tab panel content polish */
+      .tab-panel-content {
+        padding: var(--size-4);
+        min-height: 148px;
+      }
+
+      .tab-panel-content p {
+        margin: 0 0 var(--size-3) 0;
+        color: var(--neutral-400);
+      }
+
+      .mini-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(108px, 1fr));
+        gap: var(--size-2);
+        margin-top: var(--size-3);
+      }
+
+      /* Terminal buttons and accents */
+      .terminal-btn {
+        font-family: var(--font-mono);
+        text-transform: uppercase;
+        letter-spacing: var(--font-letterspacing-3);
+      }
+
+      /* Footer meta */
+      .footer-meta {
+        margin-top: var(--size-6);
+        padding-top: var(--size-4);
+        border-top: var(--border-size-1) solid var(--term-border);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-family: var(--font-mono);
+        font-size: var(--font-size-0);
+        text-transform: uppercase;
+        letter-spacing: var(--font-letterspacing-4);
+        color: var(--neutral-600);
+      }
+
+      /* Responsive tweaks */
+      @media (max-width: 980px) {
+        .nav-grid {
+          grid-template-columns: 1fr;
+        }
+        .side-stack {
+          flex-direction: row;
+          flex-wrap: wrap;
+        }
+        .side-stack > * {
+          flex: 1 1 320px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="terminal-shell">
+      <!-- COMMAND HEADER -->
+      <header class="command-header">
+        <div class="header-left">
+          <div class="section-title">// COMMAND NAV // SECTOR 1138</div>
+          <h1>NAVIGATION TERMINAL</h1>
+        </div>
+
+        <div class="header-right">
+          <div class="status-cluster">
+            <thx-badge variant="pulse">LIVE FEED</thx-badge>
+            <thx-status-leds id="header-leds"></thx-status-leds>
+            <span class="live-clock" id="live-clock">11:38:05</span>
+          </div>
+
+          <thx-button variant="outline" class="terminal-btn" id="reset-btn">RESET TERMINAL</thx-button>
+          <thx-button variant="primary" class="terminal-btn" id="sync-btn">SYNC NAV</thx-button>
+        </div>
+      </header>
+
+      <!-- BREADCRUMB — PRIMARY NAV PATH -->
+      <thx-crt-display class="demo-crt" label="CURRENT NAV PATH" size="small">
+        <div class="breadcrumb-crt">
+          <thx-breadcrumb id="main-breadcrumb" label="FACILITY">
+            <thx-breadcrumb-item href="#">ROOT</thx-breadcrumb-item>
+            <thx-breadcrumb-item href="#">SECTOR-07</thx-breadcrumb-item>
+            <thx-breadcrumb-item current>NAV CONSOLE</thx-breadcrumb-item>
+          </thx-breadcrumb>
+        </div>
+
+        <div class="usage-note">
+          <strong>USAGE:</strong>
+          &lt;thx-breadcrumb label="FACILITY"&gt;
+          &lt;thx-breadcrumb-item href="#"&gt;ROOT&lt;/thx-breadcrumb-item&gt;
+          &lt;thx-breadcrumb-item current&gt;NAV CONSOLE&lt;/thx-breadcrumb-item&gt;
+          &lt;/thx-breadcrumb&gt;
+        </div>
+      </thx-crt-display>
+
+      <!-- PRIMARY NAV DEMOS GRID -->
+      <div class="nav-grid">
+        <!-- TABS: Interactive tabbed interface with real panels -->
+        <thx-crt-display class="demo-crt" label="TABBED INTERFACE — thx-tab-group" size="medium">
+          <thx-tab-group id="demo-tabs" variant="crt" active-tab="overview">
+            <!-- Correct slot="tab" + panel attr on tab + id on panel -->
+            <thx-tab slot="tab" panel="overview" active>OVERVIEW</thx-tab>
+            <thx-tab slot="tab" panel="sectors">SECTORS MAP</thx-tab>
+            <thx-tab slot="tab" panel="protocols">PROTOCOLS</thx-tab>
+
+            <thx-tab-panel id="overview">
+              <div class="tab-panel-content">
+                <p>All navigation subsystems nominal. 3 active sectors linked. Roving focus enabled across tree, menu and tabs.</p>
+                <div style="display:flex; gap:var(--size-3); align-items:center; flex-wrap:wrap;">
+                  <thx-badge variant="success">NOMINAL</thx-badge>
+                  <thx-badge variant="primary">4 NODES</thx-badge>
+                  <thx-progress-bar value="92" style="width:180px;"></thx-progress-bar>
+                  <span style="font-family:var(--font-mono);font-size:var(--font-size-0);color:var(--neutral-500);">SYNC 92%</span>
+                </div>
+                <div class="mini-grid">
+                  <thx-card style="background:#161a20; border-color:#222;">
+                    <div slot="header">BRIDGE</div>
+                    <div>STATUS: ONLINE</div>
+                  </thx-card>
+                  <thx-card style="background:#161a20; border-color:#222;">
+                    <div slot="header">OPS DECK</div>
+                    <div>STATUS: ACTIVE</div>
+                  </thx-card>
+                </div>
+              </div>
+            </thx-tab-panel>
+
+            <thx-tab-panel id="sectors">
+              <div class="tab-panel-content">
+                <p>Hierarchical sector overview. Select nodes in the tree on the right to update path.</p>
+                <div class="mini-grid">
+                  <thx-tag>7-G</thx-tag>
+                  <thx-tag>BAY-A</thx-tag>
+                  <thx-tag>BAY-B</thx-tag>
+                  <thx-tag>8-H</thx-tag>
+                  <thx-tag>9-J</thx-tag>
+                  <thx-tag variant="warning">DOCK-03</thx-tag>
+                </div>
+                <thx-card crt style="margin-top:var(--size-3);">
+                  <div slot="header">SECTOR STATUS</div>
+                  <div>7-G: 94% • 8-H: 81% • 9-J: 67%</div>
+                  <div slot="footer">LAST UPDATE: 1138.05.14</div>
+                </thx-card>
+              </div>
+            </thx-tab-panel>
+
+            <thx-tab-panel id="protocols">
+              <div class="tab-panel-content">
+                <p>Navigation protocol reference. All components implement shared roving tabindex + arrow key navigation.</p>
+                <div style="display:flex; flex-direction:column; gap:var(--size-2);">
+                  <div><thx-tag>ARROWS</thx-tag> Move focus between tabs / tree nodes / menu items</div>
+                  <div><thx-tag>HOME / END</thx-tag> Jump to first / last visible item</div>
+                  <div><thx-tag>ENTER / SPACE</thx-tag> Activate selection or expand/collapse</div>
+                </div>
+              </div>
+            </thx-tab-panel>
+          </thx-tab-group>
+
+          <div class="usage-note">
+            <strong>USAGE:</strong>
+            &lt;thx-tab-group variant="crt" active-tab="overview"&gt;
+            &lt;thx-tab slot="tab" panel="overview" active&gt;OVERVIEW&lt;/thx-tab&gt;
+            &lt;thx-tab-panel id="overview"&gt;...&lt;/thx-tab-panel&gt;
+            &lt;/thx-tab-group&gt;
+          </div>
+        </thx-crt-display>
+
+        <!-- SIDE STACK: TREE + MENU -->
+        <div class="side-stack">
+          <!-- TREE: Hierarchical expandable navigation -->
+          <thx-crt-display class="demo-crt" label="FACILITY HIERARCHY — thx-tree" size="small">
+            <thx-tree id="demo-tree" label="SECTORS" variant="crt" selection="single">
+              <thx-tree-item type="folder" expanded value="cmd-center">
+                COMMAND CENTER
+                <thx-tree-item type="unit" value="bridge">BRIDGE</thx-tree-item>
+                <thx-tree-item type="unit" value="ops" status="active">OPS DECK</thx-tree-item>
+              </thx-tree-item>
+
+              <thx-tree-item type="folder" expanded value="sector-7g">
+                SECTOR 7-G
+                <thx-tree-item type="unit" value="bay-a" selected>BAY-A</thx-tree-item>
+                <thx-tree-item type="unit" value="bay-b">BAY-B</thx-tree-item>
+                <thx-tree-item type="unit" value="dock-03">DOCK-03</thx-tree-item>
+              </thx-tree-item>
+
+              <thx-tree-item type="folder" value="sector-8h">
+                SECTOR 8-H
+                <thx-tree-item type="unit" value="lab-04" status="warning">LAB-04</thx-tree-item>
+              </thx-tree-item>
+
+              <thx-tree-item type="folder" value="sector-9j">
+                SECTOR 9-J
+              </thx-tree-item>
+            </thx-tree>
+
+            <div class="readout" id="tree-readout">
+              SELECTED NODE: <strong id="tree-selected">BAY-A</strong>
+            </div>
+
+            <div class="usage-note">
+              <strong>USAGE:</strong>
+              &lt;thx-tree variant="crt" selection="single"&gt;
+              &lt;thx-tree-item type="folder" expanded&gt;SECTOR 7-G
+                &lt;thx-tree-item type="unit" selected&gt;BAY-A&lt;/thx-tree-item&gt;
+              &lt;/thx-tree-item&gt;
+              &lt;/thx-tree&gt;
+            </div>
+          </thx-crt-display>
+
+          <!-- MENU: Side command menu with active states -->
+          <thx-crt-display class="demo-crt" label="COMMAND CONSOLE — thx-menu" size="small">
+            <thx-menu id="demo-menu" label="PRIMARY OPS" variant="crt">
+              <thx-menu-label>NAV LAYER</thx-menu-label>
+              <thx-menu-item active>OVERVIEW MAP</thx-menu-item>
+              <thx-menu-item>DEPLOY PROBE</thx-menu-item>
+
+              <thx-menu-label>SECTOR CONTROL</thx-menu-label>
+              <thx-menu-item>7-G SCAN</thx-menu-item>
+              <thx-menu-item>8-H RECON</thx-menu-item>
+              <thx-menu-item disabled>EMERGENCY LOCK</thx-menu-item>
+
+              <thx-menu-label>UTILITY</thx-menu-label>
+              <thx-menu-item variant="warning">ABORT SEQUENCE</thx-menu-item>
+            </thx-menu>
+
+            <div class="readout" id="menu-readout">
+              ACTIVE COMMAND: <strong id="menu-active">OVERVIEW MAP</strong>
+            </div>
+
+            <div class="usage-note">
+              <strong>USAGE:</strong>
+              &lt;thx-menu variant="crt" label="PRIMARY OPS"&gt;
+              &lt;thx-menu-label&gt;NAV LAYER&lt;/thx-menu-label&gt;
+              &lt;thx-menu-item active&gt;OVERVIEW MAP&lt;/thx-menu-item&gt;
+              &lt;thx-menu-item disabled&gt;...&lt;/thx-menu-item&gt;
+              &lt;/thx-menu&gt;
+            </div>
+          </thx-crt-display>
+        </div>
+      </div>
+
+      <!-- LIVE EVENT LOG — integrates all four components -->
+      <thx-crt-display class="demo-crt" label="NAVIGATION LOG — LIVE EVENT FEED" size="medium">
+        <div id="nav-log" class="nav-log">
+          <!-- Populated by JS -->
+        </div>
+
+        <div class="usage-note">
+          <strong>INTEGRATION:</strong>
+          All four components dispatch events (tab-change, select, breadcrumb-click). This terminal listens and coordinates breadcrumb + log in real time.
+        </div>
+      </thx-crt-display>
+
+      <!-- FOOTER / META -->
+      <div class="footer-meta">
+        <div>
+          THX 1138 COMPONENTS v0.1.1 — NAVIGATION CATEGORY • 4 COMMAND SURFACES
+        </div>
+        <div>
+          <thx-tag>ROVING TABINDEX</thx-tag>
+          <thx-tag>KEYBOARD FIRST</thx-tag>
+          <thx-tag>PHOSPHOR ACCENTS</thx-tag>
+        </div>
+      </div>
+    </div>
+
+    <!-- LOAD LIBRARY + INTERACTIVITY -->
+    <script type="module">
+      import '../../webcomponents.js';
+
+      // Elements
+      const logEl = document.getElementById('nav-log');
+      const clockEl = document.getElementById('live-clock');
+      const treeEl = document.getElementById('demo-tree');
+      const menuEl = document.getElementById('demo-menu');
+      const tabsEl = document.getElementById('demo-tabs');
+      const breadcrumbEl = document.getElementById('main-breadcrumb');
+      const treeSelectedEl = document.getElementById('tree-selected');
+      const menuActiveEl = document.getElementById('menu-active');
+      const resetBtn = document.getElementById('reset-btn');
+      const syncBtn = document.getElementById('sync-btn');
+
+      // Live clock (terminal time)
+      function updateClock() {
+        const now = new Date();
+        const h = String(now.getHours()).padStart(2, '0');
+        const m = String(now.getMinutes()).padStart(2, '0');
+        const s = String(now.getSeconds()).padStart(2, '0');
+        clockEl.textContent = `${h}:${m}:${s}`;
+      }
+      updateClock();
+      setInterval(updateClock, 1000);
+
+      // Terminal log writer — THX styled
+      function appendLog(msg, type = 'info') {
+        if (!logEl) return;
+        const time = clockEl ? clockEl.textContent : '11:38:05';
+        const line = document.createElement('div');
+        line.className = `log-line ${type}`;
+        line.innerHTML = `<span class="t">[${time}]</span> ${msg}`;
+        logEl.appendChild(line);
+        logEl.scrollTop = logEl.scrollHeight;
+
+        // Keep last 14 entries for clean terminal feel
+        while (logEl.children.length > 14) {
+          logEl.removeChild(logEl.firstChild);
+        }
+      }
+
+      // Update breadcrumb path dynamically (real DOM manipulation)
+      function updateBreadcrumbPath(segments) {
+        if (!breadcrumbEl) return;
+        breadcrumbEl.innerHTML = '';
+
+        segments.forEach((seg, idx) => {
+          const item = document.createElement('thx-breadcrumb-item');
+          item.textContent = seg;
+          if (idx === segments.length - 1) {
+            item.setAttribute('current', '');
+          } else {
+            item.setAttribute('href', '#');
+          }
+          breadcrumbEl.appendChild(item);
+        });
+      }
+
+      // Initialize status LEDs (heavy CRT usage pattern)
+      async function initLeds() {
+        await customElements.whenDefined('thx-status-leds');
+        const leds = document.getElementById('header-leds');
+        if (leds) {
+          leds.leds = [
+            { active: true, state: 'normal' },
+            { active: true, state: 'normal' },
+            { active: true, state: 'normal' },
+            { active: false, state: 'warning' },
+            { active: true, state: 'normal' },
+            { active: true, state: 'normal' }
+          ];
+        }
+      }
+
+      // Menu active state management (component does not auto-toggle active)
+      function setupMenu() {
+        if (!menuEl) return;
+
+        menuEl.addEventListener('select', (e) => {
+          const clickedItem = e.target;
+          if (clickedItem.disabled) return;
+
+          // Clear all active states
+          menuEl.querySelectorAll('thx-menu-item').forEach((item) => {
+            item.active = false;
+          });
+
+          // Activate clicked
+          clickedItem.active = true;
+
+          const label = clickedItem.textContent.trim();
+          menuActiveEl.textContent = label;
+
+          appendLog(`MENU SELECT → ${label}`, label.includes('ABORT') || label.includes('EMERGENCY') ? 'crit' : 'success');
+
+          // Cross-component sync: switch tab on certain commands
+          if (label.includes('OVERVIEW')) {
+            tabsEl.activeTab = 'overview';
+            updateBreadcrumbPath(['ROOT', 'SECTOR-07', 'NAV CONSOLE']);
+          } else if (label.includes('7-G') || label.includes('SCAN')) {
+            tabsEl.activeTab = 'sectors';
+            updateBreadcrumbPath(['ROOT', 'SECTOR-07', 'BAY-A']);
+          } else if (label.includes('8-H')) {
+            tabsEl.activeTab = 'sectors';
+            updateBreadcrumbPath(['ROOT', 'SECTOR-08', 'RECON']);
+          }
+        });
+
+        // Initial active readout
+        const initialActive = menuEl.querySelector('thx-menu-item[active]');
+        if (initialActive) menuActiveEl.textContent = initialActive.textContent.trim();
+      }
+
+      // Tree selection + expansion integration
+      function setupTree() {
+        if (!treeEl) return;
+
+        // Listen for selection events on the tree (bubbles from items)
+        treeEl.addEventListener('select', (e) => {
+          const item = e.target;
+          if (!item.selected) return;
+
+          const label = item.textContent.trim().split('\n')[0];
+          const value = item.getAttribute('value') || label;
+
+          treeSelectedEl.textContent = label;
+
+          appendLog(`TREE SELECT → ${label}`, 'info');
+
+          // Dynamic breadcrumb update — demonstrates coordination
+          if (value.includes('bay') || value.includes('7g')) {
+            updateBreadcrumbPath(['ROOT', 'SECTOR-07', label.toUpperCase()]);
+            tabsEl.activeTab = 'sectors';
+          } else if (value.includes('cmd') || value.includes('bridge') || value.includes('ops')) {
+            updateBreadcrumbPath(['ROOT', 'COMMAND CENTER', label.toUpperCase()]);
+            tabsEl.activeTab = 'overview';
+          } else if (value.includes('8h')) {
+            updateBreadcrumbPath(['ROOT', 'SECTOR-08', label.toUpperCase()]);
+            tabsEl.activeTab = 'sectors';
+          }
+        });
+
+        // Also listen for toggle (expand/collapse) for log feedback
+        treeEl.addEventListener('toggle', (e) => {
+          const item = e.target;
+          const label = item.textContent.trim().split('\n')[0];
+          const state = item.expanded ? 'EXPANDED' : 'COLLAPSED';
+          appendLog(`TREE ${state} → ${label}`, 'info');
+        });
+
+        // Initial readout
+        const initiallySelected = treeEl.querySelector('thx-tree-item[selected]');
+        if (initiallySelected) {
+          treeSelectedEl.textContent = initiallySelected.textContent.trim().split('\n')[0];
+        }
+      }
+
+      // Tab change listener — updates log + breadcrumb context
+      function setupTabs() {
+        if (!tabsEl) return;
+
+        tabsEl.addEventListener('tab-change', (e) => {
+          const active = e.detail.activeTab;
+          let friendly = active.toUpperCase();
+
+          appendLog(`TAB CHANGE → ${friendly}`, 'info');
+
+          // Contextual breadcrumb change when switching tabs
+          if (active === 'sectors') {
+            updateBreadcrumbPath(['ROOT', 'SECTOR-07', 'MAP VIEW']);
+          } else if (active === 'protocols') {
+            updateBreadcrumbPath(['ROOT', 'COMMAND', 'PROTOCOLS']);
+          } else if (active === 'overview') {
+            updateBreadcrumbPath(['ROOT', 'SECTOR-07', 'NAV CONSOLE']);
+          }
+        });
+      }
+
+      // Breadcrumb click logging (demonstrates the fourth component)
+      function setupBreadcrumb() {
+        if (!breadcrumbEl) return;
+
+        breadcrumbEl.addEventListener('breadcrumb-click', (e) => {
+          const item = e.target;
+          const text = item.textContent.trim();
+          const href = e.detail?.href || '#';
+          appendLog(`BREADCRUMB NAV → ${text}`, 'success');
+
+          // Example: clicking a breadcrumb segment can reset tree selection
+          if (text === 'ROOT') {
+            // Deselect everything in tree for demo reset effect
+            treeEl.querySelectorAll('thx-tree-item').forEach((i) => (i.selected = false));
+            treeSelectedEl.textContent = '—';
+          }
+        });
+      }
+
+      // Programmatic actions — fully functional buttons
+      function setupControls() {
+        // RESET TERMINAL
+        if (resetBtn) {
+          resetBtn.addEventListener('click', () => {
+            // Reset tabs
+            tabsEl.activeTab = 'overview';
+
+            // Reset tree selections
+            treeEl.querySelectorAll('thx-tree-item').forEach((item) => {
+              item.selected = false;
+              if (item.getAttribute('value') === 'bay-a') item.selected = true;
+              if (item.getAttribute('value') === 'sector-7g' || item.getAttribute('value') === 'cmd-center') {
+                item.expanded = true;
+              }
+            });
+            treeSelectedEl.textContent = 'BAY-A';
+
+            // Reset menu
+            menuEl.querySelectorAll('thx-menu-item').forEach((item) => (item.active = false));
+            const firstMenu = menuEl.querySelector('thx-menu-item');
+            if (firstMenu) firstMenu.active = true;
+            menuActiveEl.textContent = firstMenu ? firstMenu.textContent.trim() : 'OVERVIEW MAP';
+
+            // Reset breadcrumb
+            updateBreadcrumbPath(['ROOT', 'SECTOR-07', 'NAV CONSOLE']);
+
+            // Clear and seed log
+            logEl.innerHTML = '';
+            appendLog('TERMINAL RESET — ALL SYSTEMS NOMINAL', 'success');
+            appendLog('TREE RESTORED TO BAY-A', 'info');
+          });
+        }
+
+        // SYNC NAV — demonstrates cross-component orchestration
+        if (syncBtn) {
+          syncBtn.addEventListener('click', () => {
+            tabsEl.activeTab = 'sectors';
+            updateBreadcrumbPath(['ROOT', 'SECTOR-07', 'BAY-A', 'SYNC']);
+
+            // Force select BAY-A in tree
+            treeEl.querySelectorAll('thx-tree-item').forEach((item) => (item.selected = false));
+            const bayA = treeEl.querySelector('thx-tree-item[value="bay-a"]');
+            if (bayA) {
+              bayA.selected = true;
+              bayA.expanded = true;
+              treeSelectedEl.textContent = 'BAY-A';
+            }
+
+            // Activate matching menu item
+            menuEl.querySelectorAll('thx-menu-item').forEach((item) => (item.active = false));
+            const scanItem = Array.from(menuEl.querySelectorAll('thx-menu-item')).find((i) =>
+              i.textContent.includes('7-G')
+            );
+            if (scanItem) scanItem.active = true;
+            if (scanItem) menuActiveEl.textContent = scanItem.textContent.trim();
+
+            appendLog('SYNC NAV EXECUTED — ALL PANELS ALIGNED', 'success');
+          });
+        }
+      }
+
+      // Seed initial log messages
+      function seedLog() {
+        if (!logEl) return;
+        logEl.innerHTML = '';
+        appendLog('COMMAND NAVIGATION TERMINAL ONLINE', 'success');
+        appendLog('ALL NAV COMPONENTS REGISTERED (tab/tree/menu/breadcrumb)', 'info');
+        appendLog('ROVING FOCUS ACTIVE — ARROW KEYS ENABLED', 'info');
+        appendLog('TREE NODE BAY-A PRESELECTED', 'info');
+      }
+
+      // Master initialization
+      async function initTerminal() {
+        await initLeds();
+
+        seedLog();
+        setupMenu();
+        setupTree();
+        setupTabs();
+        setupBreadcrumb();
+        setupControls();
+
+        // Bonus: initial cross-component state hint
+        setTimeout(() => {
+          appendLog('INTERACTIVE DEMO READY — CLICK ANY NAV ELEMENT', 'success');
+        }, 850);
+
+        // Keyboard hint in console for developer
+        console.log('%c[THX] Command Navigation Terminal ready. All demos fully interactive.', 'color:#a6c8e1');
+      }
+
+      // Boot the terminal
+      initTerminal();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,639 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>THX 1138 • COMPONENT LIBRARY — DOC TERMINAL LDS-1138</title>
+  <link rel="stylesheet" href="../aesthetics.css" />
+  <style>
+    /* ========================================
+       THX-1138 CONTROL ROOM DOC TERMINAL
+       Dark CRT aesthetic overrides + layout
+       ======================================== */
+
+    :root {
+      /* Ensure dark terminal tokens are available */
+      --terminal-bg: #0a0a0a;
+      --terminal-surface: #111111;
+      --terminal-border: #2a2a2a;
+      --terminal-grid: #222;
+    }
+
+    /* Full terminal viewport */
+    html, body {
+      background: var(--terminal-bg) !important;
+      color: var(--atmos-primary, #a6c8e1) !important;
+      font-family: var(--font-mono, 'Courier New', Courier, monospace) !important;
+      line-height: 1.5;
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Subtle grid background for control-room feel */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(166, 200, 225, 0.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(166, 200, 225, 0.035) 1px, transparent 1px);
+      background-size: 24px 24px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .terminal-shell {
+      position: relative;
+      z-index: 1;
+      max-width: 1480px;
+      margin: 0 auto;
+      padding: 0 var(--size-4) var(--size-6);
+    }
+
+    /* Sticky command header bar */
+    .header-bar {
+      position: sticky;
+      top: 0;
+      z-index: var(--layer-5);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--size-4);
+      padding: var(--size-3) var(--size-4);
+      background: var(--terminal-surface);
+      border-bottom: calc(var(--size-2) + var(--size-1)) solid var(--terminal-border);
+      font-size: var(--font-size-0);
+      text-transform: uppercase;
+      letter-spacing: var(--font-letterspacing-5);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+    }
+
+    .header-bar .identity {
+      display: flex;
+      align-items: center;
+      gap: var(--size-3);
+      font-weight: 600;
+      color: var(--atmos-primary);
+    }
+
+    .header-bar .status-cluster {
+      display: flex;
+      align-items: center;
+      gap: var(--size-3);
+      font-size: var(--font-size-00, 11px);
+      color: var(--atmos-secondary, #707e91);
+    }
+
+    /* Main two-column layout: sidebar + content */
+    .doc-layout {
+      display: grid;
+      grid-template-columns: 268px 1fr;
+      gap: var(--size-5);
+      margin-top: var(--size-4);
+    }
+
+    @media (max-width: 980px) {
+      .doc-layout {
+        grid-template-columns: 1fr;
+      }
+      .sidebar {
+        order: 2;
+      }
+    }
+
+    .sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: var(--size-4);
+      position: sticky;
+      top: 68px;
+      align-self: start;
+    }
+
+    .main-content {
+      min-width: 0;
+    }
+
+    /* Section labels — on-brand */
+    .section-label {
+      font-family: var(--font-mono);
+      font-size: var(--font-size-0);
+      text-transform: uppercase;
+      letter-spacing: var(--font-letterspacing-5);
+      color: var(--atmos-secondary, #707e91);
+      margin: 0 0 var(--size-3) 0;
+      padding-bottom: var(--size-2);
+      border-bottom: var(--border-size-1) solid rgba(166, 200, 225, 0.18);
+    }
+
+    .section-label::before {
+      content: '// ';
+    }
+
+    /* Hero overrides */
+    .hero-title {
+      font-family: var(--font-mono);
+      font-size: clamp(2.1rem, 5vw, 3.25rem);
+      line-height: 0.92;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      margin: 0 0 var(--size-3) 0;
+      color: var(--atmos-primary);
+      text-shadow: 0 0 20px rgba(166, 200, 225, 0.3);
+    }
+
+    .hero-sub {
+      font-size: var(--font-size-1);
+      color: var(--atmos-secondary);
+      max-width: 46ch;
+      margin-bottom: var(--size-4);
+    }
+
+    /* Category grid */
+    .category-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(268px, 1fr));
+      gap: var(--size-4);
+      margin-top: var(--size-4);
+    }
+
+    /* Make crt cards in grid feel like deck consoles */
+    .category-grid thx-card {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .category-grid thx-card .card__content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .category-meta {
+      margin-top: auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--size-2);
+      font-size: var(--font-size-00);
+      text-transform: uppercase;
+      letter-spacing: var(--font-letterspacing-4);
+    }
+
+    /* Quick start code block */
+    .code-block {
+      background: var(--crt-bg-dark, #0a0a0a);
+      border: var(--border-size-1) solid var(--crt-border, #2a2a2a);
+      padding: var(--size-3);
+      font-family: var(--font-mono);
+      font-size: var(--font-size-0);
+      color: var(--atmos-tertiary, #deffff);
+      white-space: pre;
+      overflow-x: auto;
+      line-height: 1.45;
+      position: relative;
+    }
+
+    .code-block + thx-copy-button {
+      margin-top: var(--size-2);
+    }
+
+    /* Live demo area styling */
+    .live-demo {
+      background: var(--terminal-surface);
+      padding: var(--size-4);
+      border: var(--border-size-1) solid var(--terminal-border);
+    }
+
+    /* Form elements inside dark terminal */
+    thx-input, thx-textarea, thx-select {
+      /* ensure they read dark tokens correctly via aesthetics */
+    }
+
+    /* Footer */
+    .footer-bar {
+      margin-top: var(--size-8);
+      padding-top: var(--size-4);
+      border-top: 1px solid rgba(166, 200, 225, 0.15);
+      font-size: var(--font-size-0);
+      color: var(--atmos-secondary);
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--size-3);
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .footer-bar a {
+      color: var(--atmos-primary);
+      text-decoration: none;
+      text-transform: uppercase;
+      letter-spacing: var(--font-letterspacing-4);
+    }
+
+    .footer-bar a:hover {
+      text-decoration: underline;
+      color: var(--atmos-tertiary);
+    }
+
+    /* Utility: filter hidden state */
+    .category-card.hidden {
+      display: none !important;
+    }
+
+    /* Status pills in header */
+    .sys-status {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--size-1);
+      background: rgba(166, 200, 225, 0.1);
+      padding: 1px 8px;
+      border: 1px solid rgba(166, 200, 225, 0.3);
+      font-size: 10px;
+      letter-spacing: 1.5px;
+    }
+
+    /* Tab group inside terminal feels native */
+    thx-tab-group[variant="crt"] {
+      margin-top: var(--size-3);
+    }
+
+    /* Stronger CRT frame on the main hero */
+    .hero-crt {
+      border-width: var(--size-3) !important;
+    }
+  </style>
+  <script type="module" src="../webcomponents.js"></script>
+</head>
+<body>
+  <!-- COMMAND HEADER BAR -->
+  <header class="header-bar">
+    <div class="identity">
+      <span style="font-weight:700; letter-spacing:0.2em;">THX 1138</span>
+      <span style="color:var(--atmos-secondary);">COMPONENT LIBRARY</span>
+      <thx-badge variant="pulse" style="margin-left: var(--size-2);">LIVE</thx-badge>
+    </div>
+
+    <div class="status-cluster">
+      <span class="sys-status">LDS-1138</span>
+      <thx-status-leds count="6" label="NODES" style="min-width:120px;"></thx-status-leds>
+      <span style="color:#666;">v0.1.1</span>
+      <span style="margin-left:var(--size-2); color:#555;">64 UNITS</span>
+    </div>
+  </header>
+
+  <div class="terminal-shell">
+    <!-- DOC LAYOUT: SIDEBAR + MAIN -->
+    <div class="doc-layout">
+
+      <!-- NAVIGATION SIDEBAR -->
+      <aside class="sidebar">
+
+        <!-- System Menu -->
+        <thx-crt-display label="NAV-CTRL" variant="crt" size="small">
+          <thx-menu variant="crt" label="TERMINAL SECTIONS">
+            <thx-menu-item href="#hero">OVERVIEW</thx-menu-item>
+            <thx-menu-item href="#playground">LIVE PLAYGROUND</thx-menu-item>
+            <thx-menu-item href="#categories">CATEGORY DECKS</thx-menu-item>
+            <thx-menu-item href="#quickstart">QUICK START</thx-menu-item>
+            <thx-menu-label>REFERENCE</thx-menu-label>
+            <thx-menu-item href="../DESIGN.md">DESIGN SPEC</thx-menu-item>
+            <thx-menu-item href="../README.md">README</thx-menu-item>
+          </thx-menu>
+        </thx-crt-display>
+
+        <!-- Category Quick Access -->
+        <thx-card label="DECKS" crt>
+          <thx-menu variant="compact" style="margin-top:-4px;">
+            <thx-menu-item href="categories/forms.html">FORMS (14)</thx-menu-item>
+            <thx-menu-item href="categories/navigation.html">NAVIGATION (8)</thx-menu-item>
+            <thx-menu-item href="categories/crt-data-viz.html">CRT &amp; DATA VIZ (12)</thx-menu-item>
+            <thx-menu-item href="categories/layout-overlays.html">LAYOUT &amp; OVERLAYS (17)</thx-menu-item>
+            <thx-menu-item href="categories/utilities.html">UTILITIES (13)</thx-menu-item>
+          </thx-menu>
+          <thx-divider style="margin: var(--size-3) 0;"></thx-divider>
+          <div style="font-size:10px; text-transform:uppercase; letter-spacing:1.5px; color:#555; padding:0 var(--size-2);">
+            ALL LINKS POINT TO GENERATED<br>HTML CATEGORY CONSOLES
+          </div>
+        </thx-card>
+
+        <!-- Filter control -->
+        <thx-card label="FILTER" crt>
+          <thx-input id="deck-filter" placeholder="SEARCH DECKS..." style="width:100%;"></thx-input>
+          <div style="margin-top:var(--size-2); font-size:10px; color:#555;">
+            TYPE TO FILTER CATEGORY CARDS
+          </div>
+        </thx-card>
+
+      </aside>
+
+      <!-- MAIN CONTENT -->
+      <main class="main-content">
+
+        <!-- HERO / SYSTEM BANNER -->
+        <section id="hero">
+          <thx-crt-display label="SYS-LOG-1138 • CONTROL ROOM DOCS" variant="crt" size="large" class="hero-crt">
+            <h1 class="hero-title">THX 1138<br>COMPONENT LIBRARY</h1>
+            <p class="hero-sub">
+              Zero-dependency clinical control interface system.<br>
+              64 semantic &lt;thx-*&gt; elements + classless aesthetics.css.<br>
+              Sterile grays. Phosphor blue. Industrial geometry. CRT scanlines.
+            </p>
+
+            <div style="display:flex; flex-wrap:wrap; gap:var(--size-3); align-items:center;">
+              <thx-button variant="primary" onclick="document.getElementById('categories').scrollIntoView({behavior:'smooth'})">ENTER CATEGORY DECKS</thx-button>
+              <thx-button variant="outline-primary" onclick="window.location.href='../DESIGN.md'">VIEW DESIGN SPEC</thx-button>
+              <thx-badge variant="secondary">64 COMPONENTS</thx-badge>
+              <thx-badge variant="warning">NO BUILD STEP</thx-badge>
+            </div>
+
+            <div style="margin-top:var(--size-4); font-size:10px; opacity:0.7; letter-spacing:1px;">
+              LOADED FROM ../webcomponents.js • ../aesthetics.css • FULLY FUNCTIONAL LOCAL DOC TERMINAL
+            </div>
+          </thx-crt-display>
+        </section>
+
+        <!-- SYSTEM METRICS -->
+        <div style="margin: var(--size-4) 0 var(--size-3); display:flex; gap:var(--size-3); flex-wrap:wrap; align-items:center;">
+          <div>
+            <thx-progress-bar value="100" style="width:180px;"></thx-progress-bar>
+          </div>
+          <thx-badge variant="pulse">ALL SYSTEMS NOMINAL</thx-badge>
+          <thx-badge variant="primary">PHOSPHOR #A6C8E1</thx-badge>
+          <thx-badge>UPTIME 18D 04H</thx-badge>
+          <thx-progress-ring value="87" style="width:42px; height:42px;"></thx-progress-ring>
+        </div>
+
+        <!-- LIVE PLAYGROUND / TABBED DEMOS -->
+        <section id="playground">
+          <div class="section-label">LIVE PLAYGROUND — INTERACTIVE INSTRUMENTATION</div>
+
+          <thx-tab-group variant="crt" active-tab="forms">
+            <thx-tab slot="nav" panel="forms" active>FORMS</thx-tab>
+            <thx-tab slot="nav" panel="feedback">FEEDBACK</thx-tab>
+            <thx-tab slot="nav" panel="crt">CRT DISPLAYS</thx-tab>
+            <thx-tab slot="nav" panel="nav">NAV</thx-tab>
+
+            <!-- FORMS TAB -->
+            <thx-tab-panel name="forms">
+              <div class="live-demo">
+                <thx-card label="PARAMETER CONSOLE" crt>
+                  <div style="display:grid; grid-template-columns:1fr 1fr; gap:var(--size-4);">
+                    <thx-input label="DESIGNATION" value="OPER-1138" prefix="ID-"></thx-input>
+                    <thx-input label="CLEARANCE" type="password" value="REDACTED"></thx-input>
+                    <thx-select label="SECTOR">
+                      <thx-option value="alpha" label="ALPHA-07"></thx-option>
+                      <thx-option value="beta" label="BETA-12" selected></thx-option>
+                      <thx-option value="gamma" label="GAMMA-03"></thx-option>
+                    </thx-select>
+                    <thx-switch label="ENABLE LOGGING" checked></thx-switch>
+                  </div>
+                  <thx-divider style="margin: var(--size-4) 0;"></thx-divider>
+                  <div style="display:flex; gap:var(--size-3); align-items:center;">
+                    <thx-button variant="primary" id="submit-demo">SUBMIT DIRECTIVE</thx-button>
+                    <thx-checkbox label="LOG TO CRT"></thx-checkbox>
+                  </div>
+                </thx-card>
+              </div>
+            </thx-tab-panel>
+
+            <!-- FEEDBACK TAB -->
+            <thx-tab-panel name="feedback">
+              <div class="live-demo">
+                <div style="display:flex; flex-wrap:wrap; gap:var(--size-3);">
+                  <thx-alert variant="info" open>INFO — ALL NOMINAL</thx-alert>
+                  <thx-alert variant="warning" open>WARNING — CHECK SECTOR 4</thx-alert>
+                  <thx-alert variant="error" open>CRITICAL — PRESSURE DROP</thx-alert>
+                  <thx-alert variant="success" open>SUCCESS — COMPLIANT</thx-alert>
+                </div>
+                <div style="margin-top:var(--size-4); display:flex; gap:var(--size-3); flex-wrap:wrap;">
+                  <thx-badge variant="primary">PRIMARY</thx-badge>
+                  <thx-badge variant="warning">AMBER</thx-badge>
+                  <thx-badge variant="error">CRITICAL</thx-badge>
+                  <thx-badge variant="pulse">LIVE FEED</thx-badge>
+                  <thx-tag>SECTOR-07</thx-tag>
+                  <thx-tag variant="outline">MAINT</thx-tag>
+                </div>
+                <div style="margin-top:var(--size-4);">
+                  <thx-button-group>
+                    <thx-button variant="secondary">ACKNOWLEDGE</thx-button>
+                    <thx-button variant="warning">ESCALATE</thx-button>
+                    <thx-button variant="error">ABORT</thx-button>
+                  </thx-button-group>
+                </div>
+              </div>
+            </thx-tab-panel>
+
+            <!-- CRT DISPLAYS TAB -->
+            <thx-tab-panel name="crt">
+              <div class="live-demo">
+                <thx-crt-display label="SCOPE-02" variant="crt" size="medium">
+                  <div style="display:flex; gap:var(--size-4); align-items:center; font-size:13px;">
+                    <div>
+                      <div style="color:#a6c8e1; font-size:11px;">SIGNAL STRENGTH</div>
+                      <thx-progress-bar value="78" style="width:160px; margin-top:4px;"></thx-progress-bar>
+                    </div>
+                    <thx-spinner style="width:28px; height:28px;"></thx-spinner>
+                    <div>
+                      <div style="font-size:10px; color:#707e91;">CHART GAUGE</div>
+                      <thx-chart-gauge value="64" label="PWR" style="width:64px; height:64px;"></thx-chart-gauge>
+                    </div>
+                  </div>
+                </thx-crt-display>
+              </div>
+            </thx-tab-panel>
+
+            <!-- NAV TAB -->
+            <thx-tab-panel name="nav">
+              <div class="live-demo">
+                <thx-breadcrumb>
+                  <thx-breadcrumb-item href="#">HOME</thx-breadcrumb-item>
+                  <thx-breadcrumb-item href="#">CONTROL</thx-breadcrumb-item>
+                  <thx-breadcrumb-item active>DOCS</thx-breadcrumb-item>
+                </thx-breadcrumb>
+
+                <div style="margin-top:var(--size-4); max-width:240px;">
+                  <thx-menu label="QUICK NAV" style="max-width:100%;">
+                    <thx-menu-item active>OVERVIEW</thx-menu-item>
+                    <thx-menu-item>FORMS</thx-menu-item>
+                    <thx-menu-item>DATA VIZ</thx-menu-item>
+                  </thx-menu>
+                </div>
+              </div>
+            </thx-tab-panel>
+          </thx-tab-group>
+        </section>
+
+        <!-- CATEGORY GRID -->
+        <section id="categories" style="margin-top: var(--size-6);">
+          <div class="section-label">CATEGORY DECKS — 5 CONTROL CONSOLES</div>
+          <p style="max-width: 65ch; color: var(--atmos-secondary); margin-bottom: var(--size-4);">
+            Each deck contains fully interactive component documentation and live examples.
+            Click the console buttons below to open the dedicated category terminal (HTML pages generated from source specs).
+          </p>
+
+          <div class="category-grid">
+
+            <!-- FORMS -->
+            <thx-card label="FORMS" crt hoverable class="category-card" data-category="forms">
+              <p style="font-size:13px; line-height:1.45; color:#a6c8e1; margin-bottom:var(--size-3);">
+                Clinical data-entry instrumentation. Inputs, selects, switches, radios, ranges, ratings, color pickers.
+              </p>
+              <div class="category-meta">
+                <div><thx-badge variant="secondary">14 UNITS</thx-badge></div>
+                <thx-button variant="primary" size="small" onclick="location.href='categories/forms.html'">OPEN CONSOLE →</thx-button>
+              </div>
+            </thx-card>
+
+            <!-- NAVIGATION -->
+            <thx-card label="NAVIGATION" crt hoverable class="category-card" data-category="navigation">
+              <p style="font-size:13px; line-height:1.45; color:#a6c8e1; margin-bottom:var(--size-3);">
+                Tab groups, trees, menus, breadcrumbs, drawers, dropdowns. Full keyboard roving &amp; ARIA.
+              </p>
+              <div class="category-meta">
+                <div><thx-badge variant="secondary">8 UNITS</thx-badge></div>
+                <thx-button variant="primary" size="small" onclick="location.href='categories/navigation.html'">OPEN CONSOLE →</thx-button>
+              </div>
+            </thx-card>
+
+            <!-- CRT & DATA VIZ -->
+            <thx-card label="CRT &amp; DATA VIZ" crt hoverable class="category-card" data-category="crt data viz">
+              <p style="font-size:13px; line-height:1.45; color:#a6c8e1; margin-bottom:var(--size-3);">
+                thx-crt-display, chart-line/bar/gauge/monitors, progress rings &amp; bars, status LEDs, spinners.
+              </p>
+              <div class="category-meta">
+                <div><thx-badge variant="secondary">12 UNITS</thx-badge></div>
+                <thx-button variant="primary" size="small" onclick="location.href='categories/crt-data-viz.html'">OPEN CONSOLE →</thx-button>
+              </div>
+            </thx-card>
+
+            <!-- LAYOUT & OVERLAYS -->
+            <thx-card label="LAYOUT &amp; OVERLAYS" crt hoverable class="category-card" data-category="layout overlays">
+              <p style="font-size:13px; line-height:1.45; color:#a6c8e1; margin-bottom:var(--size-3);">
+                Cards, dividers, dialogs, drawers, popups, split panels, carousels, tooltips, details.
+              </p>
+              <div class="category-meta">
+                <div><thx-badge variant="secondary">17 UNITS</thx-badge></div>
+                <thx-button variant="primary" size="small" onclick="location.href='categories/layout-overlays.html'">OPEN CONSOLE →</thx-button>
+              </div>
+            </thx-card>
+
+            <!-- UTILITIES -->
+            <thx-card label="UTILITIES" crt hoverable class="category-card" data-category="utilities">
+              <p style="font-size:13px; line-height:1.45; color:#a6c8e1; margin-bottom:var(--size-3);">
+                Buttons, badges, tags, alerts, copy-button, avatars, formatters, skeletons, observers.
+              </p>
+              <div class="category-meta">
+                <div><thx-badge variant="secondary">13 UNITS</thx-badge></div>
+                <thx-button variant="primary" size="small" onclick="location.href='categories/utilities.html'">OPEN CONSOLE →</thx-button>
+              </div>
+            </thx-card>
+
+          </div>
+        </section>
+
+        <!-- QUICK START -->
+        <section id="quickstart" style="margin-top: var(--size-7);">
+          <div class="section-label">QUICK START — ZERO BOILERPLATE</div>
+
+          <thx-card label="INSTALLATION &amp; USAGE" crt>
+            <p style="margin-bottom:var(--size-4); color:#a6c8e1;">
+              Drop two files. Everything else is semantic HTML + &lt;thx-*&gt;.
+            </p>
+
+            <div>
+              <div style="margin-bottom:4px; font-size:10px; text-transform:uppercase; letter-spacing:1.5px; color:#707e91;">1. LINK THE ASSETS (from docs/)</div>
+              <div class="code-block">&lt;link rel="stylesheet" href="../aesthetics.css" /&gt;
+&lt;script type="module" src="../webcomponents.js"&gt;&lt;/script&gt;</div>
+              <thx-copy-button value='<link rel="stylesheet" href="../aesthetics.css" />
+<script type="module" src="../webcomponents.js"></script>' copyText="COPY LINKS" style="margin-top:var(--size-2);"></thx-copy-button>
+            </div>
+
+            <thx-divider style="margin: var(--size-5) 0;"></thx-divider>
+
+            <div>
+              <div style="margin-bottom:4px; font-size:10px; text-transform:uppercase; letter-spacing:1.5px; color:#707e91;">2. USE ANY COMPONENT</div>
+              <div class="code-block">&lt;thx-card label="OPERATOR CONSOLE"&gt;
+  &lt;thx-input label="SUBJECT ID" value="1138"&gt;&lt;/thx-input&gt;
+  &lt;thx-button variant="primary"&gt;CONFIRM&lt;/thx-button&gt;
+&lt;/thx-card&gt;</div>
+              <thx-copy-button value='<thx-card label="OPERATOR CONSOLE">
+  <thx-input label="SUBJECT ID" value="1138"></thx-input>
+  <thx-button variant="primary">CONFIRM</thx-button>
+</thx-card>' copyText="COPY EXAMPLE" style="margin-top:var(--size-2);"></thx-copy-button>
+            </div>
+
+            <div style="margin-top:var(--size-4); font-size:11px; color:#555;">
+              → All 64 components are auto-registered. Works in any modern browser. No bundler required.
+            </div>
+          </thx-card>
+        </section>
+
+        <!-- FOOTER -->
+        <footer class="footer-bar">
+          <div>
+            THX 1138 COMPONENT LIBRARY • v0.1.1 • ZERO DEPENDENCIES (LIT VENDORED)
+          </div>
+          <div>
+            <a href="../DESIGN.md">DESIGN.MD SPECIFICATION</a>
+            <span style="margin:0 var(--size-2); color:#333;">•</span>
+            <a href="https://github.com/xai-org/thx-components" target="_blank" rel="noopener">GITHUB REPOSITORY</a>
+            <span style="margin:0 var(--size-2); color:#333;">•</span>
+            <a href="../README.md">ROOT README</a>
+          </div>
+        </footer>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- Interactivity script -->
+  <script>
+    // Filter category cards live
+    const filterInput = document.getElementById('deck-filter');
+    if (filterInput) {
+      filterInput.addEventListener('input', (e) => {
+        const term = e.target.value.toLowerCase().trim();
+        document.querySelectorAll('.category-card').forEach(card => {
+          const text = card.textContent.toLowerCase() + ' ' + (card.dataset.category || '');
+          if (!term) {
+            card.classList.remove('hidden');
+          } else {
+            card.classList.toggle('hidden', !text.includes(term));
+          }
+        });
+      });
+    }
+
+    // Demo: clicking SUBMIT DIRECTIVE shows a live alert + console feedback
+    setTimeout(() => {
+      const submitBtn = document.getElementById('submit-demo');
+      if (submitBtn) {
+        submitBtn.addEventListener('click', () => {
+          const alertContainer = submitBtn.parentElement;
+          const existing = document.querySelector('#demo-success-alert');
+          if (existing) existing.remove();
+
+          const successAlert = document.createElement('thx-alert');
+          successAlert.setAttribute('variant', 'success');
+          successAlert.setAttribute('open', '');
+          successAlert.id = 'demo-success-alert';
+          successAlert.textContent = 'DIRECTIVE RECEIVED — SECTOR LOG UPDATED';
+          alertContainer.appendChild(successAlert);
+
+          // Auto-dismiss after 3.2s
+          setTimeout(() => {
+            if (successAlert && successAlert.parentNode) successAlert.parentNode.removeChild(successAlert);
+          }, 3200);
+        });
+      }
+    }, 800);
+
+    // Keyboard hint in console
+    console.log('%c[THX-1138] Documentation terminal ready. All components loaded from ../webcomponents.js', 'color:#555; font-size:9px');
+  </script>
+</body>
+</html>

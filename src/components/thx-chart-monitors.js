@@ -6,6 +6,7 @@
  */
 
 import { LitElement, html, css } from '../../vendor/lit.js';
+import { crtStaticScanlineOverlay, crtStaticVignetteOverlay } from '../styles/crt-effects.js';
 
 /**
  * @typedef {Object} MonitorData
@@ -16,7 +17,7 @@ import { LitElement, html, css } from '../../vendor/lit.js';
  */
 
 /**
- * THX 1138 styled monitor bank component
+ * THX 1138 styled monitor bank component (decorative CRT via crt-effects.js)
  * @extends {LitElement}
  */
 export class ThxChartMonitors extends LitElement {
@@ -43,27 +44,9 @@ export class ThxChartMonitors extends LitElement {
       overflow: hidden;
     }
 
-    .monitor-unit::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: repeating-linear-gradient(
-        0deg,
-        transparent,
-        transparent 1px,
-        rgba(166, 200, 225, 0.03) 1px,
-        rgba(166, 200, 225, 0.03) 2px
-      );
-      pointer-events: none;
-    }
-
-    .monitor-unit::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(ellipse at center, transparent 60%, rgba(0, 0, 0, 0.4) 100%);
-      pointer-events: none;
-    }
+    /* CRT decorative scanline + vignette (shared; minor density/opacity tuned via options) */
+    ${crtStaticScanlineOverlay('.monitor-unit', { opacity: 0.03 })}
+    ${crtStaticVignetteOverlay('.monitor-unit', { opacity: 0.4 })}
 
     .monitor-label {
       position: absolute;

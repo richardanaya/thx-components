@@ -6,6 +6,8 @@
  */
 
 import { LitElement, html, css } from '../../vendor/lit.js';
+import { FormAssociatedMixin } from '../mixins/form-associated-mixin.js';
+import { focusVisibleStyles } from '../mixins/focus-visible.js';
 
 let radioGroupIdCounter = 0;
 
@@ -30,7 +32,7 @@ let radioGroupIdCounter = 0;
  * THX 1138 styled radio group component
  * @extends {LitElement}
  */
-export class ThxRadioGroup extends LitElement {
+export class ThxRadioGroup extends FormAssociatedMixin(LitElement) {
   static styles = css`
     :host {
       display: block;
@@ -84,20 +86,20 @@ export class ThxRadioGroup extends LitElement {
       appearance: none;
       width: var(--size-3);
       height: var(--size-3);
-      border: var(--border-size-2) solid #999;
-      border-radius: var(--radius-round);
-      background: white;
+      border: var(--border-size-2) solid var(--neutral-600, #666);
+      border-radius: 0;
+      background: var(--neutral-100, #fafafa);
       cursor: pointer;
       transition: all var(--duration-quick-2);
       margin: 0;
     }
 
     .radio-option input[type='radio']:hover {
-      border-color: #666;
+      border-color: var(--neutral-600, #666);
     }
 
     .radio-option input[type='radio']:checked {
-      border-color: #444;
+      border-color: var(--neutral-800, #333);
     }
 
     .radio-option input[type='radio']:checked::after {
@@ -108,8 +110,8 @@ export class ThxRadioGroup extends LitElement {
       transform: translate(-50%, -50%);
       width: var(--size-2);
       height: var(--size-2);
-      background: #444;
-      border-radius: var(--radius-round);
+      background: var(--neutral-800, #333);
+      border-radius: 0;
     }
 
     .radio-option input[type='radio']:focus {
@@ -167,6 +169,8 @@ export class ThxRadioGroup extends LitElement {
       background: var(--atmos-primary, #a6c8e1);
       color: var(--neutral-800, #333);
     }
+
+    ${focusVisibleStyles}
   `;
 
   static properties = {
@@ -189,6 +193,7 @@ export class ThxRadioGroup extends LitElement {
     this._radioDisabledState = new WeakMap();
     /** @type {string} */
     this.value = '';
+    this._defaultValue = this.value;
     /** @type {string} */
     this.name = '';
     /** @type {string} */
@@ -207,6 +212,26 @@ export class ThxRadioGroup extends LitElement {
 
   /** @param {Map<string, unknown>} _changedProperties */
   updated(_changedProperties) {
+    this.syncRadios();
+    // Form value sync (mixin also calls _syncFormValue, but we keep explicit for clarity)
+    if (_changedProperties.has('value') || _changedProperties.has('disabled')) {
+      this._updateFormValue();
+    }
+  }
+
+  firstUpdated() {
+    this._defaultValue = this.value;
+    this._updateFormValue();
+  }
+
+  /** @returns {void} */
+  _updateFormValue() {
+    this._internals?.setFormValue(this.disabled ? null : this.value);
+  }
+
+  /** @returns {void} */
+  formResetCallback() {
+    this.value = this._defaultValue;
     this.syncRadios();
   }
 

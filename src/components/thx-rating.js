@@ -6,6 +6,8 @@
  */
 
 import { LitElement, html, css } from '../../vendor/lit.js';
+import { FormAssociatedMixin } from '../mixins/form-associated-mixin.js';
+import { focusVisibleStyles } from '../mixins/focus-visible.js';
 
 /**
  * @typedef {Object} RatingProps
@@ -15,14 +17,14 @@ import { LitElement, html, css } from '../../vendor/lit.js';
  * @property {boolean} disabled - Whether the rating is disabled
  * @property {number} precision - Rating precision (1, 0.5)
  * @property {string} size - The size (sm, md, lg)
+ * @property {boolean} required - Whether the rating is required (for form)
  */
 
 /**
  * THX 1138 styled rating component
  * @extends {LitElement}
  */
-export class ThxRating extends LitElement {
-  static formAssociated = true;
+export class ThxRating extends FormAssociatedMixin(LitElement) {
 
   static styles = css`
     :host {
@@ -40,9 +42,9 @@ export class ThxRating extends LitElement {
       gap: var(--size-1);
     }
 
-    .rating-items:focus {
+    .rating-items:focus-visible {
       outline: none;
-      box-shadow: 0 0 0 2px rgba(166, 200, 225, 0.5);
+      box-shadow: var(--focus-ring-glow, 0 0 0 2px rgba(166, 200, 225, 0.3));
     }
 
     .rating-item {
@@ -107,6 +109,8 @@ export class ThxRating extends LitElement {
       margin-left: var(--size-2);
       text-transform: uppercase;
     }
+
+    ${focusVisibleStyles}
   `;
 
   static properties = {
@@ -117,11 +121,11 @@ export class ThxRating extends LitElement {
     precision: { type: Number },
     size: { type: String },
     name: { type: String },
+    required: { type: Boolean },
   };
 
   constructor() {
     super();
-    this._internals = this.attachInternals?.();
     /** @type {number} */
     this.value = 0;
     this._defaultValue = this.value;
@@ -137,6 +141,8 @@ export class ThxRating extends LitElement {
     this.size = 'md';
     /** @type {string} */
     this.name = '';
+    /** @type {boolean} */
+    this.required = false;
   }
 
   /** @param {Map<string, unknown>} changedProperties */
@@ -160,6 +166,27 @@ export class ThxRating extends LitElement {
   /** @returns {void} */
   formResetCallback() {
     this.value = this._defaultValue;
+  }
+
+  /**
+   * @returns {HTMLElement|null}
+   */
+  get ratingElement() {
+    return /** @type {HTMLElement|null} */ (this.renderRoot?.querySelector('.rating-items'));
+  }
+
+  /**
+   * @returns {void}
+   */
+  focus() {
+    this.ratingElement?.focus();
+  }
+
+  /**
+   * @returns {void}
+   */
+  blur() {
+    this.ratingElement?.blur();
   }
 
   /**

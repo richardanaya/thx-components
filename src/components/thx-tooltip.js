@@ -7,6 +7,7 @@
  */
 
 import { LitElement, html, css } from '../../vendor/lit.js';
+import { crtStaticScanlineOverlay } from '../styles/crt-effects.js';
 
 /**
  * @typedef {Object} TooltipState
@@ -59,20 +60,8 @@ export class ThxTooltip extends LitElement {
       visibility: visible;
     }
 
-    /* CRT scanline effect on tooltip */
-    .tooltip-content::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: repeating-linear-gradient(
-        0deg,
-        transparent,
-        transparent 1px,
-        rgba(166, 200, 225, 0.05) 1px,
-        rgba(166, 200, 225, 0.05) 2px
-      );
-      pointer-events: none;
-    }
+    /* CRT scanline effect on tooltip (shared) */
+    ${crtStaticScanlineOverlay('.tooltip-content', { opacity: 0.05 })}
 
     /* Arrow */
     .tooltip-arrow {

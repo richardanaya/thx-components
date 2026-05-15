@@ -6,6 +6,8 @@
  */
 
 import { LitElement, html, css } from '../../vendor/lit.js';
+import { crtStaticScanlineOverlay } from '../styles/crt-effects.js';
+import { focusVisibleStyles, getNextRovingIndex } from '../mixins/focus-visible.js';
 
 /**
  * Menu container for navigation lists
@@ -71,20 +73,8 @@ export class ThxMenu extends LitElement {
       border-bottom-color: rgba(166, 200, 225, 0.2);
     }
 
-    :host([variant='crt'])::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: repeating-linear-gradient(
-        0deg,
-        transparent,
-        transparent 2px,
-        rgba(166, 200, 225, 0.04) 2px,
-        rgba(166, 200, 225, 0.04) var(--size-1)
-      );
-      pointer-events: none;
-      z-index: var(--layer-2);
-    }
+    /* CRT scanline for variant=crt (shared) */
+    ${crtStaticScanlineOverlay(':host([variant="crt"])', { opacity: 0.04 })}
 
     :host([variant='crt']) .crt-label {
       position: absolute;
@@ -92,7 +82,7 @@ export class ThxMenu extends LitElement {
       right: var(--size-2);
       font-family: var(--font-mono, 'Courier New', Courier, monospace);
       font-size: var(--font-size-0);
-      color: #666;
+      color: var(--neutral-600, #666);
       text-transform: uppercase;
       letter-spacing: var(--font-letterspacing-4);
       z-index: calc(var(--layer-2) + 5);
@@ -110,6 +100,8 @@ export class ThxMenu extends LitElement {
       padding: var(--size-2) 0;
       border-bottom: var(--border-size-1) solid rgba(0, 0, 0, 0.06);
     }
+
+    ${focusVisibleStyles}
   `;
 
   /**
@@ -128,6 +120,49 @@ export class ThxMenu extends LitElement {
     this.variant = 'default';
   }
 
+  /**
+   * Public focus: focuses first enabled menu item.
+   * @returns {void}
+   */
+  focus() {
+    const items = this._getItems();
+    if (!items.length) return;
+    const first = items[0];
+    first.focus?.();
+    this._updateRovingTabindex(first);
+  }
+
+  /**
+   * Public blur.
+   * @returns {void}
+   */
+  blur() {
+    const activeEl = document.activeElement;
+    if (activeEl && (this.contains(activeEl) || this.shadowRoot?.contains(activeEl))) {
+      activeEl.blur();
+    }
+  }
+
+  /**
+   * Roving tabindex: only one menuitem gets 0, making menu a single tab stop.
+   * @param {HTMLElement|null} [focusedItem]
+   * @returns {void}
+   * @private
+   */
+  _updateRovingTabindex(focusedItem = null) {
+    const items = this._getItems();
+    if (!items.length) return;
+    const target = focusedItem || items[0];
+    items.forEach(item => {
+      const isTarget = item === target;
+      item.setAttribute('tabindex', isTarget ? '0' : '-1');
+    });
+  }
+
+  firstUpdated() {
+    this._updateRovingTabindex();
+  }
+
   /** @returns {HTMLElement[]} */
   _getItems() {
     return /** @type {HTMLElement[]} */ (
@@ -142,7 +177,9 @@ export class ThxMenu extends LitElement {
    * @returns {void}
    */
   _focusItem(item) {
-    item?.focus();
+    if (!item) return;
+    item.focus?.();
+    this._updateRovingTabindex(item);
   }
 
   /**
@@ -156,10 +193,15 @@ export class ThxMenu extends LitElement {
     const items = this._getItems();
     if (items.length === 0) return;
 
-    const currentIndex = Math.max(
-      0,
-      items.findIndex(item => item === document.activeElement || item.shadowRoot?.activeElement)
-    );
+    // Find current roving focused item
+    let currentIndex = items.findIndex(item => {
+      const activeEl = document.activeElement;
+      if (item === activeEl) return true;
+      if (item.shadowRoot?.activeElement) return true;
+      const inner = item.renderRoot?.querySelector('[role="menuitem"]');
+      return inner && (inner === activeEl || activeEl === item);
+    });
+    if (currentIndex < 0) currentIndex = 0;
 
     if (e.key === 'Enter' || e.key === ' ') {
       e.preventDefault();
@@ -171,13 +213,19 @@ export class ThxMenu extends LitElement {
     }
 
     e.preventDefault();
-    let nextIndex = currentIndex;
-    if (e.key === 'Home') nextIndex = 0;
-    else if (e.key === 'End') nextIndex = items.length - 1;
-    else if (e.key === 'ArrowDown') nextIndex = (currentIndex + 1) % items.length;
-    else nextIndex = (currentIndex - 1 + items.length) % items.length;
 
-    this._focusItem(/** @type {HTMLElement} */ (items[nextIndex]));
+    let direction;
+    if (e.key === 'Home') direction = 'first';
+    else if (e.key === 'End') direction = 'last';
+    else if (e.key === 'ArrowDown') direction = 'next';
+    else direction = 'prev';
+
+    const result = getNextRovingIndex(items, currentIndex, direction);
+    const nextItem = /** @type {HTMLElement} */ (/** @type {unknown} */ (result.item || items[result.index]));
+    if (nextItem) {
+      this._focusItem(nextItem);
+      this._updateRovingTabindex(nextItem);
+    }
   }
 
   /**

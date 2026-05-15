@@ -6,6 +6,7 @@
  */
 
 import { LitElement, html, css } from '../../vendor/lit.js';
+import { focusVisibleStyles } from '../mixins/focus-visible.js';
 
 /**
  * @typedef {Object} CopyButtonProps
@@ -108,6 +109,21 @@ export class ThxCopyButton extends LitElement {
       color: var(--neutral-100, #fafafa) !important;
     }
 
+    /* Loading state */
+    .loading {
+      pointer-events: none;
+    }
+
+    .loading .button-content,
+    .loading .copy-text {
+      display: none;
+    }
+
+    thx-spinner {
+      display: inline-flex;
+      vertical-align: middle;
+    }
+
     /* Icons */
     .icon {
       width: 1em;
@@ -118,6 +134,13 @@ export class ThxCopyButton extends LitElement {
     button:active:not(:disabled) {
       transform: translateY(1px);
     }
+
+    button:focus-visible {
+      outline: none;
+      box-shadow: var(--focus-ring-glow, 0 0 0 2px rgba(166, 200, 225, 0.45));
+    }
+
+    ${focusVisibleStyles}
   `;
 
   static properties = {
@@ -125,6 +148,7 @@ export class ThxCopyButton extends LitElement {
     variant: { type: String },
     size: { type: String },
     disabled: { type: Boolean },
+    loading: { type: Boolean },
     successText: { type: String },
     copyText: { type: String },
     feedbackDuration: { type: Number },
@@ -140,6 +164,8 @@ export class ThxCopyButton extends LitElement {
     this.size = 'md';
     /** @type {boolean} */
     this.disabled = false;
+    /** @type {boolean} */
+    this.loading = false;
     /** @type {string} */
     this.successText = 'COPIED';
     /** @type {string} */
@@ -159,14 +185,37 @@ export class ThxCopyButton extends LitElement {
     }
   }
 
+  focus() {
+    this.renderRoot?.querySelector('button')?.focus();
+  }
+
+  blur() {
+    this.renderRoot?.querySelector('button')?.blur();
+  }
+
+  /**
+   * Maps button variant to appropriate thx-spinner variant.
+   * @returns {'crt' | 'warning' | 'error'}
+   */
+  get _spinnerVariant() {
+    const v = (this.variant || '').toLowerCase();
+    if (v.includes('warning')) return 'warning';
+    if (v.includes('error')) return 'error';
+    return 'crt';
+  }
+
   /**
    * @returns {Promise<void>}
    */
   async copyToClipboard() {
-    if (this.disabled || !this.value) return;
+    if (this.disabled || this.loading || !this.value) return;
+
+    this.loading = true;
+    this.requestUpdate();
 
     try {
       await navigator.clipboard.writeText(this.value);
+      this.loading = false;
       this._showSuccess = true;
       this.requestUpdate();
 
@@ -181,7 +230,9 @@ export class ThxCopyButton extends LitElement {
         this.requestUpdate();
       }, this.feedbackDuration);
     } catch (err) {
+      this.loading = false;
       this.dispatchEvent(new Event('error', { bubbles: true, composed: true }));
+      this.requestUpdate();
     }
   }
 
@@ -191,7 +242,7 @@ export class ThxCopyButton extends LitElement {
   render() {
     const classes = `size-${this.size} variant-${this.variant} ${
       this._showSuccess ? 'success' : ''
-    }`;
+    } ${this.loading ? 'loading' : ''}`;
 
     const copyIcon = html`
       <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -209,12 +260,15 @@ export class ThxCopyButton extends LitElement {
     return html`
       <button
         class=${classes}
-        ?disabled=${this.disabled}
+        ?disabled=${this.disabled || this.loading}
         @click=${this.copyToClipboard}
         title=${this._showSuccess ? 'Copied!' : 'Copy to clipboard'}
+        aria-busy=${this.loading ? 'true' : 'false'}
       >
-        ${this._showSuccess ? checkIcon : copyIcon}
-        <span>${this._showSuccess ? this.successText : this.copyText}</span>
+        ${this.loading
+          ? html`<thx-spinner size="sm" variant=${this._spinnerVariant}></thx-spinner>`
+          : (this._showSuccess ? checkIcon : copyIcon)}
+        <span class="copy-text">${this._showSuccess ? this.successText : this.copyText}</span>
       </button>
     `;
   }

@@ -3,10 +3,11 @@
 /**
  * @fileoverview THX 1138 styled popup component
  * @module thx-popup
- * @description A clinical popup/positioned overlay with CRT aesthetics
+ * @description A clinical popup/positioned overlay with CRT aesthetics (uses crt-effects for scanlines/vignette)
  */
 
 import { LitElement, html, css } from '../../vendor/lit.js';
+import { crtStaticScanlineOverlay, crtStaticVignetteOverlay } from '../styles/crt-effects.js';
 
 /**
  * @typedef {Object} PopupState
@@ -66,31 +67,9 @@ export class ThxPopup extends LitElement {
       visibility: visible;
     }
 
-    /* CRT scanline effect */
-    .popup-content::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: repeating-linear-gradient(
-        0deg,
-        transparent,
-        transparent 2px,
-        rgba(166, 200, 225, 0.04) 2px,
-        rgba(166, 200, 225, 0.04) var(--size-1)
-      );
-      pointer-events: none;
-      z-index: var(--layer-2);
-    }
-
-    /* Vignette */
-    .popup-content::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(ellipse at center, transparent 50%, rgba(0, 0, 0, 0.3) 100%);
-      pointer-events: none;
-      z-index: calc(var(--layer-2) + 1);
-    }
+    /* CRT scanline + vignette (shared decorative overlays, vignette opacity tuned to 0.3) */
+    ${crtStaticScanlineOverlay('.popup-content', { opacity: 0.04 })}
+    ${crtStaticVignetteOverlay('.popup-content', { opacity: 0.3 })}
 
     /* Arrow */
     .popup-arrow {
@@ -106,32 +85,32 @@ export class ThxPopup extends LitElement {
     .popup-content.top-start .popup-arrow,
     .popup-content.top-end .popup-arrow {
       bottom: -10px;
-      border-bottom: var(--border-size-2) solid #2a2a2a;
-      border-right: var(--border-size-2) solid #2a2a2a;
+      border-bottom: var(--border-size-2) solid var(--crt-border, #2a2a2a);
+      border-right: var(--border-size-2) solid var(--crt-border, #2a2a2a);
     }
 
     .popup-content.bottom .popup-arrow,
     .popup-content.bottom-start .popup-arrow,
     .popup-content.bottom-end .popup-arrow {
       top: -10px;
-      border-top: var(--border-size-2) solid #2a2a2a;
-      border-left: var(--border-size-2) solid #2a2a2a;
+      border-top: var(--border-size-2) solid var(--crt-border, #2a2a2a);
+      border-left: var(--border-size-2) solid var(--crt-border, #2a2a2a);
     }
 
     .popup-content.left .popup-arrow,
     .popup-content.left-start .popup-arrow,
     .popup-content.left-end .popup-arrow {
       right: -10px;
-      border-top: var(--border-size-2) solid #2a2a2a;
-      border-right: var(--border-size-2) solid #2a2a2a;
+      border-top: var(--border-size-2) solid var(--crt-border, #2a2a2a);
+      border-right: var(--border-size-2) solid var(--crt-border, #2a2a2a);
     }
 
     .popup-content.right .popup-arrow,
     .popup-content.right-start .popup-arrow,
     .popup-content.right-end .popup-arrow {
       left: -10px;
-      border-bottom: var(--border-size-2) solid #2a2a2a;
-      border-left: var(--border-size-2) solid #2a2a2a;
+      border-bottom: var(--border-size-2) solid var(--crt-border, #2a2a2a);
+      border-left: var(--border-size-2) solid var(--crt-border, #2a2a2a);
     }
 
     /* Center arrow horizontally for top/bottom placements */
@@ -174,7 +153,7 @@ export class ThxPopup extends LitElement {
 
     .popup-header {
       padding: calc(var(--size-2) + var(--size-1)) var(--size-3);
-      border-bottom: var(--border-size-1) solid #333;
+      border-bottom: var(--border-size-1) solid var(--neutral-800, #333);
       position: relative;
       z-index: var(--layer-1);
     }
@@ -229,7 +208,7 @@ export class ThxPopup extends LitElement {
 
     .popup-footer {
       padding: calc(var(--size-2) + var(--size-1)) var(--size-3);
-      border-top: var(--border-size-1) solid #333;
+      border-top: var(--border-size-1) solid var(--neutral-800, #333);
       display: flex;
       justify-content: flex-end;
       gap: var(--size-2);
@@ -318,7 +297,7 @@ export class ThxPopup extends LitElement {
    * @returns {void}
    */
   _handleClickOutside(e) {
-    if (this.open && !this.contains(/** @type {Node} */ (e.target))) {
+    if (this.open && !e.composedPath().includes(this)) {
       this.hide();
     }
   }

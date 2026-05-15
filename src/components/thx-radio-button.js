@@ -6,6 +6,8 @@
  */
 
 import { LitElement, html, css } from '../../vendor/lit.js';
+import { FormAssociatedMixin } from '../mixins/form-associated-mixin.js';
+import { focusVisibleStyles } from '../mixins/focus-visible.js';
 
 /**
  * @typedef {Object} RadioButtonProps
@@ -19,7 +21,7 @@ import { LitElement, html, css } from '../../vendor/lit.js';
  * THX 1138 styled radio button component with button appearance
  * @extends {LitElement}
  */
-export class ThxRadioButton extends LitElement {
+export class ThxRadioButton extends FormAssociatedMixin(LitElement) {
   static styles = css`
     :host {
       display: inline-block;
@@ -77,6 +79,13 @@ export class ThxRadioButton extends LitElement {
     button:active:not(:disabled) {
       transform: translateY(1px);
     }
+
+    button:focus-visible {
+      outline: none;
+      box-shadow: var(--focus-ring-glow, 0 0 0 2px rgba(166, 200, 225, 0.45));
+    }
+
+    ${focusVisibleStyles}
   `;
 
   static properties = {
@@ -90,12 +99,26 @@ export class ThxRadioButton extends LitElement {
     super();
     /** @type {boolean} */
     this.checked = false;
+    this._defaultChecked = this.checked;
     /** @type {boolean} */
     this.disabled = false;
     /** @type {string} */
     this.value = '';
     /** @type {string} */
     this.size = 'md';
+  }
+
+  firstUpdated() {
+    this._defaultChecked = this.checked;
+    this._updateFormValue?.();
+  }
+
+  _updateFormValue() {
+    this._internals?.setFormValue(this.checked && !this.disabled ? this.value : null);
+  }
+
+  formResetCallback() {
+    this.checked = this._defaultChecked;
   }
 
   /**

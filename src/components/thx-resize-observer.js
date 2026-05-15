@@ -6,6 +6,7 @@
  */
 
 import { LitElement, html, css } from '../../vendor/lit.js';
+import { crtStaticScanlineOverlay, crtStaticVignetteOverlay } from '../styles/crt-effects.js';
 
 /**
  * @typedef {Object} SizeEntry
@@ -42,36 +43,16 @@ export class ThxResizeObserver extends LitElement {
       box-shadow: inset 0 0 var(--size-4) rgba(0, 0, 0, 0.5);
     }
 
-    .dimension-display::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: repeating-linear-gradient(
-        0deg,
-        transparent,
-        transparent 2px,
-        rgba(166, 200, 225, 0.04) 2px,
-        rgba(166, 200, 225, 0.04) var(--size-1)
-      );
-      pointer-events: none;
-      z-index: var(--layer-2);
-    }
-
-    .dimension-display::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(ellipse at center, transparent 50%, rgba(0, 0, 0, 0.4) 100%);
-      pointer-events: none;
-      z-index: calc(var(--layer-2) + 1);
-    }
+    /* Shared decorative CRT scanline + vignette for observer display */
+    ${crtStaticScanlineOverlay('.dimension-display')}
+    ${crtStaticVignetteOverlay('.dimension-display')}
 
     .display-label {
       position: absolute;
       top: var(--size-1);
       right: var(--size-2);
       font-size: var(--font-size-0);
-      color: #666;
+      color: var(--neutral-600, #666);
       text-transform: uppercase;
       letter-spacing: var(--font-letterspacing-4);
       z-index: calc(var(--layer-2) + 5);
@@ -165,8 +146,8 @@ export class ThxResizeObserver extends LitElement {
     .status-led {
       width: var(--size-2);
       height: var(--size-2);
-      background: #333;
-      border: var(--border-size-1) solid #444;
+      background: var(--neutral-800, #333);
+      border: var(--border-size-1) solid var(--neutral-600, #666);
     }
 
     .status-led.active {

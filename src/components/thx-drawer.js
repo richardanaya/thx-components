@@ -3,10 +3,11 @@
 /**
  * @fileoverview THX 1138 styled slide-out drawer component
  * @module thx-drawer
- * @description A clinical slide-out panel with CRT monitor aesthetics
+ * @description A clinical slide-out panel with CRT monitor aesthetics (uses crt-effects for scanlines)
  */
 
 import { LitElement, html, css } from '../../vendor/lit.js';
+import { crtStaticScanlineOverlay } from '../styles/crt-effects.js';
 
 /**
  * @typedef {Object} DrawerState
@@ -50,21 +51,8 @@ export class ThxDrawer extends LitElement {
       transition: transform var(--duration-moderate-2) ease-out;
     }
 
-    /* CRT scanline effect */
-    .drawer-panel::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: repeating-linear-gradient(
-        0deg,
-        transparent,
-        transparent 2px,
-        rgba(166, 200, 225, 0.03) 2px,
-        rgba(166, 200, 225, 0.03) var(--size-1)
-      );
-      pointer-events: none;
-      z-index: var(--layer-2);
-    }
+    /* CRT scanline effect (shared) */
+    ${crtStaticScanlineOverlay('.drawer-panel', { opacity: 0.03 })}
 
     /* Left placement */
     .drawer-panel.left {
@@ -180,7 +168,7 @@ export class ThxDrawer extends LitElement {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      border-bottom: var(--border-size-1) solid #333;
+      border-bottom: var(--border-size-1) solid var(--neutral-800, #333);
       position: relative;
       z-index: var(--layer-1);
       flex-shrink: 0;

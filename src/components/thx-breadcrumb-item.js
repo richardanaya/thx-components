@@ -6,6 +6,7 @@
  */
 
 import { LitElement, html, css } from '../../vendor/lit.js';
+import { focusVisibleStyles } from '../mixins/focus-visible.js';
 
 /**
  * Individual breadcrumb item with link or text
@@ -36,6 +37,16 @@ export class ThxBreadcrumbItem extends LitElement {
       text-shadow: 0 0 var(--size-2) rgba(166, 200, 225, 0.5);
     }
 
+    /* Keyboard focus ring (phosphor glow) for breadcrumb links */
+    a:focus-visible {
+      outline: none;
+      box-shadow:
+        0 0 0 2px color-mix(in srgb, var(--atmos-primary, #a6c8e1) 35%, transparent),
+        0 0 var(--size-2, 8px) rgba(166, 200, 225, 0.45);
+      transition: box-shadow var(--duration-quick-2, 0.1s);
+      border-bottom-color: var(--atmos-primary, #a6c8e1);
+    }
+
     span {
       color: var(--neutral-800, #333);
       font-family: var(--font-mono, 'Courier New', Courier, monospace);
@@ -48,6 +59,8 @@ export class ThxBreadcrumbItem extends LitElement {
     ::after {
       content: '';
     }
+
+    ${focusVisibleStyles}
   `;
 
   /**
@@ -64,6 +77,34 @@ export class ThxBreadcrumbItem extends LitElement {
     this.href = '';
     /** @type {boolean} Whether this is the current/active item */
     this.current = false;
+  }
+
+  /**
+   * Public focus delegation to the anchor (if link) or host.
+   * @returns {void}
+   */
+  focus() {
+    this.updateComplete.then(() => {
+      const anchor = /** @type {HTMLElement|null} */ (this.renderRoot.querySelector('a'));
+      if (anchor) {
+        anchor.focus();
+      } else {
+        // For current page span, focus the host itself (make tabindex possible if needed)
+        if (!this.hasAttribute('tabindex')) this.setAttribute('tabindex', '-1');
+        super.focus?.();
+      }
+    });
+  }
+
+  blur() {
+    this.updateComplete.then(() => {
+      const anchor = /** @type {HTMLElement|null} */ (this.renderRoot.querySelector('a'));
+      if (anchor) {
+        anchor.blur();
+      } else {
+        super.blur?.();
+      }
+    });
   }
 
   /**

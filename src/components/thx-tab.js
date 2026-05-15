@@ -6,6 +6,7 @@
  */
 
 import { LitElement, html, css } from '../../vendor/lit.js';
+import { focusVisibleStyles } from '../mixins/focus-visible.js';
 
 // Forward declaration for type checking
 /** @typedef {import('./thx-tab-group.js').ThxTabGroup} ThxTabGroup */
@@ -68,6 +69,16 @@ export class ThxTab extends LitElement {
       opacity: 0.4;
       cursor: not-allowed;
       pointer-events: none;
+    }
+
+    /* Keyboard focus ring (phosphor glow) - applies to the tab button */
+    .tab:focus-visible,
+    button[role="tab"]:focus-visible {
+      outline: none;
+      box-shadow:
+        0 0 0 2px color-mix(in srgb, var(--atmos-primary, #a6c8e1) 35%, transparent),
+        0 0 var(--size-2, 8px) rgba(166, 200, 225, 0.45);
+      transition: box-shadow var(--duration-quick-2, 0.1s);
     }
 
     /* CRT variant */
@@ -137,6 +148,8 @@ export class ThxTab extends LitElement {
       align-items: center;
       justify-content: center;
     }
+
+    ${focusVisibleStyles}
   `;
 
   /**
@@ -171,6 +184,13 @@ export class ThxTab extends LitElement {
     this.updateComplete.then(() => {
       const button = /** @type {HTMLElement|null} */ (this.renderRoot.querySelector('button'));
       button?.focus();
+    });
+  }
+
+  blur() {
+    this.updateComplete.then(() => {
+      const button = /** @type {HTMLElement|null} */ (this.renderRoot.querySelector('button'));
+      button?.blur();
     });
   }
 
@@ -243,13 +263,15 @@ export class ThxTab extends LitElement {
       .map(([k]) => k)
       .join(' ');
 
-    const tabIndex = this.getAttribute('tabindex') || (this.active && !this.disabled ? '0' : '-1');
+    // Roving tabindex: only the active tab is a tab stop (0); others -1 for arrow nav.
+    // Group manages activation; programmatic focus() allows reaching -1 tabs via arrows.
+    const tabIndex = this.disabled ? '-1' : (this.active ? '0' : '-1');
 
     return html`
       <button
         class="${classString}"
         role="tab"
-        tabindex="${this.disabled ? '-1' : tabIndex}"
+        tabindex="${tabIndex}"
         aria-selected="${this.active ? 'true' : 'false'}"
         aria-controls="${this.panel}"
         @click="${this._handleClick}"
