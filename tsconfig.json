@@ -3,19 +3,14 @@
     "target": "ES2022",
     "module": "ES2022",
     "moduleResolution": "bundler",
-    "checkJs": true,
-    "noEmit": true,
     "strict": true,
-    "esModuleInterop": true,
+    "noEmit": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "lib": ["ES2022", "DOM", "DOM.Iterable"],
-    "types": [],
-    "paths": {
-      "lit": ["./node_modules/lit/development/index.d.ts"],
-      "lit/*": ["./node_modules/lit/development/*"]
-    }
+    "types": ["node"],
+    "allowImportingTsExtensions": true,
+    "verbatimModuleSyntax": false
   },
-  "include": ["src/**/*.js", "src/**/*.d.ts", "webcomponents.js"],
-  "exclude": ["node_modules"]
+  "include": ["src", "demo", "test", "types", "vite.config.ts", "playwright.config.ts", "scripts"]
 }

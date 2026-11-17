@@ -1,65 +1,81 @@
 {
   "name": "thx-components",
-  "version": "0.1.1",
-  "description": "THX 1138 — A clinical, dystopian web component library built with Lit",
+  "version": "0.2.0",
+  "description": "THX 1138 control surface built on the Vercel UI SDK (beta). Classless theme, Web Component parts, and phosphor instruments.",
   "type": "module",
   "files": [
-    "src/components",
-    "vendor",
-    "webcomponents.js",
-    "aesthetics.css",
+    "dist",
+    "src",
+    "types",
+    "docs/architecture.md",
     "DESIGN.md",
-    "tsconfig.json"
+    "README.md",
+    "AGENTS.md"
   ],
-  "main": "./webcomponents.js",
-  "module": "./webcomponents.js",
+  "main": "./dist/index.js",
+  "types": "./types/index.d.ts",
   "exports": {
     ".": {
-      "import": "./webcomponents.js"
+      "types": "./types/index.d.ts",
+      "import": "./dist/index.js"
     },
-    "./webcomponents.js": {
-      "import": "./webcomponents.js"
+    "./register": {
+      "types": "./types/register.d.ts",
+      "import": "./dist/register.js"
     },
-    "./aesthetics.css": "./aesthetics.css",
-    "./src/components/*.js": "./src/components/*.js",
-    "./src/components/index.js": "./src/components/index.js",
-    "./vendor/lit.js": "./vendor/lit.js"
+    "./aesthetics.css": "./dist/aesthetics.css",
+    "./catalog": {
+      "types": "./types/catalog.d.ts",
+      "import": "./dist/catalog.js"
+    }
   },
   "sideEffects": [
-    "./webcomponents.js",
-    "./aesthetics.css",
-    "./src/components/*.js"
+    "./dist/index.js",
+    "./dist/register.js",
+    "./dist/elements.js",
+    "./dist/aesthetics.css",
+    "./src/index.ts",
+    "./src/register.ts",
+    "./src/elements.ts",
+    "./src/theme/aesthetics.css"
   ],
   "scripts": {
-    "pretest": "playwright install chromium",
-    "test": "web-test-runner",
-    "check": "npm run typecheck && npm run format:check && npm test",
+    "dev": "vite --host 127.0.0.1 --port 4173",
+    "build:css": "node scripts/bundle-css.mjs",
+    "build:js": "tsc -p tsconfig.build.json",
+    "build": "rm -rf dist && npm run build:js && npm run build:css && vite build",
+    "preview": "vite preview --host 127.0.0.1 --port 4173",
     "typecheck": "tsc --noEmit",
+    "lint": "eslint src demo test",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "test:unit": "node --experimental-strip-types --test test/unit/*.test.ts",
+    "test": "playwright test",
+    "check": "npm run typecheck && npm run lint && npm run format:check && npm run test:unit && npm run build && npm test"
+  },
+  "dependencies": {
+    "@ui-sdk/core": "0.1.0-beta.7",
+    "@ui-sdk/web": "0.1.0-beta.7"
   },
   "devDependencies": {
-    "@web/test-runner": "^0.20.2",
-    "@web/test-runner-playwright": "^0.11.1",
-    "lit": "^3.1.2",
-    "open-props": "^1.7.23",
-    "playwright": "^1.56.1",
+    "@eslint/js": "^9.39.1",
+    "@playwright/test": "^1.56.1",
+    "eslint": "^9.39.1",
     "prettier": "^3.8.3",
-    "typescript": "^5.4.0"
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.48.0",
+    "vite": "^7.2.2"
+  },
+  "engines": {
+    "node": ">=22"
   },
   "keywords": [
+    "ui-sdk",
     "web-components",
-    "lit",
-    "custom-elements",
-    "ui",
-    "design-system",
     "thx-1138",
-    "brutalist",
-    "clinical",
-    "crt",
-    "oscilloscope"
+    "design-system",
+    "crt"
   ],
-  "author": "",
   "license": "MIT",
   "repository": {
     "type": "git",
