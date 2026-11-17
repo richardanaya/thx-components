@@ -1,108 +1,91 @@
 # thx-components
 
-THX 1138 web components — a classless CSS framework + 64 custom elements, designed for AI/LLM authoring. Zero runtime dependency, zero class soup.
+THX 1138, rebuilt on [Vercel UI SDK](https://ui-sdk.dev) **0.1.0-beta.7** (public beta, 12 November 2026).
 
-## For AI agents (and humans who hate boilerplate)
+The page is still a classless control room: concrete canvas, Helvetica, Courier labels, phosphor only where the interface is a monitor. Keyboard, focus, selection, popups, and ARIA come from UI SDK behaviors. You bring this theme.
 
-Most CSS frameworks drown you in utility classes:
+UI SDK is in beta. Part names, events, and behavior can change before general availability. This package pins the versions it was built against. Read [docs/architecture.md](docs/architecture.md) before depending on an API.
 
-```html
-<!-- Tailwind: 47 classes, 1,400 tokens of noise -->
-<div
-  class="flex flex-col gap-2 p-4 bg-neutral-100 border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-all"
-></div>
-```
-
-This is a **classless CSS framework**. Write semantic HTML and it already looks beautiful. Drop a `<thx-*>` element and it slots right in. No classes to memorize, no design tokens to juggle, no 47-class incantations.
-
-**Why this matters for AI:** LLMs generate beautiful dashboards and websites with dramatically less HTML/CSS boilerplate. You write `<section>`, `<h1>`, `<button>`, `<thx-card>` — not a wall of `class="..."`. Output is smaller, faster, and cleaner.
-
-## How it works
-
-1. `aesthetics.css` — bare HTML tags (`<h1>`, `<p>`, `<button>`, etc.) are styled automatically. No utility classes needed.
-2. `webcomponents.js` — drop `<thx-*>` custom elements anywhere. Together they produce extremely minimal HTML with no classes and no build step.
-
-`aesthetics.css` loads Open Props tokens with CSS `@import`. Load it before rendering pages that depend on the design tokens or the classless base theme.
-
-## Quick Start
-
-Two files. That's it.
-
-```html
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/thx-components/aesthetics.css" />
-<script type="module" src="https://cdn.jsdelivr.net/npm/thx-components/webcomponents.js"></script>
-```
-
-Then use any component:
-
-```html
-<h1>Report</h1>
-<p>Bare HTML is already styled.</p>
-<thx-button variant="primary">CONFIRM</thx-button>
-<thx-alert variant="error" open>CRITICAL</thx-alert>
-```
-
-## npm
+## Install
 
 ```bash
 npm install thx-components
 ```
 
-```js
+That installs `@ui-sdk/web` and `@ui-sdk/core` at `0.1.0-beta.7`.
+
+```ts
 import 'thx-components';
-```
-
-The package vendors the runtime Lit module under `vendor/lit.js`, so published consumers do not need a runtime `lit` dependency. The npm `lit` dependency is only used for local type checking.
-
-## Selective imports
-
-Use the package entry to register all 64 custom elements:
-
-```js
-import 'thx-components';
-```
-
-Use the component barrel when you need class references:
-
-```js
-import { ThxButton, ThxDialog } from 'thx-components';
-```
-
-Use direct component imports when you only want specific custom elements registered:
-
-```js
-import 'thx-components/src/components/thx-button.js';
-import 'thx-components/src/components/thx-dialog.js';
-```
-
-For the theme, load the CSS explicitly:
-
-```js
 import 'thx-components/aesthetics.css';
 ```
 
-## Extending components
+`import "thx-components"` registers the UI SDK custom elements and the THX primitives. The root import has no component namespace; each SDK component is its own entry, which the register module imports for you.
 
-Advanced users and AI agents can import shared primitives:
+```html
+<h1>Report</h1>
+<p>Bare HTML is already on the concrete canvas.</p>
 
-```js
-import { FormAssociatedMixin } from 'thx-components/src/mixins/form-associated-mixin.js';
-import { focusVisibleStyles } from 'thx-components/src/mixins/focus-visible.js';
-import { crtMonitorStyles } from 'thx-components/src/styles/crt-effects.js';
+<ui-button>
+  <button type="button" data-variant="primary">Confirm</button>
+</ui-button>
+
+<ui-field name="designation">
+  <ui-field-label>Designation</ui-field-label>
+  <ui-input><input value="THX 1138" /></ui-input>
+</ui-field>
+
+<thx-crt variant="scope" label="LDS-1138">
+  <thx-crt-label>LDS-1138</thx-crt-label>
+  <thx-crt-screen>
+    <thx-scope-line label="Alpha" default-value="12,40,28,66"></thx-scope-line>
+  </thx-crt-screen>
+</thx-crt>
 ```
 
-See DESIGN.md for the component contract (focus(), CRT surface rules, form participation).
+Style state with the attributes the parts already set (`data-pressed`, `data-open`, `data-checked`, `data-copied`, `data-variant`), not with a class for every state. The theme maps `--ui-*` to the THX palette. Square corners are `--ui-radius: 0`.
 
-## Verification
+## Agents
+
+```ts
+import { createAgent, observe } from 'thx-components';
+
+const agent = createAgent();
+agent.snapshot();
+await agent.act({
+  steps: [{ ref: 'Designation', action: 'setValue', args: ['SEN-5241'] }],
+});
+
+observe(change => console.log(change));
+```
+
+Create the agent once in the browser. It sees components that are already mounted and ones created later.
+
+## Primitives
+
+THX-only behavior lives in `src/primitives` as `definePrimitive` definitions: alerts, badges, tags, copy button, breadcrumb, CRT frame, scopes, lamps, formatters, comparer, frames, include, presence, skeleton, spinner, and the two DOM observers. `src/elements.ts` registers their tags. The same primitives can be rendered by another UI SDK adapter; this package ships Web Components.
+
+The map from the old Lit elements is in [docs/architecture.md](docs/architecture.md) and `componentMap` from `thx-components/catalog`.
+
+## Demo
+
+```bash
+npm install
+npm run dev
+```
+
+The terminal is `demo/index.html`.
+
+## Check
 
 ```bash
 npm run typecheck
+npm run lint
 npm test
-npm run check
+npm run build
 ```
 
-`npm test` runs browser tests that import `webcomponents.js`, verify all 64 custom elements register, verify the package entry exports component classes, and cover key behavior for button, select, form, and include fixes.
+`npm test` starts the demo and runs Playwright against it. `npm run test:unit` checks the formatters and that all 64 former elements are mapped.
 
 ## License
 
-MIT
+MIT. UI SDK is Apache-2.0.

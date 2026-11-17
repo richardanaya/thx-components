@@ -1,0 +1,417 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>THX 1138 — UI SDK terminal</title>
+    <link rel="stylesheet" href="./demo.css" />
+  </head>
+  <body>
+    <main>
+      <section>
+        <p class="kicker">// SYSTEM // LDS-1138</p>
+        <h1>THX 1138</h1>
+        <p>
+          A clinical control surface. Behavior comes from UI SDK. The phosphor and the concrete are
+          the theme.
+        </p>
+        <div class="row">
+          <ui-button id="confirm">
+            <button type="button" data-variant="primary">Confirm</button>
+          </ui-button>
+          <ui-button id="notify">
+            <button type="button" data-variant="secondary">File record</button>
+          </ui-button>
+          <ui-button id="read-surface">
+            <button type="button">Read surface</button>
+          </ui-button>
+          <thx-copy-button text="THX-1138">
+            <button type="button">Copy designation</button>
+          </thx-copy-button>
+        </div>
+        <p id="action-log"></p>
+        <p id="surface-report"></p>
+        <ui-toast-region>
+          <template>
+            <ui-toast>
+              <ui-toast-title></ui-toast-title>
+              <ui-toast-description></ui-toast-description>
+            </ui-toast>
+          </template>
+        </ui-toast-region>
+      </section>
+
+      <section>
+        <h2>Designation</h2>
+        <div class="grid">
+          <thx-card>
+            <thx-card-label>Identity</thx-card-label>
+            <thx-card-body>
+              <div class="stack">
+                <ui-field name="designation">
+                  <ui-field-label>Designation</ui-field-label>
+                  <ui-input>
+                    <input value="THX 1138" />
+                  </ui-input>
+                  <ui-field-description>Filed with the bureau.</ui-field-description>
+                </ui-field>
+                <ui-field name="notes">
+                  <ui-field-label>Notes</ui-field-label>
+                  <ui-textarea>
+                    <textarea rows="3">Sector clear.</textarea>
+                  </ui-textarea>
+                </ui-field>
+              </div>
+            </thx-card-body>
+          </thx-card>
+          <div class="stack">
+            <thx-alert variant="info" default-open>
+              <span>Info — system normal</span>
+              <thx-alert-dismiss><button type="button">Dismiss</button></thx-alert-dismiss>
+            </thx-alert>
+            <thx-alert variant="warning" default-open>
+              <span>Warning — check required</span>
+            </thx-alert>
+            <thx-alert variant="error" default-open>
+              <span>Error — critical</span>
+              <thx-alert-dismiss><button type="button">Dismiss</button></thx-alert-dismiss>
+            </thx-alert>
+            <div class="row">
+              <thx-badge variant="primary">Normal</thx-badge>
+              <thx-badge variant="secondary">Pending</thx-badge>
+              <thx-badge variant="warning">Warning</thx-badge>
+              <thx-badge variant="error">Critical</thx-badge>
+              <thx-badge variant="neutral" pulse>Live</thx-badge>
+            </div>
+            <div class="row">
+              <thx-tag>
+                Sector 7-G
+                <thx-tag-remove
+                  ><button type="button" aria-label="Remove sector">×</button></thx-tag-remove
+                >
+              </thx-tag>
+              <thx-spinner label="Scanning"></thx-spinner>
+              <thx-skeleton style="width: 8rem"></thx-skeleton>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2>Choices</h2>
+        <div class="grid">
+          <ui-field>
+            <ui-field-label>Clearance</ui-field-label>
+            <ui-select placeholder="Select clearance" default-value="observer">
+              <ui-select-trigger>
+                <button type="button"><ui-select-value></ui-select-value></button>
+              </ui-select-trigger>
+              <ui-select-content>
+                <ui-select-item value="observer">Observer</ui-select-item>
+                <ui-select-item value="operator">Operator</ui-select-item>
+                <ui-select-item value="warden">Warden</ui-select-item>
+              </ui-select-content>
+            </ui-select>
+          </ui-field>
+          <ui-field>
+            <ui-field-label>Bays</ui-field-label>
+            <ui-select multiple default-value="east, west" placeholder="Select bays">
+              <ui-select-trigger>
+                <button type="button"><ui-select-value></ui-select-value></button>
+              </ui-select-trigger>
+              <ui-select-content>
+                <ui-select-item value="east">East</ui-select-item>
+                <ui-select-item value="west">West</ui-select-item>
+                <ui-select-item value="north">North</ui-select-item>
+              </ui-select-content>
+            </ui-select>
+          </ui-field>
+          <ui-field>
+            <ui-field-label>Shift</ui-field-label>
+            <ui-radio-group default-value="day" aria-label="Shift">
+              <label
+                ><ui-radio value="day"><ui-radio-indicator></ui-radio-indicator></ui-radio>
+                Day</label
+              >
+              <label
+                ><ui-radio value="night"><ui-radio-indicator></ui-radio-indicator></ui-radio>
+                Night</label
+              >
+            </ui-radio-group>
+          </ui-field>
+          <ui-segmented-control aria-label="View" default-value="list">
+            <ui-segmented-control-indicator></ui-segmented-control-indicator>
+            <ui-segmented-control-item value="list">List</ui-segmented-control-item>
+            <ui-segmented-control-item value="grid">Grid</ui-segmented-control-item>
+          </ui-segmented-control>
+          <label>
+            <ui-checkbox default-checked>
+              <ui-checkbox-indicator aria-hidden="true">✓</ui-checkbox-indicator>
+            </ui-checkbox>
+            Accept monitoring
+          </label>
+          <label>
+            <ui-switch default-checked>
+              <ui-switch-thumb></ui-switch-thumb>
+            </ui-switch>
+            Phosphor
+          </label>
+          <ui-slider default-value="42" aria-label="Gain">
+            <ui-slider-value></ui-slider-value>
+            <ui-slider-control>
+              <ui-slider-track>
+                <ui-slider-indicator></ui-slider-indicator>
+                <ui-slider-thumb aria-label="Gain"></ui-slider-thumb>
+              </ui-slider-track>
+            </ui-slider-control>
+          </ui-slider>
+          <ui-rating aria-label="Compliance" default-value="3">
+            <template><ui-rating-item>★</ui-rating-item></template>
+          </ui-rating>
+        </div>
+      </section>
+
+      <section>
+        <h2>Scope</h2>
+        <thx-crt variant="scope" label="LDS-1138">
+          <thx-crt-label>LDS-1138 // signal</thx-crt-label>
+          <thx-crt-screen>
+            <div class="grid">
+              <thx-scope-line
+                label="Alpha"
+                default-value="12,40,28,66,30,72,44"
+                secondary="8,18,22,20,36,28,40"
+              ></thx-scope-line>
+              <thx-scope-bar label="Load" default-value="20,55,40,80,35"></thx-scope-bar>
+              <thx-scope-gauge label="Core" default-value="67"></thx-scope-gauge>
+              <thx-scope-monitors
+                label="Bays"
+                channels="ALPHA:12,40,28,60|BETA:8,22,70,30|GAMMA:44,41,38,52"
+              ></thx-scope-monitors>
+            </div>
+            <div class="row" style="margin-top: 0.8rem">
+              <thx-leds label="Bay lamps">
+                <thx-led status="ok"></thx-led>
+                <thx-led status="ok"></thx-led>
+                <thx-led status="warn"></thx-led>
+                <thx-led status="error"></thx-led>
+                <thx-led status="off"></thx-led>
+              </thx-leds>
+            </div>
+          </thx-crt-screen>
+        </thx-crt>
+        <div class="grid" style="margin-top: 1rem">
+          <ui-progress value="67">
+            <ui-progress-label>Transfer</ui-progress-label>
+            <ui-progress-value></ui-progress-value>
+            <ui-progress-track>
+              <ui-progress-indicator></ui-progress-indicator>
+            </ui-progress-track>
+          </ui-progress>
+          <ui-meter value="67" data-variant="ring" aria-label="Core load">
+            <ui-meter-label>Core</ui-meter-label>
+            <ui-meter-value></ui-meter-value>
+            <ui-meter-track>
+              <ui-meter-indicator></ui-meter-indicator>
+            </ui-meter-track>
+          </ui-meter>
+        </div>
+      </section>
+
+      <section>
+        <h2>Navigation</h2>
+        <ui-tabs default-value="account">
+          <ui-tabs-list aria-label="Records">
+            <ui-tabs-tab value="account"><button type="button">Account</button></ui-tabs-tab>
+            <ui-tabs-tab value="bay"><button type="button">Bay</button></ui-tabs-tab>
+          </ui-tabs-list>
+          <ui-tabs-panel value="account">Profile is current. No outstanding orders.</ui-tabs-panel>
+          <ui-tabs-panel value="bay">Bay 4 holds the spare phosphor stock.</ui-tabs-panel>
+        </ui-tabs>
+        <div class="grid" style="margin-top: 1rem">
+          <ui-tree aria-label="Files" default-expanded="app" default-value="app/page">
+            <ui-tree-item value="app">
+              <ui-tree-item-label>
+                <ui-tree-item-indicator>›</ui-tree-item-indicator>
+                app
+              </ui-tree-item-label>
+              <ui-tree-group>
+                <ui-tree-item value="app/page">
+                  <ui-tree-item-label>page</ui-tree-item-label>
+                </ui-tree-item>
+              </ui-tree-group>
+            </ui-tree-item>
+            <ui-tree-item value="readme">
+              <ui-tree-item-label>readme</ui-tree-item-label>
+            </ui-tree-item>
+          </ui-tree>
+          <div class="stack">
+            <thx-breadcrumb aria-label="Trail">
+              <thx-breadcrumb-item value="sector"><a href="#sector">Sector</a></thx-breadcrumb-item>
+              <thx-breadcrumb-separator>/</thx-breadcrumb-separator>
+              <thx-breadcrumb-item value="bay" current><a href="#bay">Bay</a></thx-breadcrumb-item>
+            </thx-breadcrumb>
+            <ui-toolbar aria-label="Record actions">
+              <ui-toolbar-button><button type="button">Hold</button></ui-toolbar-button>
+              <ui-toolbar-button><button type="button">Release</button></ui-toolbar-button>
+              <ui-toolbar-separator></ui-toolbar-separator>
+              <ui-toolbar-button><button type="button">Stamp</button></ui-toolbar-button>
+            </ui-toolbar>
+            <ui-menu id="actions">
+              <ui-menu-trigger><button type="button">Actions</button></ui-menu-trigger>
+              <ui-menu-content>
+                <ui-menu-group>
+                  <ui-menu-group-label>Record</ui-menu-group-label>
+                  <ui-menu-item value="rename">Rename</ui-menu-item>
+                  <ui-menu-item value="archive">Archive</ui-menu-item>
+                </ui-menu-group>
+              </ui-menu-content>
+            </ui-menu>
+            <p id="menu-log"></p>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2>Overlays</h2>
+        <div class="row">
+          <ui-dialog>
+            <ui-dialog-trigger
+              ><button type="button" data-variant="primary">Open dialog</button></ui-dialog-trigger
+            >
+            <ui-dialog-backdrop hidden></ui-dialog-backdrop>
+            <ui-dialog-content hidden>
+              <ui-dialog-title>Project details</ui-dialog-title>
+              <ui-dialog-description>Review the designation before filing.</ui-dialog-description>
+              <ui-dialog-close><button type="button">Close</button></ui-dialog-close>
+            </ui-dialog-content>
+          </ui-dialog>
+          <ui-drawer>
+            <ui-drawer-trigger><button type="button">Open drawer</button></ui-drawer-trigger>
+            <ui-drawer-backdrop hidden></ui-drawer-backdrop>
+            <ui-drawer-content hidden>
+              <ui-drawer-title>Bay notes</ui-drawer-title>
+              <ui-drawer-description>The east bay is offline until 04:00.</ui-drawer-description>
+              <ui-drawer-close><button type="button">Close</button></ui-drawer-close>
+            </ui-drawer-content>
+          </ui-drawer>
+          <ui-popover>
+            <ui-popover-trigger><button type="button">Share</button></ui-popover-trigger>
+            <ui-popover-content>
+              <ui-popover-title>Share this record</ui-popover-title>
+              <p>Anyone with the link can view.</p>
+              <ui-popover-close><button type="button">Done</button></ui-popover-close>
+            </ui-popover-content>
+          </ui-popover>
+          <ui-tooltip>
+            <ui-tooltip-trigger><button type="button">Hint</button></ui-tooltip-trigger>
+            <ui-tooltip-content>Phosphor stays on the scope.</ui-tooltip-content>
+          </ui-tooltip>
+        </div>
+        <ui-collapsible style="margin-top: 1rem">
+          <ui-collapsible-trigger>
+            <button type="button">Order 4189</button>
+          </ui-collapsible-trigger>
+          <ui-collapsible-panel hidden>Three items. Held at the gate.</ui-collapsible-panel>
+        </ui-collapsible>
+      </section>
+
+      <section>
+        <h2>Layout</h2>
+        <ui-resizable>
+          <ui-resizable-panel default-size="40" min-size="20">
+            <h3>Index</h3>
+            <p>page, layout, theme</p>
+          </ui-resizable-panel>
+          <ui-resizable-handle aria-label="Resize index"></ui-resizable-handle>
+          <ui-resizable-panel default-size="60" min-size="30">
+            <h3>Record</h3>
+            <p>The page is the record.</p>
+          </ui-resizable-panel>
+        </ui-resizable>
+        <div class="grid" style="margin-top: 1rem">
+          <ui-carousel aria-label="Frames">
+            <ui-carousel-previous
+              ><button type="button" aria-label="Previous slide">‹</button></ui-carousel-previous
+            >
+            <ui-carousel-viewport>
+              <ui-carousel-content>
+                <ui-carousel-item><div class="panel">Slide 01</div></ui-carousel-item>
+                <ui-carousel-item><div class="panel">Slide 02</div></ui-carousel-item>
+                <ui-carousel-item><div class="panel">Slide 03</div></ui-carousel-item>
+              </ui-carousel-content>
+            </ui-carousel-viewport>
+            <ui-carousel-next
+              ><button type="button" aria-label="Next slide">›</button></ui-carousel-next
+            >
+          </ui-carousel>
+          <thx-comparer default-value="55" aria-label="Compare frames">
+            <thx-comparer-before
+              ><img alt="Frame A" src="./media/before.svg"
+            /></thx-comparer-before>
+            <thx-comparer-after><img alt="Frame B" src="./media/after.svg" /></thx-comparer-after>
+            <thx-comparer-handle
+              ><button type="button" aria-label="Divider">|</button></thx-comparer-handle
+            >
+          </thx-comparer>
+          <div class="row">
+            <ui-avatar>
+              <ui-avatar-fallback>THX</ui-avatar-fallback>
+            </ui-avatar>
+            <ui-avatar>
+              <ui-avatar-fallback>LUH</ui-avatar-fallback>
+            </ui-avatar>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2>Readouts</h2>
+        <div class="row">
+          <thx-format-bytes value="1536"></thx-format-bytes>
+          <thx-format-number value="1138.5"></thx-format-number>
+          <thx-format-date value="2026-11-12T15:04:00Z"></thx-format-date>
+          <thx-relative-time value="2026-11-17T05:00:00Z"></thx-relative-time>
+        </div>
+        <div class="grid" style="margin-top: 1rem">
+          <thx-include src="./snippet.txt" mode="text"></thx-include>
+          <thx-frames interval="900" aria-label="Cycle">
+            <thx-frame value="0"><img alt="Frame A" src="./media/before.svg" /></thx-frame>
+            <thx-frame value="1"><img alt="Frame B" src="./media/after.svg" /></thx-frame>
+          </thx-frames>
+          <thx-presence name="scan" default-active>
+            <p>Scan complete. Corridor is empty.</p>
+          </thx-presence>
+          <thx-resize-observer>
+            <p id="resize-readout">Measuring</p>
+          </thx-resize-observer>
+          <thx-mutation-observer id="mutations">
+            <p>Watch this node.</p>
+          </thx-mutation-observer>
+          <p>
+            The hidden name is
+            <thx-visually-hidden>unit eleven thirty-eight</thx-visually-hidden> still in the page.
+          </p>
+        </div>
+        <ui-calendar default-value="2026-11-12" style="margin-top: 1rem">
+          <ui-calendar-previous
+            ><button type="button" aria-label="Previous month">‹</button></ui-calendar-previous
+          >
+          <ui-calendar-heading></ui-calendar-heading>
+          <ui-calendar-next
+            ><button type="button" aria-label="Next month">›</button></ui-calendar-next
+          >
+          <ui-calendar-grid>
+            <ui-calendar-weekdays>
+              <template><ui-calendar-weekday></ui-calendar-weekday></template>
+            </ui-calendar-weekdays>
+            <ui-calendar-weeks>
+              <template><ui-calendar-day></ui-calendar-day></template>
+            </ui-calendar-weeks>
+          </ui-calendar-grid>
+        </ui-calendar>
+      </section>
+    </main>
+    <script type="module" src="./main.ts"></script>
+  </body>
+</html>

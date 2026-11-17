@@ -1,0 +1,482 @@
+/**
+ * THX 1138 theme for UI SDK.
+ *
+ * The structural component CSS ships with @ui-sdk/core (layer `ui-sdk`).
+ * This file overrides its tokens and adds the clinical page and CRT surfaces.
+ * Unlayered rules win over the SDK layer. APIs are beta and may change.
+ */
+@import '@ui-sdk/core/web.css';
+
+:root {
+  color-scheme: light;
+  --thx-canvas: #e0e0e0;
+  --thx-surface: #fafafa;
+  --thx-ink: #333333;
+  --thx-muted: #666666;
+  --thx-line: #cccccc;
+  --thx-primary: #a6c8e1;
+  --thx-on-primary: #333333;
+  --thx-secondary: #707e91;
+  --thx-glow: #deffff;
+  --thx-warning: #d4aa00;
+  --thx-on-warning: #333333;
+  --thx-error: #d44000;
+  --thx-on-error: #ffffff;
+  --thx-crt: #111111;
+  --thx-crt-void: #0a0a0a;
+  --thx-crt-frame: #2a2a2a;
+  --thx-crt-grid: #333333;
+  --thx-sans: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --thx-mono: 'Courier New', Courier, monospace;
+
+  --ui-background: var(--thx-surface);
+  --ui-foreground: var(--thx-ink);
+  --ui-muted: var(--thx-canvas);
+  --ui-muted-foreground: var(--thx-muted);
+  --ui-border: var(--thx-line);
+  --ui-input: #bbbbbb;
+  --ui-primary: var(--thx-primary);
+  --ui-primary-foreground: var(--thx-on-primary);
+  --ui-destructive: var(--thx-error);
+  --ui-ring: var(--thx-primary);
+  --ui-ring-border: var(--thx-secondary);
+  --ui-overlay: rgb(17 17 17 / 0.55);
+  --ui-shadow: 0 0 0 1px var(--thx-crt-frame);
+  --ui-radius: 0;
+  --ui-spacing: 0.25rem;
+  --ui-font-size: 0.8125rem;
+  --ui-line-height: 1.45;
+  --ui-font-sans: var(--thx-sans);
+  --ui-font-mono: var(--thx-mono);
+}
+
+body {
+  margin: 0;
+  background: var(--thx-canvas);
+  color: var(--thx-ink);
+  font-family: var(--thx-sans);
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  line-height: 1.1;
+}
+
+h1 {
+  font-size: 2.6rem;
+  font-weight: 300;
+}
+
+h2 {
+  font-size: 1rem;
+  margin: 2rem 0 0.75rem;
+}
+
+p {
+  max-width: 68ch;
+}
+
+a {
+  color: inherit;
+}
+
+section {
+  background: var(--thx-surface);
+  padding: 1.75rem;
+  margin-bottom: 2px;
+}
+
+code,
+kbd {
+  font-family: var(--thx-mono);
+}
+
+:where(
+  [data-slot='button'],
+  [data-slot='thx-copy-button'],
+  [data-slot='thx-alert-dismiss'],
+  [data-slot='toolbar-button'] button
+) {
+  font-family: var(--thx-mono);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+[data-slot='button'][data-variant='primary'] {
+  background: var(--thx-primary);
+  color: var(--thx-on-primary);
+  border-color: transparent;
+}
+
+[data-slot='button'][data-variant='secondary'] {
+  background: var(--thx-secondary);
+  color: #111111;
+  border-color: transparent;
+}
+
+[data-slot='button'][data-variant='warning'] {
+  background: var(--thx-warning);
+  color: var(--thx-on-warning);
+  border-color: transparent;
+}
+
+[data-slot='button'][data-variant='error'] {
+  background: var(--thx-error);
+  color: var(--thx-on-error);
+  border-color: transparent;
+}
+
+[data-slot='thx-copy-button'][data-copied] {
+  background: var(--thx-crt);
+  color: var(--thx-glow);
+  border-color: var(--thx-primary);
+}
+
+:is([data-slot='dialog-title'], [data-slot='drawer-title'], [data-slot='popover-title']) {
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+[data-slot='thx-alert'] {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.8rem 1rem;
+  border: 1px solid var(--thx-line);
+  background: var(--thx-surface);
+  font-family: var(--thx-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+[data-slot='thx-alert'][data-variant='warning'] {
+  border-color: var(--thx-warning);
+}
+
+[data-slot='thx-alert'][data-variant='error'] {
+  background: var(--thx-error);
+  color: var(--thx-on-error);
+  border-color: var(--thx-error);
+}
+
+[data-slot='thx-alert'][data-variant='success'] {
+  border-color: var(--thx-primary);
+}
+
+[data-slot='thx-badge'] {
+  display: inline-block;
+  padding: 0.25rem 0.5rem;
+  background: var(--thx-primary);
+  color: var(--thx-on-primary);
+  font-family: var(--thx-mono);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+[data-slot='thx-badge'][data-variant='secondary'] {
+  background: var(--thx-secondary);
+}
+
+[data-slot='thx-badge'][data-variant='warning'] {
+  background: var(--thx-warning);
+}
+
+[data-slot='thx-badge'][data-variant='error'] {
+  background: var(--thx-error);
+  color: var(--thx-on-error);
+}
+
+[data-slot='thx-badge'][data-variant='neutral'] {
+  background: var(--thx-ink);
+  color: var(--thx-surface);
+}
+
+[data-slot='thx-badge'][data-pulse] {
+  animation: thx-pulse 1.4s steps(2, end) infinite;
+}
+
+[data-slot='thx-tag'] {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.2rem 0.45rem;
+  border: 1px solid var(--thx-line);
+  font-family: var(--thx-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+[data-slot='thx-tag-remove'] {
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+[data-slot='thx-card'] {
+  background: var(--thx-surface);
+  border: 1px solid var(--thx-line);
+  padding: 1.25rem;
+}
+
+[data-slot='thx-card-label'] {
+  margin-bottom: 0.75rem;
+  font-family: var(--thx-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--thx-muted);
+}
+
+[data-slot='thx-crt'] {
+  background: var(--thx-crt-frame);
+  color: var(--thx-primary);
+  padding: 0.5rem;
+}
+
+[data-slot='thx-crt-label'] {
+  padding: 0.35rem 0.6rem 0.2rem;
+  font-family: var(--thx-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--thx-muted);
+}
+
+[data-slot='thx-crt-screen'] {
+  position: relative;
+  background: var(--thx-crt);
+  padding: 0.8rem;
+  overflow: hidden;
+}
+
+[data-slot='thx-crt-screen']::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(to bottom, transparent 0 2px, rgb(0 0 0 / 0.18) 2px 3px);
+}
+
+[data-slot='thx-scope-line'],
+[data-slot='thx-scope-bar'],
+[data-slot='thx-scope-gauge'],
+[data-slot='thx-scope-monitors'] {
+  display: block;
+}
+
+[data-slot='thx-scope-line'] canvas,
+[data-slot='thx-scope-bar'] canvas,
+[data-slot='thx-scope-gauge'] canvas,
+[data-slot='thx-scope-monitors'] canvas {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+[data-slot='thx-leds'] {
+  display: flex;
+  gap: 0.45rem;
+  align-items: center;
+}
+
+[data-slot='thx-led'] {
+  width: 0.7rem;
+  height: 0.7rem;
+  background: var(--thx-crt-grid);
+  box-shadow: inset 0 0 0 1px #000;
+}
+
+[data-slot='thx-led'][data-status='ok'] {
+  background: var(--thx-primary);
+  box-shadow: 0 0 8px var(--thx-primary);
+}
+
+[data-slot='thx-led'][data-status='warn'] {
+  background: var(--thx-warning);
+  box-shadow: 0 0 8px var(--thx-warning);
+}
+
+[data-slot='thx-led'][data-status='error'] {
+  background: var(--thx-error);
+  box-shadow: 0 0 8px var(--thx-error);
+}
+
+[data-slot='thx-spinner'] {
+  width: 1.1rem;
+  height: 1.1rem;
+  border: 2px solid var(--thx-line);
+  border-top-color: var(--thx-ink);
+  animation: thx-spin 0.8s linear infinite;
+}
+
+[data-slot='thx-skeleton'] {
+  display: block;
+  min-height: 2.4rem;
+  background: linear-gradient(90deg, #ececec 25%, #f7f7f7 50%, #ececec 75%);
+  background-size: 200% 100%;
+  animation: thx-shimmer 1.4s linear infinite;
+}
+
+[data-slot='thx-breadcrumb'] {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  align-items: center;
+  font-family: var(--thx-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+[data-slot='thx-breadcrumb-separator'] {
+  color: var(--thx-muted);
+}
+
+[data-slot='thx-comparer'] {
+  position: relative;
+  overflow: hidden;
+  min-height: 180px;
+  background: var(--thx-crt);
+}
+
+[data-slot='thx-comparer-before'],
+[data-slot='thx-comparer-after'] {
+  position: absolute;
+  inset: 0;
+}
+
+[data-slot='thx-comparer-before'] img,
+[data-slot='thx-comparer-after'] img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+[data-slot='thx-comparer-after'] {
+  clip-path: inset(0 0 0 var(--thx-split, 50%));
+}
+
+[data-slot='thx-comparer-handle'] {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: var(--thx-split, 50%);
+  width: 2px;
+  transform: translateX(-50%);
+  background: var(--thx-glow);
+  cursor: ew-resize;
+}
+
+[data-slot='thx-frames'] {
+  display: grid;
+}
+
+[data-slot='thx-frame'] {
+  grid-area: 1 / 1;
+}
+
+[data-slot='thx-include'] {
+  font-family: var(--thx-mono);
+  font-size: 0.8rem;
+  letter-spacing: 0.06em;
+  white-space: pre-wrap;
+}
+
+[data-slot='thx-include'][data-status='error'] {
+  color: var(--thx-error);
+}
+
+[data-slot='thx-include'][data-status='error']::before {
+  content: 'INCLUDE FAILED';
+}
+
+[data-slot='thx-presence'][data-animation='scan'][data-active] {
+  animation: thx-scan 0.6s steps(6, end) both;
+}
+
+[data-slot='thx-presence'][data-animation='fade'][data-active] {
+  animation: thx-fade 0.35s linear both;
+}
+
+[data-variant='ring'] {
+  width: 6.5rem;
+  min-width: 0;
+  justify-items: center;
+}
+
+[data-variant='ring'] [data-slot='meter-track'] {
+  width: 5.5rem;
+  height: 5.5rem;
+  border-radius: 50%;
+  background: conic-gradient(var(--thx-primary) var(--meter-value, 0%), var(--thx-crt-frame) 0);
+  mask: radial-gradient(farthest-side, transparent calc(100% - 7px), #000 calc(100% - 6px));
+}
+
+[data-variant='ring'] [data-slot='meter-indicator'] {
+  display: none;
+}
+
+[data-variant='ring'] [data-slot='meter-value'],
+[data-variant='ring'] [data-slot='meter-label'] {
+  font-family: var(--thx-mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-slot='thx-badge'][data-pulse],
+  [data-slot='thx-spinner'],
+  [data-slot='thx-skeleton'],
+  [data-slot='thx-presence'][data-active] {
+    animation: none;
+  }
+}
+
+@keyframes thx-spin {
+  to {
+    transform: rotate(1turn);
+  }
+}
+
+@keyframes thx-pulse {
+  50% {
+    opacity: 0.35;
+  }
+}
+
+@keyframes thx-shimmer {
+  to {
+    background-position: -200% 0;
+  }
+}
+
+@keyframes thx-fade {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes thx-scan {
+  from {
+    clip-path: inset(0 0 100% 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}

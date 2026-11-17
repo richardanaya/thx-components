@@ -1,0 +1,79 @@
+main {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 2.5rem 1rem 4rem;
+}
+
+.kicker {
+  margin: 0 0 0.4rem;
+  font-family: var(--thx-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--thx-muted);
+}
+
+.row,
+.stack {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.row {
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.stack {
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1rem;
+}
+
+.panel {
+  border: 1px solid var(--thx-line);
+  padding: 1rem;
+  background: rgb(0 0 0 / 0.02);
+}
+
+.panel h3 {
+  margin: 0 0 0.75rem;
+  font-family: var(--thx-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+}
+
+#action-log,
+#surface-report,
+#menu-log {
+  min-height: 1.2rem;
+  font-family: var(--thx-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--thx-muted);
+}
+
+[data-slot='thx-scope-line'],
+[data-slot='thx-scope-bar'],
+[data-slot='thx-scope-monitors'] {
+  min-height: 168px;
+}
+
+[data-slot='thx-scope-gauge'] {
+  min-height: 150px;
+}
+
+ui-carousel-viewport {
+  max-width: 100%;
+}
+
+ui-resizable {
+  min-height: 140px;
+  border: 1px solid var(--thx-line);
+}

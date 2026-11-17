@@ -219,7 +219,7 @@ This design system embodies clinical dystopian instrumentation: blank institutio
 
 The visual source is the sterile world of THX-1138: white and gray voids, industrial corridors, impersonal identifiers, uniform costume logic, and cold machine interfaces. In UI terms, that becomes a system where decoration is removed, hierarchy comes from containment and typography, and color appears only as operational signal.
 
-The design must feel authored by a control room, not a marketing site. It should be legible, austere, and slightly oppressive without becoming unusable. The classless CSS layer makes bare semantic HTML look designed; custom elements extend that same language without utility-class noise.
+The design must feel authored by a control room, not a marketing site. It should be legible, austere, and slightly oppressive without becoming unusable. The classless CSS layer makes bare semantic HTML look designed. Interactive parts are UI SDK elements and a few THX primitives, styled from `data-slot` and state attributes instead of utility classes.
 
 Key characteristics:
 
@@ -230,7 +230,7 @@ Key characteristics:
 - Phosphor blue is the primary operational accent, not a decorative brand wash.
 - Amber and orange-red are reserved for warning and critical states.
 - CRT and oscilloscope surfaces form a dark sub-system with scanlines, grid overlays, inset shadows, and soft glow.
-- Components should be usable through semantic HTML and custom elements with minimal class authorship.
+- Components should be usable through semantic HTML and UI SDK parts with minimal class authorship.
 
 ## Colors
 
@@ -521,3 +521,7 @@ Iteration guide:
 3. Keep color semantic: blue is operational, amber is warning, orange-red is critical.
 4. Prefer seams, underlines, and inset shadows over floating elevation.
 5. Remove any styling that makes the system feel friendly, playful, glossy, or generic SaaS.
+
+## Implementation
+
+The visual language above is unchanged. The component runtime is the Vercel UI SDK beta (`@ui-sdk/web` and `@ui-sdk/core` at `0.1.0-beta.7`). Theme tokens override the SDK's `--ui-*` variables. CRT instruments are THX primitives. See `docs/architecture.md` for the old-to-new map.
